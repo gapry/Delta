@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/**",
+    "D:/Epic Games/UE_5.5/Engine/Source/**"
+  ],
+  "files.associations": {
+    "*.usf": "hlsl"
+  },
+  "C_Cpp.errorSquiggles": "disabled"
+}
