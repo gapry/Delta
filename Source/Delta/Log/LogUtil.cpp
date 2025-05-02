@@ -4,11 +4,17 @@
 #include "Engine/Engine.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+#include <fmt/core.h>
+
 void LogUtil::PrintMessage(const FString& Message, const FColor Color, const float Duration) {
   UE_LOG(LogTemp, Warning, TEXT("%s"), *Message);
 
   if (GEngine) {
+    std::string FormattedMessage = fmt::format("Hello, {}! The answer is {}", "fmt", 2025);
+    FString     TestFmtMessage(UTF8_TO_TCHAR(FormattedMessage.c_str()));
+
     GEngine->AddOnScreenDebugMessage(-1, Duration, Color, Message);
+    GEngine->AddOnScreenDebugMessage(-1, Duration, Color, TestFmtMessage);
   }
 }
 
