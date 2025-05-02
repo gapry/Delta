@@ -14,8 +14,12 @@
 
 class DELTA_API LogUtil {
 public:
+  static void PrintMessage(const FString& Message,
+                           const FColor   Color    = FColor::Green,
+                           const float    Duration = 5.f);
+
   static void PrintMessage(const UObject* const Context,
                            const FString&       Message,
-                           const FColor         Color    = FColor::Green,
+                           const FColor         Color    = FColor::Yellow,
                            const float          Duration = 5.f);
 };
