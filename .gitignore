@@ -1,10 +1,14 @@
 # Visual Studio 
 .vs/
 
+# vscode
 .vscode/compileCommands_Default/*
 .vscode/compileCommands_Delta/*
 .vscode/compileCommands_Default.json
 .vscode/compileCommands_Delta.json
+
+# vcpkg
+vcpkg/
 
 .ignore
 
