@@ -3,12 +3,14 @@
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
+  "C_Cpp.clang_format_style": "file",
   "C_Cpp.default.includePath": [
     "${workspaceFolder}/**",
-    "D:/Epic Games/UE_5.5/Engine/Source/**"
+    "D:/Epic Games/UE_5.5/Engine/Source/**",
   ],
   "files.associations": {
-    "*.usf": "hlsl"
+    "*.usf": "hlsl",
+    "*.uproject": "json",
   },
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp.errorSquiggles": "disabled",
 }
