@@ -27,10 +27,14 @@ public class Delta : ModuleRules
 
   private void AddVcpkgDependencies()
   {
-    string VcpkgLibDir = Path.Combine(ModuleDirectory, "../../vcpkg/installed/x64-windows/lib");
-    string VcpkgBinDir = Path.Combine(ModuleDirectory, "../../vcpkg/installed/x64-windows/bin");
+    const string VcpkgRootDir = "../../vcpkg";
+    string VcpkgInstalledDir = Path.Combine(VcpkgRootDir, "installed/x64-windows");
 
-    PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "../../vcpkg/installed/x64-windows/include"));
+    string VcpkgLibDir = Path.Combine(ModuleDirectory, VcpkgInstalledDir, "lib");
+    string VcpkgBinDir = Path.Combine(ModuleDirectory, VcpkgInstalledDir, "bin");
+    string VcpkgIncludeDir = Path.Combine(ModuleDirectory, VcpkgInstalledDir, "include");
+
+    PublicIncludePaths.Add(VcpkgIncludeDir);
 
     Action<string> SetupLibrary = (string libraryName) =>
     {
