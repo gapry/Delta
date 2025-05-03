@@ -5,7 +5,7 @@
   },
   "C_Cpp.clang_format_style": "file",
   "C_Cpp.default.includePath": [
-    "${workspaceFolder}/**",
+    "${workspaceFolder}/Source/**",
     "D:/Epic Games/UE_5.5/Engine/Source/**",
   ],
   "files.associations": {
