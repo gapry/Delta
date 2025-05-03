@@ -1,4 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Gapry.
+// Licensed under the MIT License.
+// See LICENSE file in the project root for full license information.
 
 #pragma once
 
@@ -40,9 +42,11 @@ public:
 
 #define DELTA_DEFAULT_LOG_DURATION 5.f
 
-#define DELTA_LOG(...)                                \
-  do {                                                \
-    LogUtil::PrintMessage(INDEX_NONE,                 \
-                          DELTA_DEFAULT_LOG_DURATION, \
-                          __VA_ARGS__);               \
+#define DELTA_LOG_BY_KEY(key, ...)                                       \
+  do {                                                                   \
+    LogUtil::PrintMessage(key, DELTA_DEFAULT_LOG_DURATION, __VA_ARGS__); \
   } while (false)
+
+#define DELTA_LOG(...)      DELTA_LOG_BY_KEY(INDEX_NONE, __VA_ARGS__)
+
+#define DELTA_LOG_ONCE(...) DELTA_LOG_BY_KEY(1, __VA_ARGS__)

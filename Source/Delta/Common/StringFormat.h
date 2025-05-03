@@ -1,3 +1,7 @@
+// Copyright (c) 2025 Gapry.
+// Licensed under the MIT License.
+// See LICENSE file in the project root for full license information.
+
 #pragma once
 
 #include <UObject/ReflectedTypeAccessors.h>
@@ -54,11 +58,13 @@ struct fmt::detail::is_output_iterator<DeltaFormatFStringBackInserter, char>
   : std::true_type {};
 
 template<class... ARGS>
-FORCEINLINE void DeltaAppendFormat(FString&    outStr,
-                                   const char* format_str,
-                                   const ARGS&... args) {
+FORCEINLINE void DeltaAppendFormat(FString&                    outStr,
+                                   fmt::format_string<ARGS...> format_str,
+                                   ARGS&&... args) {
   try {
-    fmt::format_to(DeltaFormatFStringBackInserter(outStr), format_str, args...);
+    fmt::format_to(DeltaFormatFStringBackInserter(outStr),
+                   format_str,
+                   std::forward<ARGS>(args)...);
   } catch (const std::exception& e) {
     UE_LOG(LogTemp,
            Error,
@@ -68,9 +74,10 @@ FORCEINLINE void DeltaAppendFormat(FString&    outStr,
 }
 
 template<class... ARGS>
-FORCEINLINE FString DeltaFormat(const char* format_str, const ARGS&... args) {
+FORCEINLINE FString DeltaFormat(fmt::format_string<ARGS...> format_str,
+                                ARGS&&... args) {
   FString tmp;
-  DeltaAppendFormat(tmp, format_str, args...);
+  DeltaAppendFormat(tmp, format_str, std::forward<ARGS>(args)...);
   return tmp;
 }
 

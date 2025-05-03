@@ -20,7 +20,8 @@
 			"DOTNET_ROLL_FORWARD": "LatestMajor"
 		},
 		"files.associations": {
-			"exception": "cpp"
+			"exception": "cpp",
+			"__node_handle": "cpp"
 		}
 	},
 	"extensions": {
