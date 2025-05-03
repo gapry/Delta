@@ -1,1 +1,1 @@
-
+These are my notes for the online course, [Unreal Engine 5 C++: The Ultimate Game Developer](https://www.udemy.com/course/unreal-engine-5-the-ultimate-game-developer-course/), by Stephen Ulibarri on Udemy. 
