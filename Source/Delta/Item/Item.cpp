@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Item.h"
-#include "../Log/LogUtil.h"
+#include "../Common/LogUtil.h"
 
 AItem::AItem() {
   PrimaryActorTick.bCanEverTick = true;
