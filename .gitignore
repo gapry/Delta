@@ -1,16 +1,16 @@
-# Visual Studio 
+# IDE
 .vs/
+.idea/
 
 # vscode
 .vscode/compileCommands_Default/*
 .vscode/compileCommands_Delta/*
 .vscode/compileCommands_Default.json
 .vscode/compileCommands_Delta.json
+.ignore
 
 # vcpkg
 vcpkg/
-
-.ignore
 
 # Prerequisites
 *.d
@@ -66,10 +66,6 @@ vcpkg/
 *.VC.db
 *.VC.opendb
 
-# Precompiled Assets
-SourceArt/**/*.png
-SourceArt/**/*.tga
-
 # Binary Files
 Binaries/*
 Plugins/*/Binaries/*
@@ -98,4 +94,6 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
-Content/*
+# Content
+Content/Collections/*
+Content/Developers/*
