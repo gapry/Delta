@@ -5,11 +5,11 @@
 #include "StringFormat.h"
 
 #if defined(_MSC_VER)
-#define DELTA_FUNCSIG TEXT(__FUNCSIG__)
+#define DELTA_FUNCSIG TCHAR_TO_UTF8(TEXT(__FUNCSIG__))
 #elif defined(__clang__) || defined(__GNUC__)
-#define DELTA_FUNCSIG TEXT(__PRETTY_FUNCTION__)
+#define DELTA_FUNCSIG TCHAR_TO_UTF8(TEXT(__PRETTY_FUNCTION__))
 #else
-#define DELTA_FUNCSIG TEXT(__FUNCTION__)
+#define DELTA_FUNCSIG TCHAR_TO_UTF8(TEXT(__FUNCTION__))
 #endif
 
 class DELTA_API LogUtil {

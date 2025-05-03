@@ -10,7 +10,7 @@ AItem::AItem() {
 void AItem::BeginPlay() {
   Super::BeginPlay();
 
-  DELTA_LOG("{}", TCHAR_TO_UTF8(DELTA_FUNCSIG));
+  DELTA_LOG("{}", DELTA_FUNCSIG);
 }
 
 void AItem::Tick(float DeltaTime) {

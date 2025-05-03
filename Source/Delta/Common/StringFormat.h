@@ -2,6 +2,7 @@
 
 #include <UObject/ReflectedTypeAccessors.h>
 #include <fmt/core.h>
+#include <exception>
 
 template<class T>
 FORCEINLINE FName DeltaEnumToFName(const T& enumValue) {
@@ -58,8 +59,11 @@ FORCEINLINE void DeltaAppendFormat(FString&    outStr,
                                    const ARGS&... args) {
   try {
     fmt::format_to(DeltaFormatFStringBackInserter(outStr), format_str, args...);
-  } catch (...) {
-    UE_LOG(LogTemp, Error, TEXT("Exception in DeltaAppendFormat"));
+  } catch (const std::exception& e) {
+    UE_LOG(LogTemp,
+           Error,
+           TEXT("Exception in DeltaAppendFormat: %s"),
+           *FString(e.what()));
   }
 }
 
