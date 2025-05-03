@@ -3,6 +3,7 @@
 #pragma once
 
 #include "StringFormat.h"
+#include "Logging/LogMacros.h"
 
 #if defined(_MSC_VER)
 #define DELTA_FUNCSIG TCHAR_TO_UTF8(TEXT(__FUNCSIG__))
@@ -37,7 +38,11 @@ public:
   }
 };
 
-#define DELTA_LOG(...)                                 \
-  do {                                                 \
-    LogUtil::PrintMessage(INDEX_NONE, 3, __VA_ARGS__); \
+#define DELTA_DEFAULT_LOG_DURATION 5.f
+
+#define DELTA_LOG(...)                                \
+  do {                                                \
+    LogUtil::PrintMessage(INDEX_NONE,                 \
+                          DELTA_DEFAULT_LOG_DURATION, \
+                          __VA_ARGS__);               \
   } while (false)
