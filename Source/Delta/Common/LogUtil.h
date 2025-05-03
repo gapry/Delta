@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "StringFormat.h"
 
 #if defined(_MSC_VER)
 #define DELTA_FUNCSIG TEXT(__FUNCSIG__)
@@ -14,12 +14,30 @@
 
 class DELTA_API LogUtil {
 public:
-  static void PrintMessage(const FString& Message,
-                           const FColor   Color    = FColor::Green,
-                           const float    Duration = 5.f);
+  static void PrintMessage(const int32    key,
+                           const FString& Message,
+                           const float    Duration = 5.f,
+                           const FColor   Color    = FColor::Green);
 
   static void PrintMessage(const UObject* const Context,
                            const FString&       Message,
                            const FColor         Color    = FColor::Yellow,
                            const float          Duration = 5.f);
+
+  template<class... ARGS>
+  FORCEINLINE static void PrintMessage(const int32 key,
+                                       const float Duration,
+                                       const char* format_str,
+                                       const ARGS&... args) {
+    FString Message;
+    fmt::format_to(DeltaFormatFStringBackInserter(Message),
+                   fmt::runtime(format_str),
+                   args...);
+    PrintMessage(key, Message, Duration);
+  }
 };
+
+#define DELTA_LOG(...)                                 \
+  do {                                                 \
+    LogUtil::PrintMessage(INDEX_NONE, 3, __VA_ARGS__); \
+  } while (false)

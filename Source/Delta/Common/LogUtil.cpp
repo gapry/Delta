@@ -1,20 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LogUtil.h"
+
 #include "Engine/Engine.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-#include <fmt/core.h>
+DECLARE_LOG_CATEGORY_EXTERN(DeltaLog, Log, All);
+DEFINE_LOG_CATEGORY(DeltaLog)
 
-void LogUtil::PrintMessage(const FString& Message, const FColor Color, const float Duration) {
-  UE_LOG(LogTemp, Warning, TEXT("%s"), *Message);
+void LogUtil::PrintMessage(const int32    key,
+                           const FString& Message,
+                           const float    Duration,
+                           const FColor   Color) {
+  UE_LOG(DeltaLog, Warning, TEXT("%s"), *Message);
 
   if (GEngine) {
-    std::string FormattedMessage = fmt::format("Hello, {}! The answer is {}", "fmt", 2025);
-    FString     TestFmtMessage(UTF8_TO_TCHAR(FormattedMessage.c_str()));
-
-    GEngine->AddOnScreenDebugMessage(-1, Duration, Color, Message);
-    GEngine->AddOnScreenDebugMessage(-1, Duration, Color, TestFmtMessage);
+    GEngine->AddOnScreenDebugMessage(key, Duration, Color, Message);
   }
 }
 

@@ -471,7 +471,8 @@
 				"request": "launch",
 				"program": "D:\\Workspaces\\Delta\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
 				"preLaunchTask": "Delta Win64 Debug Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "D:\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -486,7 +487,8 @@
 				"request": "launch",
 				"program": "D:\\Workspaces\\Delta\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
 				"preLaunchTask": "Delta Win64 DebugGame Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "D:\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -501,7 +503,8 @@
 				"request": "launch",
 				"program": "D:\\Workspaces\\Delta\\Binaries\\Win64\\UnrealGame.exe",
 				"preLaunchTask": "Delta Win64 Development Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "D:\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -516,7 +519,8 @@
 				"request": "launch",
 				"program": "D:\\Workspaces\\Delta\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
 				"preLaunchTask": "Delta Win64 Test Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "D:\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -531,7 +535,8 @@
 				"request": "launch",
 				"program": "D:\\Workspaces\\Delta\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
 				"preLaunchTask": "Delta Win64 Shipping Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "D:\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",

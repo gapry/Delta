@@ -6,6 +6,9 @@ using System;
 
 public class Delta : ModuleRules
 {
+  private readonly string OS;
+  private readonly string Arch;
+
   public Delta(ReadOnlyTargetRules Target) : base(Target)
   {
     PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
@@ -13,6 +16,9 @@ public class Delta : ModuleRules
     PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });
+
+    OS = DetectOS(Target.Platform);
+    Arch = DetectArch(Target.Platform);
 
     AddVcpkgDependencies();
 
@@ -25,10 +31,47 @@ public class Delta : ModuleRules
     // To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
   }
 
+  private string DetectOS(UnrealTargetPlatform platform)
+  {
+    if (platform == UnrealTargetPlatform.Win64)
+    {
+      return "windows";
+    }
+    else if (platform == UnrealTargetPlatform.Mac)
+    {
+      return "osx";
+    }
+    else if (platform == UnrealTargetPlatform.Linux)
+    {
+      return "linux";
+    }
+    else
+    {
+      return "unknown-os";
+    }
+  }
+
+  private string DetectArch(UnrealTargetPlatform platform)
+  {
+    if (platform == UnrealTargetPlatform.Win64 || platform == UnrealTargetPlatform.Mac || platform == UnrealTargetPlatform.Linux)
+    {
+      return "x64";
+    }
+    else if (platform == UnrealTargetPlatform.LinuxArm64)
+    {
+      return "arm64";
+    }
+    else
+    {
+      return "unknown-arch";
+    }
+  }
+
   private void AddVcpkgDependencies()
   {
     const string VcpkgRootDir = "../../vcpkg";
-    string VcpkgInstalledDir = Path.Combine(VcpkgRootDir, "installed/x64-windows");
+
+    string VcpkgInstalledDir = Path.Combine(VcpkgRootDir, $"installed/{Arch}-{OS}");
 
     string VcpkgLibDir = Path.Combine(ModuleDirectory, VcpkgInstalledDir, "lib");
     string VcpkgBinDir = Path.Combine(ModuleDirectory, VcpkgInstalledDir, "bin");
