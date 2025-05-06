@@ -36,11 +36,17 @@ public:
   }
 };
 
-#define DELTA_DEFAULT_LOG_DURATION 5.f
+#define DELTA_DEFAULT_LOG_DURATION  5.f
 
-#define DELTA_LOG_BY_KEY(key, ...)                                       \
-  do {                                                                   \
-    LogUtil::PrintMessage(key, DELTA_DEFAULT_LOG_DURATION, __VA_ARGS__); \
+#define DELTA_IS_ENABLE_LOG         1
+#define DELTA_IS_ENABLE_CONSOLE_LOG 1
+#define DELTA_IS_ENABLE_SCREEN_LOG  1
+
+#define DELTA_LOG_BY_KEY(key, ...)                                         \
+  do {                                                                     \
+    if (DELTA_IS_ENABLE_LOG) {                                             \
+      LogUtil::PrintMessage(key, DELTA_DEFAULT_LOG_DURATION, __VA_ARGS__); \
+    }                                                                      \
   } while (false)
 
 FORCEINLINE static int DeltaAutoIncreaseLogMessageKey() {

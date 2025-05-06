@@ -16,6 +16,10 @@ AItem::AItem() {
 
 void AItem::BeginPlay() {
   Super::BeginPlay();
+
+  SetLocation(FVector(0.f, 0.f, 50.f));
+  SetRotation(FRotator(0.f, 45.f, 0.f));
+  UpdateForwardDirection();
 }
 
 void AItem::Tick(float DeltaTime) {
@@ -37,7 +41,7 @@ void AItem::RenderDebugShapeOneFrame(const float DeltaTime) {
   AddActorWorldOffset(FVector(MovementRate * DeltaTime, 0.f, 0.f));
 
   // RotationRate * DeltaTime
-  //       (cm/s) * (s/frame) = (cm/frame)
+  //  (degrees/s) * (s/frame) = (degrees/frame)
   AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
 
   RenderDebugShape();
