@@ -45,6 +45,5 @@ void AItem::SetRotation(const FRotator& NewRotation) {
 
 void AItem::SetForwardDirection(const FVector& NewForwardDirection) {
   ForwardDirection = NewForwardDirection.GetSafeNormal();
-  SetActorRotation(ForwardDirection.Rotation());
   DELTA_LOG("{}", DeltaFormat("ForwardDirection: {}", ForwardDirection.ToString()));
 }

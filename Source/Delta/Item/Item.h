@@ -27,11 +27,11 @@ protected:
 
 private:
   UPROPERTY(EditAnywhere, Category = "Item")
-  FVector CurrentLocation;
+  FVector CurrentLocation = FVector::ZeroVector;
 
   UPROPERTY(EditAnywhere, Category = "Item")
-  FVector ForwardDirection;
+  FVector ForwardDirection = FVector::ForwardVector;
 
   UPROPERTY(EditAnywhere, Category = "Item")
-  FRotator CurrentRotation;
+  FRotator CurrentRotation = FRotator::ZeroRotator;
 };
