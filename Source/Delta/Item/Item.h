@@ -35,4 +35,13 @@ private:
 
   UPROPERTY(EditAnywhere, Category = "Item")
   FVector ForwardDirection{FVector::ForwardVector};
+
+  UPROPERTY(EditAnywhere, Category = "Item")
+  float Amplitude{0.5f};
+
+  UPROPERTY(EditAnywhere, Category = "Item")
+  float Frequency{0.5f};
+
+  UPROPERTY(EditAnywhere, Category = "Item")
+  float RunningTime{0.f};
 };

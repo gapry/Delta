@@ -24,6 +24,8 @@ void AItem::BeginPlay() {
 
 void AItem::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
+  RunningTime += DeltaTime;
+
   RenderDebugShapeOneFrame(DeltaTime);
 }
 
@@ -36,9 +38,13 @@ void AItem::RenderDebugShape() const {
 }
 
 void AItem::RenderDebugShapeOneFrame(const float DeltaTime) {
+  // Frequency * RunningTime
+  //      (Hz) * (s)         = (1 / s) * (s) = 1 = scalar = unitless
+  const float DeltaZ = FMath::Sin(2.f * PI * Frequency * RunningTime) * Amplitude;
+
   // MovementRate * DeltaTime
   //       (cm/s) * (s/frame) = (cm/frame)
-  AddActorWorldOffset(FVector(MovementRate * DeltaTime, 0.f, 0.f));
+  AddActorWorldOffset(FVector(MovementRate * DeltaTime, 0.f, DeltaZ));
 
   // RotationRate * DeltaTime
   //  (degrees/s) * (s/frame) = (degrees/frame)
