@@ -14,11 +14,15 @@ void LogUtil::PrintMessage(const int32    key,
                            const FString& Message,
                            const float    Duration,
                            const FColor   Color) {
+#if DELTA_IS_ENABLE_CONSOLE_LOG
   UE_LOG(DeltaLog, Warning, TEXT("%s"), *Message);
+#endif
 
+#if DELTA_IS_ENABLE_SCREEN_LOG
   if (GEngine) {
     GEngine->AddOnScreenDebugMessage(key, Duration, Color, Message);
   }
+#endif
 }
 
 void LogUtil::PrintMessage(const UObject* const Context,
