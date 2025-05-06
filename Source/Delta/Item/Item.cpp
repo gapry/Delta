@@ -13,19 +13,21 @@ AItem::AItem() {
 void AItem::BeginPlay() {
   Super::BeginPlay();
 
-  DELTA_LOG("{}", DELTA_FUNCSIG);
+  SetLocation(FVector(0.f, 0.f, 50.f));
 
-  const FVector CurrentLocation = GetActorLocation();
-  const FVector CurrentForward  = GetActorForwardVector();
+  ForwardDirection = GetActorForwardVector().GetSafeNormal();
+  DELTA_LOG("{}", DeltaFormat("CurrentLocation: {}", CurrentLocation.ToString()));
+  DELTA_LOG("{}", DeltaFormat("ForwardDirection: {}", ForwardDirection.ToString()));
 
-  DELTA_DEBUG_POINT(CurrentLocation);
-  DELTA_DEBUG_LINE(CurrentLocation, CurrentLocation + CurrentForward * 100.f);
-  DELTA_DEBUG_ARROW(CurrentLocation, CurrentLocation + CurrentForward * 150.f);
+  DELTA_DEBUG_ARROW(CurrentLocation, ForwardDirection * 100.f);
   DELTA_DEBUG_SPHERE(CurrentLocation);
 }
 
 void AItem::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
+}
 
-  DELTA_LOG_ONCE("{}", DeltaFormat("DeltaTime = {}", DeltaTime));
+void AItem::SetLocation(const FVector& NewLocation) {
+  CurrentLocation = NewLocation;
+  SetActorLocation(NewLocation);
 }

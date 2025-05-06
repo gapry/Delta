@@ -16,6 +16,15 @@ public:
 
   virtual void Tick(float DeltaTime) override;
 
+  void SetLocation(const FVector& NewLocation);
+
 protected:
   virtual void BeginPlay() override;
+
+private:
+  UPROPERTY(EditAnywhere, Category = "Item")
+  FVector CurrentLocation;
+
+  UPROPERTY(EditAnywhere, Category = "Item")
+  FVector ForwardDirection;
 };
