@@ -8,26 +8,43 @@
 
 AItem::AItem() {
   PrimaryActorTick.bCanEverTick = true;
+  if (RootComponent)
+    RootComponent->SetMobility(EComponentMobility::Movable);
 }
 
 void AItem::BeginPlay() {
   Super::BeginPlay();
 
   SetLocation(FVector(0.f, 0.f, 50.f));
+  SetRotation(FRotator(0.f, 45.f, 0.f));
+  SetForwardDirection(GetActorForwardVector().GetSafeNormal());
 
-  ForwardDirection = GetActorForwardVector().GetSafeNormal();
-  DELTA_LOG("{}", DeltaFormat("CurrentLocation: {}", CurrentLocation.ToString()));
-  DELTA_LOG("{}", DeltaFormat("ForwardDirection: {}", ForwardDirection.ToString()));
-
-  DELTA_DEBUG_ARROW(CurrentLocation, ForwardDirection * 100.f);
-  DELTA_DEBUG_SPHERE(CurrentLocation);
+  RenderDebugShape();
 }
 
 void AItem::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 }
 
+void AItem::RenderDebugShape() const {
+  DELTA_DEBUG_ARROW(CurrentLocation, ForwardDirection * 100.f);
+  DELTA_DEBUG_SPHERE(CurrentLocation);
+}
+
 void AItem::SetLocation(const FVector& NewLocation) {
   CurrentLocation = NewLocation;
-  SetActorLocation(NewLocation);
+  SetActorLocation(CurrentLocation);
+  DELTA_LOG("{}", DeltaFormat("CurrentLocation: {}", CurrentLocation.ToString()));
+}
+
+void AItem::SetRotation(const FRotator& NewRotation) {
+  CurrentRotation = NewRotation;
+  SetActorRotation(CurrentRotation);
+  DELTA_LOG("{}", DeltaFormat("CurrentRotation: {}", CurrentRotation.ToString()));
+}
+
+void AItem::SetForwardDirection(const FVector& NewForwardDirection) {
+  ForwardDirection = NewForwardDirection.GetSafeNormal();
+  SetActorRotation(ForwardDirection.Rotation());
+  DELTA_LOG("{}", DeltaFormat("ForwardDirection: {}", ForwardDirection.ToString()));
 }
