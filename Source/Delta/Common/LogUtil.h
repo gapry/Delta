@@ -28,14 +28,10 @@ public:
                            const float          Duration = 5.f);
 
   template<class... ARGS>
-  FORCEINLINE static void PrintMessage(const int32 key,
-                                       const float Duration,
-                                       const char* format_str,
-                                       const ARGS&... args) {
+  FORCEINLINE static void
+  PrintMessage(const int32 key, const float Duration, const char* format_str, const ARGS&... args) {
     FString Message;
-    fmt::format_to(DeltaFormatFStringBackInserter(Message),
-                   fmt::runtime(format_str),
-                   args...);
+    fmt::format_to(DeltaFormatFStringBackInserter(Message), fmt::runtime(format_str), args...);
     PrintMessage(key, Message, Duration);
   }
 };
@@ -47,6 +43,9 @@ public:
     LogUtil::PrintMessage(key, DELTA_DEFAULT_LOG_DURATION, __VA_ARGS__); \
   } while (false)
 
-#define DELTA_LOG(...)      DELTA_LOG_BY_KEY(INDEX_NONE, __VA_ARGS__)
+FORCEINLINE static int DeltaAutoIncreaseLogMessageKey() {
+  static int LogMessageIndex = 0;
+  return LogMessageIndex++;
+}
 
-#define DELTA_LOG_ONCE(...) DELTA_LOG_BY_KEY(1, __VA_ARGS__)
+#define DELTA_LOG(...) DELTA_LOG_BY_KEY(DeltaAutoIncreaseLogMessageKey(), __VA_ARGS__)

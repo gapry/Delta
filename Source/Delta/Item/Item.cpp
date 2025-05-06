@@ -15,8 +15,11 @@ void AItem::BeginPlay() {
 
   SetLocation(FVector(0.f, 0.f, 50.f));
 
-  ForwardDirection = GetActorForwardVector();
-  DELTA_DEBUG_ARROW(CurrentLocation, ForwardDirection.GetSafeNormal() * 100.f);
+  ForwardDirection = GetActorForwardVector().GetSafeNormal();
+  DELTA_LOG("{}", DeltaFormat("CurrentLocation: {}", CurrentLocation.ToString()));
+  DELTA_LOG("{}", DeltaFormat("ForwardDirection: {}", ForwardDirection.ToString()));
+
+  DELTA_DEBUG_ARROW(CurrentLocation, ForwardDirection * 100.f);
   DELTA_DEBUG_SPHERE(CurrentLocation);
 }
 

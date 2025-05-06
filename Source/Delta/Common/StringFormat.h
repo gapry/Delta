@@ -54,28 +54,20 @@ public:
 };
 
 template<>
-struct fmt::detail::is_output_iterator<DeltaFormatFStringBackInserter, char>
-  : std::true_type {};
+struct fmt::detail::is_output_iterator<DeltaFormatFStringBackInserter, char> : std::true_type {};
 
 template<class... ARGS>
-FORCEINLINE void DeltaAppendFormat(FString&                    outStr,
-                                   fmt::format_string<ARGS...> format_str,
-                                   ARGS&&... args) {
+FORCEINLINE void
+DeltaAppendFormat(FString& outStr, fmt::format_string<ARGS...> format_str, ARGS&&... args) {
   try {
-    fmt::format_to(DeltaFormatFStringBackInserter(outStr),
-                   format_str,
-                   std::forward<ARGS>(args)...);
+    fmt::format_to(DeltaFormatFStringBackInserter(outStr), format_str, std::forward<ARGS>(args)...);
   } catch (const std::exception& e) {
-    UE_LOG(LogTemp,
-           Error,
-           TEXT("Exception in DeltaAppendFormat: %s"),
-           *FString(e.what()));
+    UE_LOG(LogTemp, Error, TEXT("Exception in DeltaAppendFormat: %s"), *FString(e.what()));
   }
 }
 
 template<class... ARGS>
-FORCEINLINE FString DeltaFormat(fmt::format_string<ARGS...> format_str,
-                                ARGS&&... args) {
+FORCEINLINE FString DeltaFormat(fmt::format_string<ARGS...> format_str, ARGS&&... args) {
   FString tmp;
   DeltaAppendFormat(tmp, format_str, std::forward<ARGS>(args)...);
   return tmp;
@@ -96,8 +88,7 @@ FORCEINLINE FName DeltaFormatName(const char* format_str, const ARGS&... args) {
 }
 
 struct DeltaFormatterBase {
-  constexpr auto parse(fmt::format_parse_context& ctx)
-    -> decltype(ctx.begin()) {
+  constexpr auto parse(fmt::format_parse_context& ctx) -> decltype(ctx.begin()) {
     return ctx.begin();
   }
 };
@@ -180,8 +171,6 @@ struct fmt::formatter<FRotator> : public DeltaFormatterBase {
 template<>
 struct fmt::formatter<AActor> : public DeltaFormatterBase {
   auto format(const AActor& v, fmt::format_context& ctx) {
-    return fmt::format_to(ctx.out(),
-                          "Actor:{}",
-                          &v == nullptr ? v.GetFName() : "");
+    return fmt::format_to(ctx.out(), "Actor:{}", &v == nullptr ? v.GetFName() : "");
   }
 };
