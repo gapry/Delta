@@ -18,20 +18,21 @@ public:
 
   void SetLocation(const FVector& NewLocation);
   void SetRotation(const FRotator& NewRotation);
-  void SetForwardDirection(const FVector& NewForwardDirection);
+  void UpdateForwardDirection();
 
   void RenderDebugShape() const;
+  void RenderDebugShapeOneFrame(const float DeltaTime);
 
 protected:
   virtual void BeginPlay() override;
 
 private:
   UPROPERTY(EditAnywhere, Category = "Item")
-  FVector CurrentLocation = FVector::ZeroVector;
+  float MovementRate{50.f};
 
   UPROPERTY(EditAnywhere, Category = "Item")
-  FVector ForwardDirection = FVector::ForwardVector;
+  float RotationRate{45.f};
 
   UPROPERTY(EditAnywhere, Category = "Item")
-  FRotator CurrentRotation = FRotator::ZeroRotator;
+  FVector ForwardDirection{FVector::ForwardVector};
 };
