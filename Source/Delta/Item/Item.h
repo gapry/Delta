@@ -14,6 +14,10 @@ class DELTA_API AItem : public AActor {
 public:
   AItem();
 
+  void InitializeStaticMeshComponent();
+  void InitializeCollision();
+  void InitializeRootComponent();
+
   virtual void Tick(float DeltaTime) override;
 
   void SetLocation(const FVector& NewLocation);
@@ -26,22 +30,48 @@ public:
 protected:
   virtual void BeginPlay() override;
 
+  UFUNCTION(BlueprintCallable, Category = "Item")
+  float GetSineOscillationOffset() const;
+
+  UFUNCTION(BlueprintCallable, Category = "Item")
+  float GetCosineOscillationOffset() const;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
+  TObjectPtr<UStaticMeshComponent> StaticMeshComponent{nullptr};
+
 private:
-  UPROPERTY(EditAnywhere, Category = "Item")
+  const TCHAR* StaticMeshPath{nullptr};
+
+  UPROPERTY(BlueprintReadWrite,
+            EditAnywhere,
+            Category = "Item",
+            meta     = (AllowPrivateAccess = "true"))
   float MovementRate{50.f};
 
-  UPROPERTY(EditAnywhere, Category = "Item")
+  UPROPERTY(BlueprintReadWrite,
+            EditAnywhere,
+            Category = "Item",
+            meta     = (AllowPrivateAccess = "true"))
   float RotationRate{45.f};
 
-  UPROPERTY(EditAnywhere, Category = "Item")
+  UPROPERTY(VisibleAnywhere, Category = "Item")
   FVector ForwardDirection{FVector::ForwardVector};
 
-  UPROPERTY(EditAnywhere, Category = "Item")
+  UPROPERTY(BlueprintReadWrite,
+            EditAnywhere,
+            Category = "Item",
+            meta     = (AllowPrivateAccess = "true"))
   float Amplitude{0.5f};
 
-  UPROPERTY(EditAnywhere, Category = "Item")
+  UPROPERTY(BlueprintReadWrite,
+            EditAnywhere,
+            Category = "Item",
+            meta     = (AllowPrivateAccess = "true"))
   float Frequency{0.5f};
 
-  UPROPERTY(EditAnywhere, Category = "Item")
+  UPROPERTY(VisibleInstanceOnly,
+            BlueprintReadOnly,
+            Category = "Item",
+            meta     = (AllowPrivateAccess = "true"))
   float RunningTime{0.f};
 };
