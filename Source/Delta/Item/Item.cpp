@@ -43,21 +43,23 @@ float AItem::GetCosineOscillationOffset() const {
 }
 
 void AItem::InitializeCollision() {
-  StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-  StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-  StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-  StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
-                                                     ECollisionResponse::ECR_Ignore);
-  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                                     ECollisionResponse::ECR_Overlap);
+  if (StaticMeshComponent) {
+    StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+    StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
+                                                       ECollisionResponse::ECR_Ignore);
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+                                                       ECollisionResponse::ECR_Overlap);
+  }
 }
 
 void AItem::InitializeRootComponent() {
   if (RootComponent) {
     RootComponent->SetMobility(EComponentMobility::Movable);
+    RootComponent = StaticMeshComponent;
   }
-  RootComponent = StaticMeshComponent;
 }
 
 void AItem::Tick(float DeltaTime) {
