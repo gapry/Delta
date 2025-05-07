@@ -9,8 +9,20 @@
 AItem::AItem() {
   PrimaryActorTick.bCanEverTick = true;
 
-  if (RootComponent) {
-    RootComponent->SetMobility(EComponentMobility::Movable);
+  InitializeStaticMeshComponent();
+  InitializeCollision();
+  InitializeRootComponent();
+}
+
+void AItem::InitializeStaticMeshComponent() {
+  StaticMeshPath = TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_QuadPyramid'");
+
+  static const TCHAR* const ComponentName = TEXT("StaticMeshComponent");
+  StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(ComponentName);
+
+  static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMesh(StaticMeshPath);
+  if (StaticMesh.Succeeded()) {
+    StaticMeshComponent->SetStaticMesh(StaticMesh.Object);
   }
 }
 
@@ -20,6 +32,34 @@ void AItem::BeginPlay() {
   SetLocation(FVector(0.f, 0.f, 50.f));
   SetRotation(FRotator(0.f, 45.f, 0.f));
   UpdateForwardDirection();
+}
+
+float AItem::GetSineOscillationOffset() const {
+  return FMath::Sin(2.f * PI * Frequency * RunningTime) * Amplitude;
+}
+
+float AItem::GetCosineOscillationOffset() const {
+  return FMath::Cos(2.f * PI * Frequency * RunningTime) * Amplitude;
+}
+
+void AItem::InitializeCollision() {
+  if (StaticMeshComponent) {
+    StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+    StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
+                                                       ECollisionResponse::ECR_Ignore);
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+                                                       ECollisionResponse::ECR_Overlap);
+  }
+}
+
+void AItem::InitializeRootComponent() {
+  if (RootComponent) {
+    RootComponent->SetMobility(EComponentMobility::Movable);
+    RootComponent = StaticMeshComponent;
+  }
 }
 
 void AItem::Tick(float DeltaTime) {
@@ -40,7 +80,7 @@ void AItem::RenderDebugShape() const {
 void AItem::RenderDebugShapeOneFrame(const float DeltaTime) {
   // Frequency * RunningTime
   //      (Hz) * (s)         = (1 / s) * (s) = 1 = scalar = unitless
-  const float DeltaZ = FMath::Sin(2.f * PI * Frequency * RunningTime) * Amplitude;
+  const float DeltaZ = GetSineOscillationOffset();
 
   // MovementRate * DeltaTime
   //       (cm/s) * (s/frame) = (cm/frame)
