@@ -15,12 +15,11 @@ AItem::AItem() {
   RootComponent = StaticMeshComponent;
 }
 
-void AItem::InitializeStaticMeshComponent(const FString& StaticMeshPath) {
+void AItem::InitializeStaticMeshComponent(const TCHAR* const StaticMeshPath) {
   if (StaticMeshComponent) {
     StaticMeshComponent->SetMobility(EComponentMobility::Movable);
-
-    if (!StaticMeshPath.IsEmpty()) {
-      static ConstructorHelpers::FObjectFinder<UStaticMesh> Finder(*StaticMeshPath);
+    if (StaticMeshPath != nullptr) {
+      static ConstructorHelpers::FObjectFinder<UStaticMesh> Finder(StaticMeshPath);
       if (Finder.Succeeded()) {
         StaticMeshComponent->SetStaticMesh(Finder.Object);
       }

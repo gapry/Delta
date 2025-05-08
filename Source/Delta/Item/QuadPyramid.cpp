@@ -5,7 +5,8 @@
 #include "QuadPyramid.h"
 
 AQuadPyramid::AQuadPyramid() {
-  static const FString& Path = TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_QuadPyramid'");
+  static const TCHAR* const Path =
+    TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_QuadPyramid'");
   InitializeStaticMeshComponent(Path);
 }
 

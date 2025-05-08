@@ -14,7 +14,7 @@ class DELTA_API AItem : public AActor {
 public:
   AItem();
 
-  void InitializeStaticMeshComponent(const FString& StaticMeshPath);
+  void InitializeStaticMeshComponent(const TCHAR* const StaticMeshPath);
 
   virtual void InitializeCollision();
   virtual void InitializeRootComponent();
