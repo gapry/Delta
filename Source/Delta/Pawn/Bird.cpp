@@ -55,6 +55,9 @@ void ABird::PostInitializeComponents() {
 void ABird::PostInitializeSkeletalMeshComponent() {
   if (SkeletalMeshComponent) {
     SkeletalMeshComponent->SetMobility(EComponentMobility::Movable);
+
+    SkeletalMeshComponent->SetRelativeLocation(FVector(0.f, 0.f, -10.f));
+    SkeletalMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
   }
 }
 
