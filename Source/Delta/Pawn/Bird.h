@@ -25,6 +25,8 @@ public:
   void InitializeSkeletalMeshComponent(const TCHAR* const SkeletalMeshPath);
   void PostInitializeSkeletalMeshComponent();
 
+  void InitializeCollision();
+
 protected:
   virtual void BeginPlay() override;
   virtual void PostInitializeComponents() override;
