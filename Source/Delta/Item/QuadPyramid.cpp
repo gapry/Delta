@@ -7,35 +7,17 @@
 AQuadPyramid::AQuadPyramid() {
   static const TCHAR* const Path =
     TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_QuadPyramid'");
-  InitializeStaticMeshComponent(Path);
+  Super::InitializeStaticMeshComponent(Path);
 }
 
 void AQuadPyramid::OnConstruction(const FTransform& Transform) {
   Super::OnConstruction(Transform);
 
-  InitializeCollision();
-  InitializeRootComponent();
-}
-
-void AQuadPyramid::InitializeCollision() {
   Super::InitializeCollision();
-}
-
-void AQuadPyramid::InitializeRootComponent() {
   Super::InitializeRootComponent();
-};
-
-void AQuadPyramid::BeginPlay() {
-  Super::BeginPlay();
-  BeginPlayAction();
 }
 
 void AQuadPyramid::BeginPlayAction() {
-}
-
-void AQuadPyramid::Tick(float DeltaTime) {
-  Super::Tick(DeltaTime);
-  TickAction(DeltaTime);
 }
 
 void AQuadPyramid::TickAction(const float DeltaTime) {

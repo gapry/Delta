@@ -12,7 +12,9 @@ AItem::AItem() {
   static const TCHAR* const ComponentName = TEXT("StaticMeshComponent");
   StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(ComponentName);
 
-  RootComponent = StaticMeshComponent;
+  if (StaticMeshComponent) {
+    RootComponent = StaticMeshComponent;
+  }
 }
 
 void AItem::InitializeStaticMeshComponent(const TCHAR* const StaticMeshPath) {

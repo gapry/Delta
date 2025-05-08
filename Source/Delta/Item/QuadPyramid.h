@@ -17,13 +17,8 @@ public:
 
   virtual void OnConstruction(const FTransform& Transform) override;
 
-  virtual void InitializeCollision() override;
-  virtual void InitializeRootComponent() override;
-
-  virtual void Tick(float DeltaTime) override;
   virtual void TickAction(const float DeltaTime) override;
 
 protected:
-  virtual void BeginPlay() override;
   virtual void BeginPlayAction() override;
 };
