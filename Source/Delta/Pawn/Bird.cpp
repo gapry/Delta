@@ -47,11 +47,25 @@ void ABird::InitializeSkeletalMeshComponent(const TCHAR* const SkeletalMeshPath)
 
 void ABird::PostInitializeComponents() {
   Super::PostInitializeComponents();
+
   PostInitializeSkeletalMeshComponent();
+  InitializeCollision();
 }
 
 void ABird::PostInitializeSkeletalMeshComponent() {
   if (SkeletalMeshComponent) {
     SkeletalMeshComponent->SetMobility(EComponentMobility::Movable);
+  }
+}
+
+void ABird::InitializeCollision() {
+  static constexpr const TCHAR* const CollisionProfileName = TEXT("BlockAll");
+
+  if (SkeletalMeshComponent) {
+    SkeletalMeshComponent->SetCollisionProfileName(CollisionProfileName);
+    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECR_Block);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
   }
 }
