@@ -59,7 +59,7 @@ void ABird::PostInitializeSkeletalMeshComponent() {
 }
 
 void ABird::InitializeCollision() {
-  static const TCHAR* const CollisionProfileName = TEXT("BlockAll");
+  static constexpr const TCHAR* const CollisionProfileName = TEXT("BlockAll");
 
   if (SkeletalMeshComponent) {
     SkeletalMeshComponent->SetCollisionProfileName(CollisionProfileName);
