@@ -23,9 +23,11 @@ public:
   virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
   void InitializeSkeletalMeshComponent(const TCHAR* const SkeletalMeshPath);
+  void PostInitializeSkeletalMeshComponent();
 
 protected:
   virtual void BeginPlay() override;
+  virtual void PostInitializeComponents() override;
 
 private:
   UPROPERTY(VisibleAnywhere,

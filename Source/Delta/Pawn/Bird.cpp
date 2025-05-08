@@ -4,6 +4,7 @@
 
 #include "Bird.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "../Common/LogUtil.h"
 
 ABird::ABird() {
   PrimaryActorTick.bCanEverTick = true;
@@ -33,13 +34,24 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 }
 
 void ABird::InitializeSkeletalMeshComponent(const TCHAR* const SkeletalMeshPath) {
+  if (SkeletalMeshComponent != nullptr && SkeletalMeshPath != nullptr) {
+    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(SkeletalMeshPath);
+    if (Finder.Succeeded()) {
+      SkeletalMeshComponent->SetSkeletalMesh(Finder.Object);
+    } else {
+      DELTA_LOG("{}",
+                DeltaFormat("Failed to load skeletal mesh: {}", TCHAR_TO_UTF8(SkeletalMeshPath)));
+    }
+  }
+}
+
+void ABird::PostInitializeComponents() {
+  Super::PostInitializeComponents();
+  PostInitializeSkeletalMeshComponent();
+}
+
+void ABird::PostInitializeSkeletalMeshComponent() {
   if (SkeletalMeshComponent) {
     SkeletalMeshComponent->SetMobility(EComponentMobility::Movable);
-    if (SkeletalMeshPath != nullptr) {
-      static ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(SkeletalMeshPath);
-      if (Finder.Succeeded()) {
-        SkeletalMeshComponent->SetSkeletalMesh(Finder.Object);
-      }
-    }
   }
 }
