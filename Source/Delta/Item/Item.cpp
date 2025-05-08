@@ -9,37 +9,23 @@
 AItem::AItem() {
   PrimaryActorTick.bCanEverTick = true;
 
-  InitializeStaticMeshComponent();
-  InitializeCollision();
-  InitializeRootComponent();
-}
-
-void AItem::InitializeStaticMeshComponent() {
-  StaticMeshPath = TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_QuadPyramid'");
-
   static const TCHAR* const ComponentName = TEXT("StaticMeshComponent");
   StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(ComponentName);
 
-  static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMesh(StaticMeshPath);
-  if (StaticMesh.Succeeded()) {
-    StaticMeshComponent->SetStaticMesh(StaticMesh.Object);
+  RootComponent = StaticMeshComponent;
+}
+
+void AItem::InitializeStaticMeshComponent(const FString& StaticMeshPath) {
+  if (StaticMeshComponent) {
+    StaticMeshComponent->SetMobility(EComponentMobility::Movable);
+
+    if (!StaticMeshPath.IsEmpty()) {
+      static ConstructorHelpers::FObjectFinder<UStaticMesh> Finder(*StaticMeshPath);
+      if (Finder.Succeeded()) {
+        StaticMeshComponent->SetStaticMesh(Finder.Object);
+      }
+    }
   }
-}
-
-void AItem::BeginPlay() {
-  Super::BeginPlay();
-
-  SetLocation(FVector(0.f, 0.f, 50.f));
-  SetRotation(FRotator(0.f, 45.f, 0.f));
-  UpdateForwardDirection();
-}
-
-float AItem::GetSineOscillationOffset() const {
-  return FMath::Sin(2.f * PI * Frequency * RunningTime) * Amplitude;
-}
-
-float AItem::GetCosineOscillationOffset() const {
-  return FMath::Cos(2.f * PI * Frequency * RunningTime) * Amplitude;
 }
 
 void AItem::InitializeCollision() {
@@ -58,14 +44,28 @@ void AItem::InitializeCollision() {
 void AItem::InitializeRootComponent() {
   if (RootComponent) {
     RootComponent->SetMobility(EComponentMobility::Movable);
-    RootComponent = StaticMeshComponent;
   }
+}
+
+void AItem::BeginPlay() {
+  Super::BeginPlay();
+  BeginPlayAction();
+}
+
+void AItem::BeginPlayAction() {
+  SetLocation(FVector(0.f, 0.f, 50.f));
+  SetRotation(FRotator(0.f, 45.f, 0.f));
+  UpdateForwardDirection();
 }
 
 void AItem::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
   RunningTime += DeltaTime;
 
+  TickAction(DeltaTime);
+}
+
+void AItem::TickAction(const float DeltaTime) {
   RenderDebugShapeOneFrame(DeltaTime);
 }
 
@@ -106,4 +106,12 @@ void AItem::SetRotation(const FRotator& NewRotation) {
 void AItem::UpdateForwardDirection() {
   ForwardDirection = GetActorForwardVector().GetSafeNormal();
   DELTA_LOG("{}", DeltaFormat("ForwardDirection: {}", ForwardDirection.ToString()));
+}
+
+float AItem::GetSineOscillationOffset() const {
+  return FMath::Sin(2.f * PI * Frequency * RunningTime) * Amplitude;
+}
+
+float AItem::GetCosineOscillationOffset() const {
+  return FMath::Cos(2.f * PI * Frequency * RunningTime) * Amplitude;
 }

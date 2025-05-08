@@ -14,11 +14,13 @@ class DELTA_API AItem : public AActor {
 public:
   AItem();
 
-  void InitializeStaticMeshComponent();
-  void InitializeCollision();
-  void InitializeRootComponent();
+  void InitializeStaticMeshComponent(const FString& StaticMeshPath);
+
+  virtual void InitializeCollision();
+  virtual void InitializeRootComponent();
 
   virtual void Tick(float DeltaTime) override;
+  virtual void TickAction(const float DeltaTime);
 
   void SetLocation(const FVector& NewLocation);
   void SetRotation(const FRotator& NewRotation);
@@ -29,6 +31,7 @@ public:
 
 protected:
   virtual void BeginPlay() override;
+  virtual void BeginPlayAction();
 
   UFUNCTION(BlueprintCallable, Category = "Item")
   float GetSineOscillationOffset() const;
@@ -40,8 +43,6 @@ protected:
   TObjectPtr<UStaticMeshComponent> StaticMeshComponent{nullptr};
 
 private:
-  const TCHAR* StaticMeshPath{nullptr};
-
   UPROPERTY(BlueprintReadWrite,
             EditAnywhere,
             Category = "Item",
