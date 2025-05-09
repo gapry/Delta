@@ -4,6 +4,7 @@
 
 #include "Bird.h"
 #include "../Common/Finder.h"
+#include "../Common/LogUtil.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
