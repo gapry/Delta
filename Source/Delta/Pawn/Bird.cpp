@@ -4,6 +4,7 @@
 
 #include "Bird.h"
 #include "../Common/Finder.h"
+#include "../Common/LogUtil.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -17,7 +18,11 @@ ABird::ABird() {
 
     static const TCHAR* const MeshPath =
       TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
-    Finder::InitializeSkeletalMeshComponent(SkeletalMeshComponent, MeshPath);
+    Finder::SetSkeletalMesh(SkeletalMeshComponent, MeshPath);
+
+    static constexpr const TCHAR* const AnimSequencePath =
+      TEXT("AnimSequence'/Game/AnimalVarietyPack/Crow/Animations/ANIM_Crow_Fly.ANIM_Crow_Fly'");
+    Finder::SetAnimation(SkeletalMeshComponent, AnimSequencePath);
   }
 
   {
@@ -25,12 +30,18 @@ ABird::ABird() {
     CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(CapsuleName);
   }
 
-  if (CapsuleComponent) {
-    RootComponent = CapsuleComponent;
+  {
+    if (CapsuleComponent) {
+      RootComponent = CapsuleComponent;
 
-    if (SkeletalMeshComponent) {
-      SkeletalMeshComponent->AttachToComponent(CapsuleComponent,
-                                               FAttachmentTransformRules::KeepRelativeTransform);
+      if (SkeletalMeshComponent) {
+        SkeletalMeshComponent->AttachToComponent(CapsuleComponent,
+                                                 FAttachmentTransformRules::KeepRelativeTransform);
+      } else {
+        DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null"));
+      }
+    } else {
+      DELTA_LOG("{}", DeltaFormat("CapsuleComponent is null"));
     }
   }
 }
@@ -56,29 +67,42 @@ void ABird::PostInitializeComponents() {
 }
 
 void ABird::PostInitializeSkeletalMeshComponent() {
-  if (SkeletalMeshComponent) {
-    SkeletalMeshComponent->SetMobility(EComponentMobility::Movable);
-
-    SkeletalMeshComponent->SetRelativeLocation(FVector(0.f, 0.f, -10.f));
-    SkeletalMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+  if (!SkeletalMeshComponent) {
+    DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null"));
+    return;
   }
+
+  SkeletalMeshComponent->SetMobility(EComponentMobility::Movable);
+
+  SkeletalMeshComponent->SetRelativeLocation(FVector(0.f, 0.f, -10.f));
+  SkeletalMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+  SkeletalMeshComponent->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+  SkeletalMeshComponent->AnimationData.bSavedPlaying = true;
+  SkeletalMeshComponent->AnimationData.bSavedLooping = true;
 }
 
 void ABird::InitializeCapsuleComponent() {
-  if (CapsuleComponent) {
-    CapsuleComponent->SetCapsuleHalfHeight(20.f);
-    CapsuleComponent->SetCapsuleRadius(15.f);
+  if (!CapsuleComponent) {
+    DELTA_LOG("{}", DeltaFormat("CapsuleComponent is null"));
+    return;
   }
+
+  CapsuleComponent->SetCapsuleHalfHeight(20.f);
+  CapsuleComponent->SetCapsuleRadius(15.f);
 }
 
 void ABird::InitializeCollision() {
+  if (!CapsuleComponent) {
+    DELTA_LOG("{}", DeltaFormat("CapsuleComponent is null"));
+    return;
+  }
+
   static constexpr const TCHAR* const CollisionProfileName = TEXT("BlockAll");
 
-  if (CapsuleComponent) {
-    CapsuleComponent->SetCollisionProfileName(CollisionProfileName);
-    CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    CapsuleComponent->SetCollisionResponseToAllChannels(ECR_Block);
-    CapsuleComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-  }
+  CapsuleComponent->SetCollisionProfileName(CollisionProfileName);
+  CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+  CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+  CapsuleComponent->SetCollisionResponseToAllChannels(ECR_Block);
+  CapsuleComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 }

@@ -9,9 +9,12 @@ class USkeletalMeshComponent;
 
 class DELTA_API Finder {
 public:
-  static void InitializeStaticMeshComponent(UStaticMeshComponent* StaticMeshComponent,
-                                            const TCHAR*          MeshPath);
+  static void SetStaticMesh(UStaticMeshComponent* const StaticMeshComponent,
+                            const TCHAR* const          MeshPath);
 
-  static void InitializeSkeletalMeshComponent(USkeletalMeshComponent* SkeletalMeshComponent,
-                                              const TCHAR*            MeshPath);
+  static void SetSkeletalMesh(USkeletalMeshComponent* const SkeletalMeshComponent,
+                              const TCHAR* const            MeshPath);
+
+  static void SetAnimation(USkeletalMeshComponent* const MeshComponent,
+                           const TCHAR* const            AnimSequencePath);
 };
