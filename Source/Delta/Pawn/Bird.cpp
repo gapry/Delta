@@ -10,19 +10,23 @@
 ABird::ABird() {
   PrimaryActorTick.bCanEverTick = true;
 
-  static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
-  SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
+  {
+    static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
+    SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
 
-  static constexpr const TCHAR* const CapsuleName = TEXT("CapsuleComponent");
-  CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(CapsuleName);
+    static const TCHAR* const SkeletalMeshPath =
+      TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
+    InitializeSkeletalMeshComponent(SkeletalMeshPath);
+  }
+
+  {
+    static constexpr const TCHAR* const CapsuleName = TEXT("CapsuleComponent");
+    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(CapsuleName);
+  }
 
   if (CapsuleComponent) {
     RootComponent = CapsuleComponent;
   }
-
-  static const TCHAR* const SkeletalMeshPath =
-    TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
-  InitializeSkeletalMeshComponent(SkeletalMeshPath);
 }
 
 void ABird::BeginPlay() {
