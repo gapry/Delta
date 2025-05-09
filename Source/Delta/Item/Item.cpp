@@ -17,18 +17,6 @@ AItem::AItem() {
   }
 }
 
-void AItem::InitializeStaticMeshComponent(const TCHAR* const StaticMeshPath) {
-  if (StaticMeshComponent) {
-    StaticMeshComponent->SetMobility(EComponentMobility::Movable);
-    if (StaticMeshPath != nullptr) {
-      static ConstructorHelpers::FObjectFinder<UStaticMesh> Finder(StaticMeshPath);
-      if (Finder.Succeeded()) {
-        StaticMeshComponent->SetStaticMesh(Finder.Object);
-      }
-    }
-  }
-}
-
 void AItem::InitializeCollision() {
   if (StaticMeshComponent) {
     StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
@@ -57,6 +45,17 @@ void AItem::BeginPlayAction() {
   SetLocation(FVector(0.f, 0.f, 50.f));
   SetRotation(FRotator(0.f, 45.f, 0.f));
   UpdateForwardDirection();
+}
+
+void AItem::PostInitializeComponents() {
+  Super::PostInitializeComponents();
+  PostInitializeStaticMeshComponent();
+}
+
+void AItem::PostInitializeStaticMeshComponent() {
+  if (StaticMeshComponent) {
+    StaticMeshComponent->SetMobility(EComponentMobility::Movable);
+  }
 }
 
 void AItem::Tick(float DeltaTime) {
