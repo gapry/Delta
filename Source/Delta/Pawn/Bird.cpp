@@ -4,21 +4,34 @@
 
 #include "Bird.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "../Common/LogUtil.h"
 
 ABird::ABird() {
   PrimaryActorTick.bCanEverTick = true;
 
-  static const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
-  SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
+  {
+    static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
+    SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
 
-  if (SkeletalMeshComponent) {
-    RootComponent = SkeletalMeshComponent;
+    static const TCHAR* const SkeletalMeshPath =
+      TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
+    InitializeSkeletalMeshComponent(SkeletalMeshPath);
   }
 
-  static const TCHAR* const SkeletalMeshPath =
-    TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
-  InitializeSkeletalMeshComponent(SkeletalMeshPath);
+  {
+    static constexpr const TCHAR* const CapsuleName = TEXT("CapsuleComponent");
+    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(CapsuleName);
+  }
+
+  if (CapsuleComponent) {
+    RootComponent = CapsuleComponent;
+
+    if (SkeletalMeshComponent) {
+      SkeletalMeshComponent->AttachToComponent(CapsuleComponent,
+                                               FAttachmentTransformRules::KeepRelativeTransform);
+    }
+  }
 }
 
 void ABird::BeginPlay() {
@@ -49,6 +62,7 @@ void ABird::PostInitializeComponents() {
   Super::PostInitializeComponents();
 
   PostInitializeSkeletalMeshComponent();
+  InitializeCapsuleComponent();
   InitializeCollision();
 }
 
@@ -61,14 +75,21 @@ void ABird::PostInitializeSkeletalMeshComponent() {
   }
 }
 
+void ABird::InitializeCapsuleComponent() {
+  if (CapsuleComponent) {
+    CapsuleComponent->SetCapsuleHalfHeight(20.f);
+    CapsuleComponent->SetCapsuleRadius(15.f);
+  }
+}
+
 void ABird::InitializeCollision() {
   static constexpr const TCHAR* const CollisionProfileName = TEXT("BlockAll");
 
-  if (SkeletalMeshComponent) {
-    SkeletalMeshComponent->SetCollisionProfileName(CollisionProfileName);
-    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECR_Block);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+  if (CapsuleComponent) {
+    CapsuleComponent->SetCollisionProfileName(CollisionProfileName);
+    CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    CapsuleComponent->SetCollisionResponseToAllChannels(ECR_Block);
+    CapsuleComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
   }
 }

@@ -10,6 +10,7 @@
 
 class UInputComponent;
 class USkeletalMeshComponent;
+class UCapsuleComponent;
 
 UCLASS()
 class DELTA_API ABird : public APawn {
@@ -25,6 +26,7 @@ public:
   void InitializeSkeletalMeshComponent(const TCHAR* const SkeletalMeshPath);
   void PostInitializeSkeletalMeshComponent();
 
+  void InitializeCapsuleComponent();
   void InitializeCollision();
 
 protected:
@@ -37,4 +39,10 @@ private:
             Category = "Bird",
             meta     = (AllowPrivateAccess = "true"))
   TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent{nullptr};
+
+  UPROPERTY(VisibleAnywhere,
+            BlueprintReadOnly,
+            Category = "Bird",
+            meta     = (AllowPrivateAccess = "true"))
+  TObjectPtr<UCapsuleComponent> CapsuleComponent{nullptr};
 };
