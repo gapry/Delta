@@ -13,4 +13,5 @@
     "*.uproject": "json",
   },
   "C_Cpp.errorSquiggles": "disabled",
+  "files.eol": "\n",
 }

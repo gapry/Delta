@@ -4,16 +4,20 @@
 
 #include "Bird.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "../Common/LogUtil.h"
 
 ABird::ABird() {
   PrimaryActorTick.bCanEverTick = true;
 
-  static const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
+  static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
   SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
 
-  if (SkeletalMeshComponent) {
-    RootComponent = SkeletalMeshComponent;
+  static constexpr const TCHAR* const CapsuleName = TEXT("CapsuleComponent");
+  CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(CapsuleName);
+
+  if (CapsuleComponent) {
+    RootComponent = CapsuleComponent;
   }
 
   static const TCHAR* const SkeletalMeshPath =
@@ -49,6 +53,7 @@ void ABird::PostInitializeComponents() {
   Super::PostInitializeComponents();
 
   PostInitializeSkeletalMeshComponent();
+  InitializeCapsuleComponent();
   InitializeCollision();
 }
 
@@ -58,6 +63,14 @@ void ABird::PostInitializeSkeletalMeshComponent() {
 
     SkeletalMeshComponent->SetRelativeLocation(FVector(0.f, 0.f, -10.f));
     SkeletalMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+  }
+}
+
+void ABird::InitializeCapsuleComponent() {
+  if (CapsuleComponent) {
+    CapsuleComponent->SetCapsuleHalfHeight(20.f);
+    CapsuleComponent->SetCapsuleRadius(15.f);
+    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
   }
 }
 
