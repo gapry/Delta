@@ -18,11 +18,11 @@ ABird::ABird() {
 
     static const TCHAR* const MeshPath =
       TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
-    Finder::InitializeSkeletalMeshComponent(SkeletalMeshComponent, MeshPath);
+    Finder::SetSkeletalMesh(SkeletalMeshComponent, MeshPath);
 
     static constexpr const TCHAR* const AnimSequencePath =
       TEXT("AnimSequence'/Game/AnimalVarietyPack/Crow/Animations/ANIM_Crow_Fly.ANIM_Crow_Fly'");
-    Finder::InitializeAnimationAsset(SkeletalMeshComponent, AnimSequencePath);
+    Finder::SetAnimation(SkeletalMeshComponent, AnimSequencePath);
   }
 
   {

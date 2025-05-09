@@ -8,7 +8,7 @@
 AQuadPyramid::AQuadPyramid() {
   static const TCHAR* const Path =
     TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_QuadPyramid'");
-  Finder::InitializeStaticMeshComponent(StaticMeshComponent, Path);
+  Finder::SetStaticMesh(StaticMeshComponent, Path);
 }
 
 void AQuadPyramid::OnConstruction(const FTransform& Transform) {

@@ -9,9 +9,9 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 
-void Finder::InitializeStaticMeshComponent(UStaticMeshComponent* StaticMeshComponent,
-                                           const TCHAR*          MeshPath) {
-  if (!StaticMeshComponent && !MeshPath) {
+void Finder::SetStaticMesh(UStaticMeshComponent* const StaticMeshComponent,
+                           const TCHAR* const          MeshPath) {
+  if (!StaticMeshComponent || !MeshPath) {
     DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null or MeshPath is null"));
     return;
   }
@@ -25,8 +25,8 @@ void Finder::InitializeStaticMeshComponent(UStaticMeshComponent* StaticMeshCompo
   StaticMeshComponent->SetStaticMesh(Finder.Object);
 }
 
-void Finder::InitializeSkeletalMeshComponent(USkeletalMeshComponent* SkeletalMeshComponent,
-                                             const TCHAR*            MeshPath) {
+void Finder::SetSkeletalMesh(USkeletalMeshComponent* const SkeletalMeshComponent,
+                             const TCHAR* const            MeshPath) {
   if (!SkeletalMeshComponent || !MeshPath) {
     DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null or MeshPath is null"));
     return;
@@ -41,8 +41,8 @@ void Finder::InitializeSkeletalMeshComponent(USkeletalMeshComponent* SkeletalMes
   SkeletalMeshComponent->SetSkeletalMesh(Finder.Object);
 }
 
-void Finder::InitializeAnimationAsset(USkeletalMeshComponent* MeshComponent,
-                                      const TCHAR*            AnimSequencePath) {
+void Finder::SetAnimation(USkeletalMeshComponent* const MeshComponent,
+                          const TCHAR* const            AnimSequencePath) {
   if (!MeshComponent || !AnimSequencePath) {
     DELTA_LOG("{}", DeltaFormat("MeshComponent is null or AnimSequencePath is null"));
     return;

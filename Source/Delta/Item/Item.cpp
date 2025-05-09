@@ -18,22 +18,27 @@ AItem::AItem() {
 }
 
 void AItem::InitializeCollision() {
-  if (StaticMeshComponent) {
-    StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-    StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
-                                                       ECollisionResponse::ECR_Ignore);
-    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                                       ECollisionResponse::ECR_Overlap);
+  if (!StaticMeshComponent) {
+    DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null"));
+    return;
   }
+
+  StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+  StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+  StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+  StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
+                                                     ECollisionResponse::ECR_Ignore);
+  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+                                                     ECollisionResponse::ECR_Overlap);
 }
 
 void AItem::InitializeRootComponent() {
-  if (RootComponent) {
-    RootComponent->SetMobility(EComponentMobility::Movable);
+  if (!RootComponent) {
+    DELTA_LOG("{}", DeltaFormat("RootComponent is null"));
+    return;
   }
+  RootComponent->SetMobility(EComponentMobility::Movable);
 }
 
 void AItem::BeginPlay() {
@@ -53,9 +58,11 @@ void AItem::PostInitializeComponents() {
 }
 
 void AItem::PostInitializeStaticMeshComponent() {
-  if (StaticMeshComponent) {
-    StaticMeshComponent->SetMobility(EComponentMobility::Movable);
+  if (!StaticMeshComponent) {
+    DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null"));
+    return;
   }
+  StaticMeshComponent->SetMobility(EComponentMobility::Movable);
 }
 
 void AItem::Tick(float DeltaTime) {
@@ -70,7 +77,7 @@ void AItem::TickAction(const float DeltaTime) {
 }
 
 void AItem::RenderDebugShape() const {
-  const FVector CurrentLocation = GetActorLocation();
+  static const FVector& CurrentLocation = GetActorLocation();
 
   DELTA_DEBUG_SPHERE_ONE_FRAME(CurrentLocation);
   DELTA_DEBUG_ARROW_ONE_FRAME(CurrentLocation,
