@@ -12,7 +12,7 @@
 *.xcf filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 
-# Code
+# https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings
 * text=auto
 *.cpp text eol=crlf
 *.h text eol=crlf
