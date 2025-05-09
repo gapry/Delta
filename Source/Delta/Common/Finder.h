@@ -14,4 +14,7 @@ public:
 
   static void InitializeSkeletalMeshComponent(USkeletalMeshComponent* SkeletalMeshComponent,
                                               const TCHAR*            MeshPath);
+
+  static void InitializeAnimationAsset(USkeletalMeshComponent* MeshComponent,
+                                       const TCHAR*            AnimSequencePath);
 };

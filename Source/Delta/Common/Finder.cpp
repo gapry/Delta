@@ -11,28 +11,50 @@
 
 void Finder::InitializeStaticMeshComponent(UStaticMeshComponent* StaticMeshComponent,
                                            const TCHAR*          MeshPath) {
-  if (StaticMeshComponent != nullptr && MeshPath != nullptr) {
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> Finder(MeshPath);
-    if (Finder.Succeeded()) {
-      StaticMeshComponent->SetStaticMesh(Finder.Object);
-    } else {
-      DELTA_LOG("{}", DeltaFormat("Failed to load static mesh: {}", TCHAR_TO_UTF8(MeshPath)));
-    }
-  } else {
+  if (!StaticMeshComponent && !MeshPath) {
     DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null or MeshPath is null"));
+    return;
   }
+
+  static ConstructorHelpers::FObjectFinder<UStaticMesh> Finder(MeshPath);
+  if (!Finder.Succeeded()) {
+    DELTA_LOG("{}", DeltaFormat("Failed to load static mesh: {}", TCHAR_TO_UTF8(MeshPath)));
+    return;
+  }
+
+  StaticMeshComponent->SetStaticMesh(Finder.Object);
 }
 
 void Finder::InitializeSkeletalMeshComponent(USkeletalMeshComponent* SkeletalMeshComponent,
                                              const TCHAR*            MeshPath) {
-  if (SkeletalMeshComponent != nullptr && MeshPath != nullptr) {
-    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(MeshPath);
-    if (Finder.Succeeded()) {
-      SkeletalMeshComponent->SetSkeletalMesh(Finder.Object);
-    } else {
-      DELTA_LOG("{}", DeltaFormat("Failed to load skeletal mesh: {}", TCHAR_TO_UTF8(MeshPath)));
-    }
-  } else {
+  if (!SkeletalMeshComponent || !MeshPath) {
     DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null or MeshPath is null"));
+    return;
   }
+
+  static ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(MeshPath);
+  if (!Finder.Succeeded()) {
+    DELTA_LOG("{}", DeltaFormat("Failed to load skeletal mesh: {}", TCHAR_TO_UTF8(MeshPath)));
+    return;
+  }
+
+  SkeletalMeshComponent->SetSkeletalMesh(Finder.Object);
+}
+
+void Finder::InitializeAnimationAsset(USkeletalMeshComponent* MeshComponent,
+                                      const TCHAR*            AnimSequencePath) {
+  if (!MeshComponent || !AnimSequencePath) {
+    DELTA_LOG("{}", DeltaFormat("MeshComponent is null or AnimSequencePath is null"));
+    return;
+  }
+
+  static ConstructorHelpers::FObjectFinder<UAnimationAsset> AnimSequence(AnimSequencePath);
+  if (!AnimSequence.Succeeded()) {
+    DELTA_LOG("{}",
+              DeltaFormat("Failed to load animation asset: {}", TCHAR_TO_UTF8(AnimSequencePath)));
+    return;
+  }
+
+  MeshComponent->SetAnimation(AnimSequence.Object);
+  MeshComponent->AnimationData.AnimToPlay = AnimSequence.Object;
 }
