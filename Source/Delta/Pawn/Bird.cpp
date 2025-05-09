@@ -3,9 +3,10 @@
 // See LICENSE file in the project root for full license information.
 
 #include "Bird.h"
+#include "../Common/Finder.h"
+
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "../Common/LogUtil.h"
 
 ABird::ABird() {
   PrimaryActorTick.bCanEverTick = true;
@@ -14,9 +15,9 @@ ABird::ABird() {
     static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
     SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
 
-    static const TCHAR* const SkeletalMeshPath =
+    static const TCHAR* const MeshPath =
       TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
-    InitializeSkeletalMeshComponent(SkeletalMeshPath);
+    Finder::InitializeSkeletalMeshComponent(SkeletalMeshComponent, MeshPath);
   }
 
   {
@@ -44,18 +45,6 @@ void ABird::Tick(float DeltaTime) {
 
 void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
   Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-void ABird::InitializeSkeletalMeshComponent(const TCHAR* const SkeletalMeshPath) {
-  if (SkeletalMeshComponent != nullptr && SkeletalMeshPath != nullptr) {
-    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(SkeletalMeshPath);
-    if (Finder.Succeeded()) {
-      SkeletalMeshComponent->SetSkeletalMesh(Finder.Object);
-    } else {
-      DELTA_LOG("{}",
-                DeltaFormat("Failed to load skeletal mesh: {}", TCHAR_TO_UTF8(SkeletalMeshPath)));
-    }
-  }
 }
 
 void ABird::PostInitializeComponents() {

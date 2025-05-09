@@ -14,8 +14,6 @@ class DELTA_API AItem : public AActor {
 public:
   AItem();
 
-  void InitializeStaticMeshComponent(const TCHAR* const StaticMeshPath);
-
   virtual void InitializeCollision();
   virtual void InitializeRootComponent();
 
@@ -32,6 +30,9 @@ public:
 protected:
   virtual void BeginPlay() override;
   virtual void BeginPlayAction();
+
+  virtual void PostInitializeComponents() override;
+  virtual void PostInitializeStaticMeshComponent();
 
   UFUNCTION(BlueprintCallable, Category = "Item")
   float GetSineOscillationOffset() const;

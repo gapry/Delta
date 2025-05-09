@@ -23,9 +23,7 @@ public:
 
   virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-  void InitializeSkeletalMeshComponent(const TCHAR* const SkeletalMeshPath);
   void PostInitializeSkeletalMeshComponent();
-
   void InitializeCapsuleComponent();
   void InitializeCollision();
 
