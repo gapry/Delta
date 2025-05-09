@@ -26,6 +26,11 @@ ABird::ABird() {
 
   if (CapsuleComponent) {
     RootComponent = CapsuleComponent;
+
+    if (SkeletalMeshComponent) {
+      SkeletalMeshComponent->AttachToComponent(CapsuleComponent,
+                                               FAttachmentTransformRules::KeepRelativeTransform);
+    }
   }
 }
 
@@ -74,18 +79,17 @@ void ABird::InitializeCapsuleComponent() {
   if (CapsuleComponent) {
     CapsuleComponent->SetCapsuleHalfHeight(20.f);
     CapsuleComponent->SetCapsuleRadius(15.f);
-    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
   }
 }
 
 void ABird::InitializeCollision() {
   static constexpr const TCHAR* const CollisionProfileName = TEXT("BlockAll");
 
-  if (SkeletalMeshComponent) {
-    SkeletalMeshComponent->SetCollisionProfileName(CollisionProfileName);
-    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECR_Block);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+  if (CapsuleComponent) {
+    CapsuleComponent->SetCollisionProfileName(CollisionProfileName);
+    CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    CapsuleComponent->SetCollisionResponseToAllChannels(ECR_Block);
+    CapsuleComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
   }
 }
