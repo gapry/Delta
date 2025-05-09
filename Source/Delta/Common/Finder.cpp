@@ -18,6 +18,8 @@ void Finder::InitializeStaticMeshComponent(UStaticMeshComponent* StaticMeshCompo
     } else {
       DELTA_LOG("{}", DeltaFormat("Failed to load static mesh: {}", TCHAR_TO_UTF8(MeshPath)));
     }
+  } else {
+    DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null or MeshPath is null"));
   }
 }
 
@@ -30,5 +32,7 @@ void Finder::InitializeSkeletalMeshComponent(USkeletalMeshComponent* SkeletalMes
     } else {
       DELTA_LOG("{}", DeltaFormat("Failed to load skeletal mesh: {}", TCHAR_TO_UTF8(MeshPath)));
     }
+  } else {
+    DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null or MeshPath is null"));
   }
 }
