@@ -13,6 +13,8 @@
 #include "InputMappingContext.h"
 #include "InputAction.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 ABird::ABird() {
   PrimaryActorTick.bCanEverTick = true;
@@ -51,6 +53,23 @@ ABird::ABird() {
   }
 
   {
+    static constexpr const TCHAR* const ComponentName = TEXT("SpringArm");
+    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(ComponentName);
+  }
+
+  {
+    static constexpr const TCHAR* const ComponentName = TEXT("ViewCamera");
+
+    CameraComponent = CreateDefaultSubobject<UCameraComponent>(ComponentName);
+    CameraComponent->SetupAttachment(SpringArmComponent);
+  }
+
+  {
+    static constexpr const TCHAR* const RootComponentName = TEXT("RootComponent");
+    RootComponent = CreateDefaultSubobject<USceneComponent>(RootComponentName);
+  }
+
+  {
     if (CapsuleComponent) {
       RootComponent = CapsuleComponent;
 
@@ -65,6 +84,12 @@ ABird::ABird() {
         FloatingPawnMovement->UpdatedComponent = RootComponent;
       } else {
         DELTA_LOG("{}", DeltaFormat("FloatingPawnMovement is null"));
+      }
+
+      if (SpringArmComponent) {
+        SpringArmComponent->SetupAttachment(RootComponent);
+      } else {
+        DELTA_LOG("{}", DeltaFormat("SpringArmComponent is null"));
       }
     } else {
       DELTA_LOG("{}", DeltaFormat("CapsuleComponent is null"));
@@ -124,6 +149,8 @@ void ABird::PostInitializeComponents() {
   PostInitializeCapsuleComponent();
   PostInitializeCollision();
   PostInitializeFloatingPawnMovement();
+  PostInitializeSpringArmComponent();
+  PostInitializeCameraComponent();
 }
 
 void ABird::PostInitializeSkeletalMeshComponent() {
@@ -175,6 +202,27 @@ void ABird::PostInitializeFloatingPawnMovement() {
 
   FloatingPawnMovement->MaxSpeed     = 1024.f;
   FloatingPawnMovement->Acceleration = 2048.f;
+}
+
+void ABird::PostInitializeSpringArmComponent() {
+  if (!SpringArmComponent) {
+    DELTA_LOG("{}", DeltaFormat("SpringArmComponent is null"));
+    return;
+  }
+
+  SpringArmComponent->TargetArmLength = 100.f;
+  // SpringArmComponent->bUsePawnControlRotation = true;
+}
+
+void ABird::PostInitializeCameraComponent() {
+  if (!CameraComponent) {
+    DELTA_LOG("{}", DeltaFormat("CameraComponent is null"));
+    return;
+  }
+
+  CameraComponent->SetRelativeTransform(FTransform(FRotator(-15.f, 0.f, 0.f), // Rotation
+                                                   FVector(0.f, 0.f, 60.f),   // Translation
+                                                   FVector(1.f, 1.f, 1.f)));  // Scale
 }
 
 void ABird::Move(const FInputActionValue& Value) {
