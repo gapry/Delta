@@ -8,6 +8,11 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "GameFramework/FloatingPawnMovement.h"
 
 ABird::ABird() {
   PrimaryActorTick.bCanEverTick = true;
@@ -31,14 +36,35 @@ ABird::ABird() {
   }
 
   {
+    static constexpr const TCHAR* const IMC_Path =
+      TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Delta/Pawn/Input/IMC_Bird.IMC_Bird'");
+    InputMappingContext = Finder::FindInputMappingContext(IMC_Path);
+
+    static constexpr const TCHAR* const IA_Move_Path =
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Move.IA_Bird_Move'");
+    MoveAction = Finder::FindInputAction(IA_Move_Path);
+  }
+
+  {
+    static constexpr const TCHAR* const FloatingPawnMovementName = TEXT("FloatingPawnMovement");
+    FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(FloatingPawnMovementName);
+  }
+
+  {
     if (CapsuleComponent) {
       RootComponent = CapsuleComponent;
 
       if (SkeletalMeshComponent) {
-        SkeletalMeshComponent->AttachToComponent(CapsuleComponent,
+        SkeletalMeshComponent->AttachToComponent(RootComponent,
                                                  FAttachmentTransformRules::KeepRelativeTransform);
       } else {
         DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null"));
+      }
+
+      if (FloatingPawnMovement) {
+        FloatingPawnMovement->UpdatedComponent = RootComponent;
+      } else {
+        DELTA_LOG("{}", DeltaFormat("FloatingPawnMovement is null"));
       }
     } else {
       DELTA_LOG("{}", DeltaFormat("CapsuleComponent is null"));
@@ -48,6 +74,26 @@ ABird::ABird() {
 
 void ABird::BeginPlay() {
   Super::BeginPlay();
+
+  const auto* const PlayerController = Cast<APlayerController>(Controller);
+  if (!PlayerController) {
+    DELTA_LOG("{}", DeltaFormat("PlayerController is null"));
+    return;
+  }
+
+  auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+    PlayerController->GetLocalPlayer());
+  if (!Subsystem) {
+    DELTA_LOG("{}", DeltaFormat("Subsystem is null"));
+    return;
+  }
+
+  if (!InputMappingContext) {
+    DELTA_LOG("{}", DeltaFormat("InputMappingContext is null"));
+    return;
+  }
+
+  Subsystem->AddMappingContext(InputMappingContext, 0);
 }
 
 void ABird::Tick(float DeltaTime) {
@@ -56,14 +102,28 @@ void ABird::Tick(float DeltaTime) {
 
 void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
   Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+  auto* const EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+  if (!EnhancedInputComponent) {
+    DELTA_LOG("{}", DeltaFormat("EnhancedInputComponent is null"));
+    return;
+  }
+
+  if (!MoveAction) {
+    DELTA_LOG("{}", DeltaFormat("MoveAction is null"));
+    return;
+  }
+
+  EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
 }
 
 void ABird::PostInitializeComponents() {
   Super::PostInitializeComponents();
 
   PostInitializeSkeletalMeshComponent();
-  InitializeCapsuleComponent();
-  InitializeCollision();
+  PostInitializeCapsuleComponent();
+  PostInitializeCollision();
+  PostInitializeFloatingPawnMovement();
 }
 
 void ABird::PostInitializeSkeletalMeshComponent() {
@@ -82,7 +142,7 @@ void ABird::PostInitializeSkeletalMeshComponent() {
   SkeletalMeshComponent->AnimationData.bSavedLooping = true;
 }
 
-void ABird::InitializeCapsuleComponent() {
+void ABird::PostInitializeCapsuleComponent() {
   if (!CapsuleComponent) {
     DELTA_LOG("{}", DeltaFormat("CapsuleComponent is null"));
     return;
@@ -92,7 +152,7 @@ void ABird::InitializeCapsuleComponent() {
   CapsuleComponent->SetCapsuleRadius(15.f);
 }
 
-void ABird::InitializeCollision() {
+void ABird::PostInitializeCollision() {
   if (!CapsuleComponent) {
     DELTA_LOG("{}", DeltaFormat("CapsuleComponent is null"));
     return;
@@ -105,4 +165,28 @@ void ABird::InitializeCollision() {
   CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
   CapsuleComponent->SetCollisionResponseToAllChannels(ECR_Block);
   CapsuleComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+}
+
+void ABird::PostInitializeFloatingPawnMovement() {
+  if (!FloatingPawnMovement) {
+    DELTA_LOG("{}", DeltaFormat("FloatingPawnMovement is null"));
+    return;
+  }
+
+  FloatingPawnMovement->MaxSpeed     = 1024.f;
+  FloatingPawnMovement->Acceleration = 2048.f;
+}
+
+void ABird::Move(const FInputActionValue& Value) {
+  if (!SkeletalMeshComponent) {
+    DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null"));
+    return;
+  }
+
+  if (const auto DirectionValue = Value.Get<float>(); DirectionValue != 0.f) {
+    DELTA_LOG("{}", DeltaFormat("Move: {}", Value.ToString()));
+
+    FVector Forward = GetActorForwardVector();
+    AddMovementInput(Forward, DirectionValue);
+  }
 }
