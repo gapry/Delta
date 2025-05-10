@@ -21,4 +21,6 @@ public:
                            const TCHAR* const            AnimSequencePath);
 
   static UInputMappingContext* FindInputMappingContext(const TCHAR* const Path);
+
+  static UInputAction* FindInputAction(const TCHAR* const Path);
 };

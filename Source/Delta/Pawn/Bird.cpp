@@ -42,8 +42,7 @@ ABird::ABird() {
 
     static constexpr const TCHAR* const IA_Move_Path =
       TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Move.IA_Bird_Move'");
-    static ConstructorHelpers::FObjectFinder<UInputAction> IA_Move(IA_Move_Path);
-    MoveAction = IA_Move.Object;
+    MoveAction = Finder::FindInputAction(IA_Move_Path);
   }
 
   {
@@ -76,12 +75,25 @@ ABird::ABird() {
 void ABird::BeginPlay() {
   Super::BeginPlay();
 
-  if (const auto* const PlayerController = Cast<APlayerController>(Controller)) {
-    if (auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-          PlayerController->GetLocalPlayer())) {
-      Subsystem->AddMappingContext(InputMappingContext, 0);
-    }
+  const auto* const PlayerController = Cast<APlayerController>(Controller);
+  if (!PlayerController) {
+    DELTA_LOG("{}", DeltaFormat("PlayerController is null"));
+    return;
   }
+
+  auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+    PlayerController->GetLocalPlayer());
+  if (!Subsystem) {
+    DELTA_LOG("{}", DeltaFormat("Subsystem is null"));
+    return;
+  }
+
+  if (!InputMappingContext) {
+    DELTA_LOG("{}", DeltaFormat("InputMappingContext is null"));
+    return;
+  }
+
+  Subsystem->AddMappingContext(InputMappingContext, 0);
 }
 
 void ABird::Tick(float DeltaTime) {
@@ -91,10 +103,18 @@ void ABird::Tick(float DeltaTime) {
 void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
   Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-  if (auto* const EnhancedInputComponent =
-        CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-    EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+  auto* const EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+  if (!EnhancedInputComponent) {
+    DELTA_LOG("{}", DeltaFormat("EnhancedInputComponent is null"));
+    return;
   }
+
+  if (!MoveAction) {
+    DELTA_LOG("{}", DeltaFormat("MoveAction is null"));
+    return;
+  }
+
+  EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
 }
 
 void ABird::PostInitializeComponents() {

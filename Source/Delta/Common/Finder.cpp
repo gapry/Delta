@@ -76,3 +76,17 @@ UInputMappingContext* Finder::FindInputMappingContext(const TCHAR* const Path) {
   }
   return Finder.Object;
 }
+
+UInputAction* Finder::FindInputAction(const TCHAR* const Path) {
+  if (!Path) {
+    DELTA_LOG("{}", DeltaFormat("Path is null"));
+    return nullptr;
+  }
+
+  static ConstructorHelpers::FObjectFinder<UInputAction> Finder(Path);
+  if (!Finder.Succeeded()) {
+    DELTA_LOG("{}", DeltaFormat("Failed to load input action: {}", TCHAR_TO_UTF8(Path)));
+    return nullptr;
+  }
+  return Finder.Object;
+}
