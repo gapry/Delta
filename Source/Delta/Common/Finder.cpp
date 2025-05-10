@@ -8,6 +8,10 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
 
 void Finder::SetStaticMesh(UStaticMeshComponent* const StaticMeshComponent,
                            const TCHAR* const          MeshPath) {
@@ -57,4 +61,18 @@ void Finder::SetAnimation(USkeletalMeshComponent* const MeshComponent,
 
   MeshComponent->SetAnimation(AnimSequence.Object);
   MeshComponent->AnimationData.AnimToPlay = AnimSequence.Object;
+}
+
+UInputMappingContext* Finder::FindInputMappingContext(const TCHAR* const Path) {
+  if (!Path) {
+    DELTA_LOG("{}", DeltaFormat("Path is null"));
+    return nullptr;
+  }
+
+  static ConstructorHelpers::FObjectFinder<UInputMappingContext> Finder(Path);
+  if (!Finder.Succeeded()) {
+    DELTA_LOG("{}", DeltaFormat("Failed to load input mapping context: {}", TCHAR_TO_UTF8(Path)));
+    return nullptr;
+  }
+  return Finder.Object;
 }

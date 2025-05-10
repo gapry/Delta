@@ -6,6 +6,8 @@
 
 class UStaticMeshComponent;
 class USkeletalMeshComponent;
+class UInputMappingContext;
+class UInputAction;
 
 class DELTA_API Finder {
 public:
@@ -17,4 +19,6 @@ public:
 
   static void SetAnimation(USkeletalMeshComponent* const MeshComponent,
                            const TCHAR* const            AnimSequencePath);
+
+  static UInputMappingContext* FindInputMappingContext(const TCHAR* const Path);
 };
