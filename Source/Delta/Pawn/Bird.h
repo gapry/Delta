@@ -15,6 +15,8 @@ class UCapsuleComponent;
 class UInputMappingContext;
 class UInputAction;
 class UFloatingPawnMovement;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class DELTA_API ABird : public APawn {
@@ -31,6 +33,8 @@ public:
   void PostInitializeCapsuleComponent();
   void PostInitializeCollision();
   void PostInitializeFloatingPawnMovement();
+  void PostInitializeSpringArmComponent();
+  void PostInitializeCameraComponent();
 
 protected:
   virtual void BeginPlay() override;
@@ -51,12 +55,18 @@ private:
             meta     = (AllowPrivateAccess = "true"))
   TObjectPtr<UCapsuleComponent> CapsuleComponent{nullptr};
 
-  UPROPERTY(EditAnywhere, Category = "Bird")
+  UPROPERTY(VisibleAnywhere, Category = "Bird")
   TObjectPtr<UInputMappingContext> InputMappingContext{nullptr};
 
-  UPROPERTY(EditAnywhere, Category = "Bird")
+  UPROPERTY(VisibleAnywhere, Category = "Bird")
   TObjectPtr<UInputAction> MoveAction{nullptr};
 
-  UPROPERTY(EditAnywhere, Category = "Bird")
+  UPROPERTY(VisibleAnywhere, Category = "Bird")
   TObjectPtr<UFloatingPawnMovement> FloatingPawnMovement{nullptr};
+
+  UPROPERTY(VisibleAnywhere, Category = "Bird")
+  TObjectPtr<USpringArmComponent> SpringArmComponent{nullptr};
+
+  UPROPERTY(VisibleAnywhere, Category = "Bird")
+  TObjectPtr<UCameraComponent> CameraComponent{nullptr};
 };
