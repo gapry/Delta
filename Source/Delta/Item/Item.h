@@ -14,6 +14,8 @@ class DELTA_API AItem : public AActor {
 public:
   AItem();
 
+  virtual void OnConstruction(const FTransform& Transform) override;
+
   virtual void InitializeCollision();
   virtual void InitializeRootComponent();
 

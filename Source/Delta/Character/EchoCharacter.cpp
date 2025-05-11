@@ -23,7 +23,7 @@ AEchoCharacter::AEchoCharacter() {
     static constexpr const TCHAR* const SkeletalMeshPath{
       TEXT("/Script/Engine.SkeletalMesh'/Game/AncientContent/Characters/Echo/Meshes/Echo.Echo'")};
 
-    Finder::SetSkeletalMesh(SkeletalMeshComponent.Get(), SkeletalMeshPath);
+    DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
   }
 
   {
