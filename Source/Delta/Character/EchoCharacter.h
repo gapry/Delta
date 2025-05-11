@@ -10,6 +10,8 @@
 
 class USkeletalMeshComponent;
 class UCapsuleComponent;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -28,8 +30,12 @@ protected:
 
   void PostInitializeSkeletalMeshComponent();
   void PostInitializeCapsuleComponent();
+  void PostInitializeSpringArmComponent();
+  void PostInitializeCameraComponent();
 
 private:
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
+  TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
+  TWeakObjectPtr<UCameraComponent>       CameraComponent;
 };

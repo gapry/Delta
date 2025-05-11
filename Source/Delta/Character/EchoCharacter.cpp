@@ -9,6 +9,8 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 AEchoCharacter::AEchoCharacter() {
   {
@@ -27,6 +29,18 @@ AEchoCharacter::AEchoCharacter() {
   {
     CapsuleComponent = GetCapsuleComponent();
   }
+
+  {
+    static constexpr const TCHAR* const ComponentName{TEXT("SpringArm")};
+    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(ComponentName);
+    SpringArmComponent->SetupAttachment(GetRootComponent());
+  }
+
+  {
+    static constexpr const TCHAR* const ComponentName{TEXT("Camera")};
+    CameraComponent = CreateDefaultSubobject<UCameraComponent>(ComponentName);
+    CameraComponent->SetupAttachment(SpringArmComponent.Get(), USpringArmComponent::SocketName);
+  }
 }
 
 void AEchoCharacter::PostInitializeComponents() {
@@ -34,6 +48,8 @@ void AEchoCharacter::PostInitializeComponents() {
 
   PostInitializeSkeletalMeshComponent();
   PostInitializeCapsuleComponent();
+  PostInitializeSpringArmComponent();
+  PostInitializeCameraComponent();
 }
 
 void AEchoCharacter::PostInitializeSkeletalMeshComponent() {
@@ -52,6 +68,26 @@ void AEchoCharacter::PostInitializeCapsuleComponent() {
   }
 
   CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
+}
+
+void AEchoCharacter::PostInitializeSpringArmComponent() {
+  if (!SpringArmComponent.IsValid()) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "SpringArmComponent is not valid"));
+  }
+
+  SpringArmComponent->bUsePawnControlRotation = true;
+  SpringArmComponent->TargetArmLength         = 300.f;
+}
+
+void AEchoCharacter::PostInitializeCameraComponent() {
+  if (!CameraComponent.IsValid()) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CameraComponent is not valid"));
+  }
+
+  CameraComponent->bUsePawnControlRotation = false;
+  CameraComponent->SetRelativeTransform(FTransform(FRotator(-15.f, 0.f, 0.f), //
+                                                   FVector(0.f, 0.f, 60.f),   //
+                                                   FVector(1.f, 1.f, 1.f)));  //
 }
 
 void AEchoCharacter::BeginPlay() {
