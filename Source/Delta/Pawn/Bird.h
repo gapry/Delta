@@ -41,6 +41,8 @@ protected:
   virtual void PostInitializeComponents() override;
 
   void Move(const FInputActionValue& Value);
+  void Rotate(const FInputActionValue& Value);
+  void Look(const FInputActionValue& Value);
 
 private:
   UPROPERTY(VisibleAnywhere,
@@ -60,6 +62,12 @@ private:
 
   UPROPERTY(VisibleAnywhere, Category = "Bird")
   TObjectPtr<UInputAction> MoveAction{nullptr};
+
+  UPROPERTY(VisibleAnywhere, Category = "Bird")
+  TObjectPtr<UInputAction> RotateAction{nullptr};
+
+  UPROPERTY(VisibleAnywhere, Category = "Bird")
+  TObjectPtr<UInputAction> LookAction{nullptr};
 
   UPROPERTY(VisibleAnywhere, Category = "Bird")
   TObjectPtr<UFloatingPawnMovement> FloatingPawnMovement{nullptr};
