@@ -17,11 +17,13 @@
 #include "Camera/CameraComponent.h"
 
 ABird::ABird() {
-  PrimaryActorTick.bCanEverTick = true;
+  {
+    PrimaryActorTick.bCanEverTick = true;
 
-  bUseControllerRotationYaw   = true;
-  bUseControllerRotationPitch = true;
-  bUseControllerRotationRoll  = true;
+    bUseControllerRotationYaw   = true;
+    bUseControllerRotationPitch = true;
+    bUseControllerRotationRoll  = true;
+  }
 
   {
     static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
@@ -37,8 +39,8 @@ ABird::ABird() {
   }
 
   {
-    static constexpr const TCHAR* const CapsuleName = TEXT("CapsuleComponent");
-    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(CapsuleName);
+    static constexpr const TCHAR* const ComponentName = TEXT("CapsuleComponent");
+    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(ComponentName);
   }
 
   {
@@ -60,8 +62,8 @@ ABird::ABird() {
   }
 
   {
-    static constexpr const TCHAR* const FloatingPawnMovementName = TEXT("FloatingPawnMovement");
-    FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(FloatingPawnMovementName);
+    static constexpr const TCHAR* const ComponentName = TEXT("FloatingPawnMovement");
+    FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(ComponentName);
   }
 
   {
@@ -77,8 +79,8 @@ ABird::ABird() {
   }
 
   {
-    static constexpr const TCHAR* const RootComponentName = TEXT("RootComponent");
-    RootComponent = CreateDefaultSubobject<USceneComponent>(RootComponentName);
+    static constexpr const TCHAR* const ComponentName = TEXT("RootComponent");
+    RootComponent = CreateDefaultSubobject<USceneComponent>(ComponentName);
   }
 
   {

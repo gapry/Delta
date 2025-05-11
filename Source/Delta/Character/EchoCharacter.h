@@ -9,6 +9,7 @@
 #include "EchoCharacter.generated.h"
 
 class USkeletalMeshComponent;
+class UCapsuleComponent;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -26,7 +27,9 @@ protected:
   virtual void PostInitializeComponents() override;
 
   void PostInitializeSkeletalMeshComponent();
+  void PostInitializeCapsuleComponent();
 
 private:
-  TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent{GetMesh()};
+  TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
+  TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
 };
