@@ -8,6 +8,8 @@
 #include "GameFramework/Character.h"
 #include "EchoCharacter.generated.h"
 
+class USkeletalMeshComponent;
+
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
   GENERATED_BODY()
@@ -21,4 +23,10 @@ public:
 
 protected:
   virtual void BeginPlay() override;
+  virtual void PostInitializeComponents() override;
+
+  void PostInitializeSkeletalMeshComponent();
+
+private:
+  TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent{GetMesh()};
 };

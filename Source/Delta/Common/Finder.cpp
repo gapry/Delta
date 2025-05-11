@@ -36,7 +36,7 @@ void Finder::SetSkeletalMesh(USkeletalMeshComponent* const SkeletalMeshComponent
     return;
   }
 
-  static ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(MeshPath);
+  ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(MeshPath);
   if (!Finder.Succeeded()) {
     DELTA_LOG("{}", DeltaFormat("Failed to load skeletal mesh: {}", TCHAR_TO_UTF8(MeshPath)));
     return;
