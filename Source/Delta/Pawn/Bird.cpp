@@ -17,11 +17,13 @@
 #include "Camera/CameraComponent.h"
 
 ABird::ABird() {
-  PrimaryActorTick.bCanEverTick = true;
+  {
+    PrimaryActorTick.bCanEverTick = true;
 
-  bUseControllerRotationYaw   = true;
-  bUseControllerRotationPitch = true;
-  bUseControllerRotationRoll  = true;
+    bUseControllerRotationYaw   = true;
+    bUseControllerRotationPitch = true;
+    bUseControllerRotationRoll  = true;
+  }
 
   {
     static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
@@ -29,39 +31,39 @@ ABird::ABird() {
 
     static const TCHAR* const MeshPath =
       TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
-    Finder::SetSkeletalMesh(SkeletalMeshComponent, MeshPath);
+    DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent, MeshPath);
 
     static constexpr const TCHAR* const AnimSequencePath =
       TEXT("AnimSequence'/Game/AnimalVarietyPack/Crow/Animations/ANIM_Crow_Fly.ANIM_Crow_Fly'");
-    Finder::SetAnimation(SkeletalMeshComponent, AnimSequencePath);
+    DELTA_SET_ANIMATION(SkeletalMeshComponent, AnimSequencePath);
   }
 
   {
-    static constexpr const TCHAR* const CapsuleName = TEXT("CapsuleComponent");
-    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(CapsuleName);
+    static constexpr const TCHAR* const ComponentName = TEXT("CapsuleComponent");
+    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(ComponentName);
   }
 
   {
     static constexpr const TCHAR* const IMC_Path =
       TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Delta/Pawn/Input/IMC_Bird.IMC_Bird'");
-    InputMappingContext = Finder::FindInputMappingContext(IMC_Path);
+    DELTA_SET_InputMappingContext(InputMappingContext, IMC_Path);
 
     static constexpr const TCHAR* const IA_Move_Path =
       TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Move.IA_Bird_Move'");
-    MoveAction = Finder::FindInputAction(IA_Move_Path);
+    DELTA_SET_InputAction(MoveAction, IA_Move_Path);
 
     static constexpr const TCHAR* const IA_Rotate_Path = TEXT(
       "/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Rotate.IA_Bird_Rotate'");
-    RotateAction = Finder::FindInputAction(IA_Rotate_Path);
+    DELTA_SET_InputAction(RotateAction, IA_Rotate_Path);
 
     static constexpr const TCHAR* const IA_Look_Path =
       TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Look.IA_Bird_Look'");
-    LookAction = Finder::FindInputAction(IA_Look_Path);
+    DELTA_SET_InputAction(LookAction, IA_Look_Path);
   }
 
   {
-    static constexpr const TCHAR* const FloatingPawnMovementName = TEXT("FloatingPawnMovement");
-    FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(FloatingPawnMovementName);
+    static constexpr const TCHAR* const ComponentName = TEXT("FloatingPawnMovement");
+    FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(ComponentName);
   }
 
   {
@@ -77,8 +79,8 @@ ABird::ABird() {
   }
 
   {
-    static constexpr const TCHAR* const RootComponentName = TEXT("RootComponent");
-    RootComponent = CreateDefaultSubobject<USceneComponent>(RootComponentName);
+    static constexpr const TCHAR* const ComponentName = TEXT("RootComponent");
+    RootComponent = CreateDefaultSubobject<USceneComponent>(ComponentName);
   }
 
   {

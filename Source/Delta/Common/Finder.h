@@ -4,23 +4,82 @@
 
 #pragma once
 
-class UStaticMeshComponent;
-class USkeletalMeshComponent;
-class UInputMappingContext;
-class UInputAction;
+#include "LogUtil.h"
 
-class DELTA_API Finder {
-public:
-  static void SetStaticMesh(UStaticMeshComponent* const StaticMeshComponent,
-                            const TCHAR* const          MeshPath);
+#define DELTA_SET_STATIC_MESH(StaticMeshComponent, MeshPath)                                   \
+  do {                                                                                         \
+    if (!(StaticMeshComponent) || !(MeshPath)) {                                               \
+      DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null or MeshPath is null"));         \
+      break;                                                                                   \
+    }                                                                                          \
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> Finder(MeshPath);                    \
+    if (!Finder.Succeeded()) {                                                                 \
+      DELTA_LOG("{}", DeltaFormat("Failed to load static mesh: {}", TCHAR_TO_UTF8(MeshPath))); \
+      break;                                                                                   \
+    }                                                                                          \
+    (StaticMeshComponent)->SetStaticMesh(Finder.Object);                                       \
+  } while (false)
+// ----
 
-  static void SetSkeletalMesh(USkeletalMeshComponent* const SkeletalMeshComponent,
-                              const TCHAR* const            MeshPath);
+#define DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent, MeshPath)                                 \
+  do {                                                                                           \
+    if (!(SkeletalMeshComponent) || !(MeshPath)) {                                               \
+      DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null or MeshPath is null"));         \
+      break;                                                                                     \
+    }                                                                                            \
+    static ConstructorHelpers::FObjectFinder<USkeletalMesh> Finder(MeshPath);                    \
+    if (!Finder.Succeeded()) {                                                                   \
+      DELTA_LOG("{}", DeltaFormat("Failed to load skeletal mesh: {}", TCHAR_TO_UTF8(MeshPath))); \
+      break;                                                                                     \
+    }                                                                                            \
+    (SkeletalMeshComponent)->SetSkeletalMesh(Finder.Object);                                     \
+  } while (false)
+// ----
 
-  static void SetAnimation(USkeletalMeshComponent* const MeshComponent,
-                           const TCHAR* const            AnimSequencePath);
+#define DELTA_SET_ANIMATION(MeshComponent, AnimSequencePath)                                  \
+  do {                                                                                        \
+    if (!(MeshComponent) || !(AnimSequencePath)) {                                            \
+      DELTA_LOG("{}", DeltaFormat("MeshComponent is null or AnimSequencePath is null"));      \
+      break;                                                                                  \
+    }                                                                                         \
+    static ConstructorHelpers::FObjectFinder<UAnimationAsset> AnimSequence(AnimSequencePath); \
+    if (!AnimSequence.Succeeded()) {                                                          \
+      DELTA_LOG(                                                                              \
+        "{}",                                                                                 \
+        DeltaFormat("Failed to load animation asset: {}", TCHAR_TO_UTF8(AnimSequencePath)));  \
+      break;                                                                                  \
+    }                                                                                         \
+    (MeshComponent)->SetAnimation(AnimSequence.Object);                                       \
+    (MeshComponent)->AnimationData.AnimToPlay = AnimSequence.Object;                          \
+  } while (false)
+// ----
 
-  static UInputMappingContext* FindInputMappingContext(const TCHAR* const Path);
+#define DELTA_SET_InputMappingContext(InputMappingContext, PATH)                               \
+  do {                                                                                         \
+    if (!(PATH)) {                                                                             \
+      DELTA_LOG("{}", DeltaFormat("InputMappingContext is null or PATH is null"));             \
+      break;                                                                                   \
+    }                                                                                          \
+    static ConstructorHelpers::FObjectFinder<UInputMappingContext> Finder(PATH);               \
+    if (!Finder.Succeeded()) {                                                                 \
+      DELTA_LOG("{}",                                                                          \
+                DeltaFormat("Failed to load input mapping context: {}", TCHAR_TO_UTF8(PATH))); \
+      break;                                                                                   \
+    }                                                                                          \
+    (InputMappingContext) = Finder.Object;                                                     \
+  } while (false)
 
-  static UInputAction* FindInputAction(const TCHAR* const Path);
-};
+#define DELTA_SET_InputAction(InputAction, PATH)                                            \
+  do {                                                                                      \
+    if (!(PATH)) {                                                                          \
+      DELTA_LOG("{}", DeltaFormat("InputAction is null or PATH is null"));                  \
+      break;                                                                                \
+    }                                                                                       \
+    static ConstructorHelpers::FObjectFinder<UInputAction> Finder(PATH);                    \
+    if (!Finder.Succeeded()) {                                                              \
+      DELTA_LOG("{}", DeltaFormat("Failed to load input action: {}", TCHAR_TO_UTF8(PATH))); \
+      break;                                                                                \
+    }                                                                                       \
+    (InputAction) = Finder.Object;                                                          \
+  } while (false)
+// ----
