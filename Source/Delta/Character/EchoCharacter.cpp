@@ -115,6 +115,14 @@ void AEchoCharacter::PostInitializeCameraComponent() {
 
 void AEchoCharacter::BeginPlay() {
   Super::BeginPlay();
+}
+
+void AEchoCharacter::Tick(float DeltaTime) {
+  Super::Tick(DeltaTime);
+}
+
+void AEchoCharacter::NotifyControllerChanged() {
+  Super::NotifyControllerChanged();
 
   auto* const Subsystem = GetSubsytem();
   if (!Subsystem) {
@@ -129,10 +137,6 @@ void AEchoCharacter::BeginPlay() {
 
   static constexpr const int32 Priority = 0;
   Subsystem->AddMappingContext(InputMappingContext, Priority);
-}
-
-void AEchoCharacter::Tick(float DeltaTime) {
-  Super::Tick(DeltaTime);
 }
 
 void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {

@@ -24,6 +24,7 @@ class DELTA_API AEchoCharacter : public ACharacter {
 public:
   AEchoCharacter();
 
+  virtual void NotifyControllerChanged() override;
   virtual void Tick(float DeltaTime) override;
 
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
