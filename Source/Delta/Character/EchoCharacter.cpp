@@ -16,6 +16,7 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AEchoCharacter::AEchoCharacter() {
   {
@@ -73,6 +74,7 @@ void AEchoCharacter::PostInitializeComponents() {
   PostInitializeCapsuleComponent();
   PostInitializeSpringArmComponent();
   PostInitializeCameraComponent();
+  PostInitializeCharacterMovementComponent();
 }
 
 void AEchoCharacter::PostInitializeSkeletalMeshComponent() {
@@ -113,16 +115,24 @@ void AEchoCharacter::PostInitializeCameraComponent() {
                                                    FVector(1.f, 1.f, 1.f)));  //
 }
 
+void AEchoCharacter::PostInitializeCharacterMovementComponent() {
+  auto* const Movement = GetCharacterMovement();
+  if (!Movement) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CharacterMovement is null"));
+  }
+
+  Movement->bOrientRotationToMovement  = true;
+  Movement->RotationRate               = FRotator(0.0f, 500.0f, 0.0f);
+  Movement->JumpZVelocity              = 700.f;
+  Movement->AirControl                 = 0.35f;
+  Movement->MaxWalkSpeed               = 500.f;
+  Movement->MinAnalogWalkSpeed         = 20.f;
+  Movement->BrakingDecelerationWalking = 2000.f;
+  Movement->BrakingDecelerationFalling = 1500.0f;
+}
+
 void AEchoCharacter::BeginPlay() {
   Super::BeginPlay();
-}
-
-void AEchoCharacter::Tick(float DeltaTime) {
-  Super::Tick(DeltaTime);
-}
-
-void AEchoCharacter::NotifyControllerChanged() {
-  Super::NotifyControllerChanged();
 
   auto* const Subsystem = GetSubsytem();
   if (!Subsystem) {
@@ -137,6 +147,14 @@ void AEchoCharacter::NotifyControllerChanged() {
 
   static constexpr const int32 Priority = 0;
   Subsystem->AddMappingContext(InputMappingContext, Priority);
+}
+
+void AEchoCharacter::Tick(float DeltaTime) {
+  Super::Tick(DeltaTime);
+}
+
+void AEchoCharacter::NotifyControllerChanged() {
+  Super::NotifyControllerChanged();
 }
 
 void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {

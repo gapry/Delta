@@ -40,6 +40,7 @@ protected:
   void PostInitializeCapsuleComponent();
   void PostInitializeSpringArmComponent();
   void PostInitializeCameraComponent();
+  void PostInitializeCharacterMovementComponent();
 
 private:
   APlayerController*                  GetPlayerController() const;
