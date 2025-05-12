@@ -6,12 +6,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InputActionValue.h"
 #include "EchoCharacter.generated.h"
 
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class UInputMappingContext;
+class UInputAction;
+class UEnhancedInputLocalPlayerSubsystem;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -24,6 +28,8 @@ public:
 
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+  void Move(const FInputActionValue& Value);
+
 protected:
   virtual void BeginPlay() override;
   virtual void PostInitializeComponents() override;
@@ -34,8 +40,13 @@ protected:
   void PostInitializeCameraComponent();
 
 private:
+  APlayerController*                  GetPlayerController() const;
+  UEnhancedInputLocalPlayerSubsystem* GetSubsytem() const;
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
   TWeakObjectPtr<UCameraComponent>       CameraComponent;
+  TObjectPtr<UInputMappingContext>       InputMappingContext;
+  TObjectPtr<UInputAction>               MoveAction;
 };
