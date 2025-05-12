@@ -144,7 +144,7 @@ void AEchoCharacter::PostInitializeCharacterMovementComponent() {
 void AEchoCharacter::BeginPlay() {
   Super::BeginPlay();
 
-  auto* const Subsystem = GetSubsytem();
+  auto* const Subsystem = GetSubsystem();
   if (!Subsystem) {
     DELTA_LOG("{}", DeltaFormat("Subsystem is null"));
     return;
@@ -235,7 +235,7 @@ APlayerController* AEchoCharacter::GetPlayerController() const {
   return CastChecked<APlayerController>(Controller);
 }
 
-UEnhancedInputLocalPlayerSubsystem* AEchoCharacter::GetSubsytem() const {
+UEnhancedInputLocalPlayerSubsystem* AEchoCharacter::GetSubsystem() const {
   if (auto* const PC = GetPlayerController()) {
     return ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
   }

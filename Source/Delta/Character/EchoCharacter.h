@@ -44,7 +44,7 @@ protected:
 
 private:
   APlayerController*                  GetPlayerController() const;
-  UEnhancedInputLocalPlayerSubsystem* GetSubsytem() const;
+  UEnhancedInputLocalPlayerSubsystem* GetSubsystem() const;
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
