@@ -20,6 +20,10 @@
 AEchoCharacter::AEchoCharacter() {
   {
     PrimaryActorTick.bCanEverTick = true;
+
+    bUseControllerRotationPitch = false;
+    bUseControllerRotationYaw   = false;
+    bUseControllerRotationRoll  = false;
   }
 
   {
@@ -55,6 +59,10 @@ AEchoCharacter::AEchoCharacter() {
     static constexpr const TCHAR* const MoveActionPath{TEXT(
       "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Move.IA_Echo_Move'")};
     DELTA_SET_InputAction(MoveAction, MoveActionPath);
+
+    static constexpr const TCHAR* const LookActionPath{TEXT(
+      "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Look.IA_Echo_Look'")};
+    DELTA_SET_InputAction(LookAction, LookActionPath);
   }
 }
 
@@ -137,10 +145,20 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     return;
   }
 
+  if (!LookAction) {
+    DELTA_LOG("{}", DeltaFormat("LookAction is null"));
+    return;
+  }
+
   EnhancedInputComponent->BindAction(MoveAction,
                                      ETriggerEvent::Triggered,
                                      this,
                                      &AEchoCharacter::Move);
+
+  EnhancedInputComponent->BindAction(LookAction,
+                                     ETriggerEvent::Triggered,
+                                     this,
+                                     &AEchoCharacter::Look);
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value) {
@@ -164,6 +182,21 @@ void AEchoCharacter::Move(const FInputActionValue& Value) {
 
   AddMovementInput(ForwardDirection, MovementVector.Y);
   AddMovementInput(RightDirection, MovementVector.X);
+}
+
+void AEchoCharacter::Look(const FInputActionValue& Value) {
+  if (Controller == nullptr) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "Controller is null"));
+    return;
+  }
+
+  const FVector2D& LookAxisVector = Value.Get<FVector2D>();
+  if (LookAxisVector.IsZero()) {
+    return;
+  }
+
+  AddControllerYawInput(LookAxisVector.X);
+  AddControllerPitchInput(LookAxisVector.Y);
 }
 
 APlayerController* AEchoCharacter::GetPlayerController() const {

@@ -29,6 +29,7 @@ public:
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
   void Move(const FInputActionValue& Value);
+  void Look(const FInputActionValue& Value);
 
 protected:
   virtual void BeginPlay() override;
@@ -49,4 +50,5 @@ private:
   TWeakObjectPtr<UCameraComponent>       CameraComponent;
   TObjectPtr<UInputMappingContext>       InputMappingContext;
   TObjectPtr<UInputAction>               MoveAction;
+  TObjectPtr<UInputAction>               LookAction;
 };
