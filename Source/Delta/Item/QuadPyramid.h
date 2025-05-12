@@ -15,8 +15,6 @@ class DELTA_API AQuadPyramid : public AItem {
 public:
   AQuadPyramid();
 
-  virtual void OnConstruction(const FTransform& Transform) override;
-
   virtual void TickAction(const float DeltaTime) override;
 
 protected:

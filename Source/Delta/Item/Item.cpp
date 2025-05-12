@@ -17,6 +17,13 @@ AItem::AItem() {
   }
 }
 
+void AItem::OnConstruction(const FTransform& Transform) {
+  Super::OnConstruction(Transform);
+
+  InitializeCollision();
+  InitializeRootComponent();
+}
+
 void AItem::InitializeCollision() {
   if (!StaticMeshComponent) {
     DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null"));
