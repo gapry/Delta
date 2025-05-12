@@ -85,6 +85,16 @@ void AEchoCharacter::PostInitializeSkeletalMeshComponent() {
   SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), // Rotation
                                                          FVector(0.f, 0.f, -90.f),  // Translation
                                                          FVector(1.f, 1.f, 1.f)));  // Scale
+
+  SkeletalMeshComponent->SetGenerateOverlapEvents(true);
+
+  SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+  SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+  SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+  SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+  SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+                                                       ECollisionResponse::ECR_Ignore);
+  SkeletalMeshComponent->UpdateCollisionProfile();
 }
 
 void AEchoCharacter::PostInitializeCapsuleComponent() {
