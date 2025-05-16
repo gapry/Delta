@@ -18,7 +18,9 @@ public class Delta : ModuleRules
       "CoreUObject",
       "Engine",
       "InputCore",
-      "EnhancedInput"
+      "EnhancedInput",
+      "HairStrandsCore",
+      "Niagara",
     });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });
