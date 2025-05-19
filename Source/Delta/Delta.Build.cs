@@ -13,7 +13,15 @@ public class Delta : ModuleRules
   {
     PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-    PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+    PublicDependencyModuleNames.AddRange(new string[] {
+      "Core",
+      "CoreUObject",
+      "Engine",
+      "InputCore",
+      "EnhancedInput",
+      "HairStrandsCore",
+      "Niagara",
+    });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });
 

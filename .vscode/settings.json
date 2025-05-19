@@ -14,4 +14,11 @@
   },
   "C_Cpp.errorSquiggles": "disabled",
   "files.eol": "\n",
+  "omnisharp.useModernNet": true,
+  "omnisharp.useGlobalMono": "never",
+  "omnisharp.projectLoadTimeout": 60,
+  "omnisharp.projectLoadPaths": [
+    "${workspaceFolder}",
+    "D:/Epic Games/UE_5.5/Engine/Source/Programs/UnrealBuildTool"
+  ]
 }
