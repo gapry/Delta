@@ -16,6 +16,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class UEnhancedInputLocalPlayerSubsystem;
+class UGroomComponent;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -53,4 +54,16 @@ private:
   TObjectPtr<UInputMappingContext>       InputMappingContext;
   TObjectPtr<UInputAction>               MoveAction;
   TObjectPtr<UInputAction>               LookAction;
+
+  UPROPERTY(VisibleAnywhere,
+            BlueprintReadOnly,
+            Category = "EchoCharacter",
+            meta     = (AllowPrivateAccess = "true"))
+  TObjectPtr<UGroomComponent> HairComponent;
+
+  UPROPERTY(VisibleAnywhere,
+            BlueprintReadOnly,
+            Category = "EchoCharacter",
+            meta     = (AllowPrivateAccess = "true"))
+  TObjectPtr<UGroomComponent> EyebrowsComponent;
 };

@@ -17,6 +17,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GroomComponent.h"
 
 AEchoCharacter::AEchoCharacter() {
   {
@@ -64,6 +65,32 @@ AEchoCharacter::AEchoCharacter() {
     static constexpr const TCHAR* const LookActionPath{TEXT(
       "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Look.IA_Echo_Look'")};
     DELTA_SET_InputAction(LookAction, LookActionPath);
+  }
+
+  {
+    static constexpr const TCHAR* const HairPath{
+      TEXT("/Script/HairStrandsCore.GroomAsset'/Game/AncientContent/Characters/Echo/Hair/"
+           "Hair_S_UpdoBuns.Hair_S_UpdoBuns'")};
+    static constexpr const TCHAR* const ComponentName{TEXT("Hair")};
+    static const FString                SocketName = FString("head");
+
+    HairComponent = CreateDefaultSubobject<UGroomComponent>(ComponentName);
+    HairComponent->SetupAttachment(SkeletalMeshComponent.Get());
+    HairComponent->AttachmentName = SocketName;
+    DELTA_SET_GROOM(HairComponent, HairPath);
+  }
+
+  {
+    static constexpr const TCHAR* const EyebrowsPath{
+      TEXT("/Script/HairStrandsCore.GroomAsset'/Game/AncientContent/Characters/Echo/Hair/"
+           "Eyebrows_L_Echo.Eyebrows_L_Echo'")};
+    static constexpr const TCHAR* const ComponentName{TEXT("Eyebrows")};
+    static const FString                SocketName = FString("head");
+
+    EyebrowsComponent = CreateDefaultSubobject<UGroomComponent>(ComponentName);
+    EyebrowsComponent->SetupAttachment(SkeletalMeshComponent.Get());
+    EyebrowsComponent->AttachmentName = SocketName;
+    DELTA_SET_GROOM(EyebrowsComponent, EyebrowsPath);
   }
 }
 
