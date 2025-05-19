@@ -83,3 +83,18 @@
     (InputAction) = Finder.Object;                                                          \
   } while (false)
 // ----
+
+#define DELTA_SET_GROOM(GroomComponent, GroomPath)                                              \
+  do {                                                                                          \
+    if (!(GroomComponent) || !(GroomPath)) {                                                    \
+      DELTA_LOG("{}", DeltaFormat("GroomComponent is null or GroomPath is null"));              \
+      break;                                                                                    \
+    }                                                                                           \
+    static ConstructorHelpers::FObjectFinder<UGroomAsset> Finder(GroomPath);                    \
+    if (!Finder.Succeeded()) {                                                                  \
+      DELTA_LOG("{}", DeltaFormat("Failed to load groom asset: {}", TCHAR_TO_UTF8(GroomPath))); \
+      break;                                                                                    \
+    }                                                                                           \
+    (GroomComponent)->SetGroomAsset(Finder.Object);                                             \
+  } while (false)
+// ----
