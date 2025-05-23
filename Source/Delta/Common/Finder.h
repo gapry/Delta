@@ -104,6 +104,7 @@
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> Finder(MaterialPath);          \
     if (!Finder.Succeeded()) {                                                                  \
       DELTA_LOG("{}", DeltaFormat("Failed to load material: {}", TCHAR_TO_UTF8(MaterialPath))); \
+      break;                                                                                    \
     }                                                                                           \
     HairComponent->SetMaterial(MaterialIndex, Finder.Object);                                   \
   } while (false)
