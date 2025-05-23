@@ -71,22 +71,19 @@ AEchoCharacter::AEchoCharacter() {
     static constexpr const TCHAR* const HairPath{
       TEXT("/Script/HairStrandsCore.GroomAsset'/Game/AncientContent/Characters/Echo/Hair/"
            "Hair_S_UpdoBuns.Hair_S_UpdoBuns'")};
+    static constexpr const TCHAR* const MaterialPath{
+      TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Delta/Character/Hair/"
+           "MI_HairGroom.MI_HairGroom'")};
+
     static constexpr const TCHAR* const ComponentName{TEXT("Hair")};
     static const FString                SocketName = FString("head");
 
     HairComponent = CreateDefaultSubobject<UGroomComponent>(ComponentName);
     HairComponent->SetupAttachment(SkeletalMeshComponent.Get());
     HairComponent->AttachmentName = SocketName;
-    DELTA_SET_GROOM(HairComponent, HairPath);
 
-    static constexpr const TCHAR* const MaterialPath{
-      TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Delta/Character/Hair/"
-           "MI_HairGroom.MI_HairGroom'")};
-    auto* const HairMat = Cast<UMaterialInterface>(
-      StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, MaterialPath));
-    if (HairMat) {
-      HairComponent->SetMaterial(0, HairMat);
-    }
+    DELTA_SET_GROOM(HairComponent, HairPath);
+    DELTA_SET_GROOM_MATERIAL(HairComponent, 0, MaterialPath);
   }
 
   {
