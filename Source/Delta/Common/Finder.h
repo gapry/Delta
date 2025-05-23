@@ -98,3 +98,14 @@
     (GroomComponent)->SetGroomAsset(Finder.Object);                                             \
   } while (false)
 // ----
+
+#define DELTA_SET_GROOM_MATERIAL(HairComponent, MaterialIndex, MaterialPath)                    \
+  do {                                                                                          \
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> Finder(MaterialPath);          \
+    if (!Finder.Succeeded()) {                                                                  \
+      DELTA_LOG("{}", DeltaFormat("Failed to load material: {}", TCHAR_TO_UTF8(MaterialPath))); \
+      break;                                                                                    \
+    }                                                                                           \
+    HairComponent->SetMaterial(MaterialIndex, Finder.Object);                                   \
+  } while (false)
+// ----
