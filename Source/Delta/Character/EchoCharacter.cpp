@@ -78,6 +78,15 @@ AEchoCharacter::AEchoCharacter() {
     HairComponent->SetupAttachment(SkeletalMeshComponent.Get());
     HairComponent->AttachmentName = SocketName;
     DELTA_SET_GROOM(HairComponent, HairPath);
+
+    static constexpr const TCHAR* const MaterialPath{
+      TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Delta/Character/Hair/"
+           "MI_HairGroom.MI_HairGroom'")};
+    auto* const HairMat = Cast<UMaterialInterface>(
+      StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, MaterialPath));
+    if (HairMat) {
+      HairComponent->SetMaterial(0, HairMat);
+    }
   }
 
   {
