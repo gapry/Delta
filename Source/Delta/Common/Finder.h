@@ -109,3 +109,21 @@
     HairComponent->SetMaterial(MaterialIndex, Finder.Object);                                   \
   } while (false)
 // ----
+
+#define DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent, AnimBlueprintPath)                    \
+  do {                                                                                             \
+    if (!(SkeletalMeshComponent) || !(AnimBlueprintPath)) {                                        \
+      DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null or AnimBlueprintPath is null"));  \
+      break;                                                                                       \
+    }                                                                                              \
+    static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBlueprintFinder(AnimBlueprintPath); \
+    if (!AnimBlueprintFinder.Succeeded()) {                                                        \
+      DELTA_LOG(                                                                                   \
+        "{}",                                                                                      \
+        DeltaFormat("Failed to load AnimBlueprint: {}", TCHAR_TO_UTF8(AnimBlueprintPath)));        \
+      break;                                                                                       \
+    }                                                                                              \
+    SkeletalMeshComponent->SetAnimationMode(EAnimationMode::AnimationBlueprint);                   \
+    SkeletalMeshComponent->SetAnimInstanceClass(AnimBlueprintFinder.Class);                        \
+  } while (false)
+// ----

@@ -98,6 +98,12 @@ AEchoCharacter::AEchoCharacter() {
     EyebrowsComponent->AttachmentName = SocketName;
     DELTA_SET_GROOM(EyebrowsComponent, EyebrowsPath);
   }
+
+  {
+    static constexpr const TCHAR* const AnimBlueprintPath{TEXT(
+      "/Script/Engine.AnimBlueprint'/Game/Delta/Character/ABP_EchoCharacter.ABP_EchoCharacter_C'")};
+    DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
+  }
 }
 
 void AEchoCharacter::PostInitializeComponents() {

@@ -51,19 +51,20 @@ private:
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
   TWeakObjectPtr<UCameraComponent>       CameraComponent;
-  TObjectPtr<UInputMappingContext>       InputMappingContext;
-  TObjectPtr<UInputAction>               MoveAction;
-  TObjectPtr<UInputAction>               LookAction;
+
+  TObjectPtr<UInputMappingContext> InputMappingContext;
+  TObjectPtr<UInputAction>         MoveAction;
+  TObjectPtr<UInputAction>         LookAction;
 
   UPROPERTY(VisibleAnywhere,
             BlueprintReadOnly,
             Category = "EchoCharacter",
             meta     = (AllowPrivateAccess = "true"))
-  TObjectPtr<UGroomComponent> HairComponent;
+  TSoftObjectPtr<UGroomComponent> HairComponent;
 
   UPROPERTY(VisibleAnywhere,
             BlueprintReadOnly,
             Category = "EchoCharacter",
             meta     = (AllowPrivateAccess = "true"))
-  TObjectPtr<UGroomComponent> EyebrowsComponent;
+  TSoftObjectPtr<UGroomComponent> EyebrowsComponent;
 };
