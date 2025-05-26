@@ -28,4 +28,7 @@ private:
 
   UPROPERTY(BlueprintReadOnly, Category = "EchoAnimInstance", meta = (AllowPrivateAccess = "true"))
   float GroundSpeed{0.0f};
+
+  UPROPERTY(BlueprintReadOnly, Category = "EchoAnimInstance", meta = (AllowPrivateAccess = "true"))
+  bool IsFalling{false};
 };

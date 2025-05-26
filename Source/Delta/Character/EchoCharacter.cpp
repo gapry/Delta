@@ -65,6 +65,10 @@ AEchoCharacter::AEchoCharacter() {
     static constexpr const TCHAR* const LookActionPath{TEXT(
       "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Look.IA_Echo_Look'")};
     DELTA_SET_InputAction(LookAction, LookActionPath);
+
+    static constexpr const TCHAR* const JumpActionPath{TEXT(
+      "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Jump.IA_Echo_Jump'")};
+    DELTA_SET_InputAction(JumpAction, JumpActionPath);
   }
 
   {
@@ -230,6 +234,11 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
                                      ETriggerEvent::Triggered,
                                      this,
                                      &AEchoCharacter::Look);
+
+  EnhancedInputComponent->BindAction(JumpAction,
+                                     ETriggerEvent::Triggered,
+                                     this,
+                                     &AEchoCharacter::Jump);
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value) {
@@ -268,6 +277,13 @@ void AEchoCharacter::Look(const FInputActionValue& Value) {
 
   AddControllerYawInput(LookAxisVector.X);
   AddControllerPitchInput(LookAxisVector.Y);
+}
+
+void AEchoCharacter::Jump() {
+  if (GetCharacterMovement()->IsFalling()) {
+    return;
+  }
+  Super::Jump();
 }
 
 APlayerController* AEchoCharacter::GetPlayerController() const {
