@@ -225,6 +225,11 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     return;
   }
 
+  if (!JumpAction) {
+    DELTA_LOG("{}", DeltaFormat("JumpAction is null"));
+    return;
+  }
+
   EnhancedInputComponent->BindAction(MoveAction,
                                      ETriggerEvent::Triggered,
                                      this,
