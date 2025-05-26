@@ -17,7 +17,7 @@ class DELTA_API UEchoAnimInstance : public UAnimInstance {
 
 public:
   virtual void NativeInitializeAnimation() override;
-  virtual void NativeUpdateAnimation(const float DeltaTime) override;
+  virtual void NativeUpdateAnimation(float DeltaTime) override;
 
 private:
   UPROPERTY(BlueprintReadOnly, Category = "EchoAnimInstance", meta = (AllowPrivateAccess = "true"))
