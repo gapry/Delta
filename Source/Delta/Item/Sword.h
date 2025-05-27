@@ -29,6 +29,8 @@ public:
                                   UPrimitiveComponent* OtherComp,
                                   int32                OtherBodyIndex) override;
 
+  void Equip(USceneComponent* InParent, FName InSocketName);
+
 protected:
   virtual void BeginPlayAction() override;
 };

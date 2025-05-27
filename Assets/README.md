@@ -1,0 +1,16 @@
+## [mixamo](https://www.mixamo.com/)
+- Characters
+  - X Bot 
+    - Format: .fbx
+    - Pose: T-pose
+- Animations
+  - axe Standing Idle
+    - Format: .fbx
+    - Skin: Without Skin
+    - FPS: 30
+    - Keyframe Reduction: none
+  - axe Standing Melee Attack Horizontal 
+    - Format: .fbx
+    - Skin: Without Skin
+    - FPS: 30
+    - Keyframe Reduction: none

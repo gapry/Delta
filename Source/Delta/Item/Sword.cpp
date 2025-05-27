@@ -5,6 +5,7 @@
 #include "Sword.h"
 #include "Components/SphereComponent.h"
 #include "../Common/Finder.h"
+#include "../Character/EchoCharacter.h"
 
 ASword::ASword() {
   {
@@ -35,15 +36,15 @@ void ASword::BeginPlayAction() {
 }
 
 void ASword::TickAction(const float DeltaTime) {
-  const float DeltaZ = GetSineOscillationOffset();
+  // const float DeltaZ = GetSineOscillationOffset();
 
-  FVector MoveLocation = GetActorLocation();
-  MoveLocation.Z += DeltaZ;
-  SetActorLocation(MoveLocation);
+  // FVector MoveLocation = GetActorLocation();
+  // MoveLocation.Z += DeltaZ;
+  // SetActorLocation(MoveLocation);
 
-  FRotator MoveRotation = GetActorRotation();
-  MoveRotation.Yaw += RotationRate * DeltaTime;
-  SetActorRotation(MoveRotation);
+  // FRotator MoveRotation = GetActorRotation();
+  // MoveRotation.Yaw += RotationRate * DeltaTime;
+  // SetActorRotation(MoveRotation);
 }
 
 void ASword::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -52,9 +53,9 @@ void ASword::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                   int32                OtherBodyIndex,
                                   bool                 bFromSweep,
                                   const FHitResult&    SweepResult) {
-  const FString& OtherActorName = FString("Begining Overlap with: ") + OtherActor->GetName();
-  if (GEngine) {
-    GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+  AEchoCharacter* EchoCharacter = Cast<AEchoCharacter>(OtherActor);
+  if (EchoCharacter) {
+    EchoCharacter->SetOverlappingItem(this);
   }
 }
 
@@ -62,8 +63,13 @@ void ASword::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
                                 AActor*              OtherActor,
                                 UPrimitiveComponent* OtherComp,
                                 int32                OtherBodyIndex) {
-  const FString OtherActorName = FString("Ending Overlap with: ") + OtherActor->GetName();
-  if (GEngine) {
-    GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+  AEchoCharacter* EchoCharacter = Cast<AEchoCharacter>(OtherActor);
+  if (EchoCharacter) {
+    EchoCharacter->SetOverlappingItem(nullptr);
   }
+}
+
+void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
+  FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
+  StaticMeshComponent->AttachToComponent(InParent, TransformRules, InSocketName);
 }
