@@ -9,6 +9,5 @@ void UEchoControlRig::Initialize(bool bRequestInit) {
 }
 
 bool UEchoControlRig::Execute(const FName& InEventName) {
-  Super::Execute(InEventName);
-  return true;
+  return Super::Execute(InEventName);
 }
