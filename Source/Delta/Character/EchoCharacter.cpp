@@ -16,6 +16,7 @@
 #include "GroomComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
+#include "../Item/Sword.h"
 
 AEchoCharacter::AEchoCharacter() {
   {
@@ -67,6 +68,11 @@ AEchoCharacter::AEchoCharacter() {
     static constexpr const TCHAR* const JumpActionPath{TEXT(
       "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Jump.IA_Echo_Jump'")};
     DELTA_SET_InputAction(JumpAction, JumpActionPath);
+
+    static constexpr const TCHAR* const EquipActionPath{
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
+           "IA_Echo_Equip.IA_Echo_Equip'")};
+    DELTA_SET_InputAction(EquipAction, EquipActionPath);
   }
 
   {
@@ -244,6 +250,11 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
                                      ETriggerEvent::Triggered,
                                      this,
                                      &AEchoCharacter::Jump);
+
+  EnhancedInputComponent->BindAction(EquipAction,
+                                     ETriggerEvent::Triggered,
+                                     this,
+                                     &AEchoCharacter::Equip);
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value) {
@@ -291,6 +302,13 @@ void AEchoCharacter::Jump() {
   Super::Jump();
 }
 
+void AEchoCharacter::Equip(const FInputActionValue& Value) {
+  auto* const OverlappingWeapon = Cast<ASword>(OverlappingItem);
+  if (OverlappingWeapon) {
+    OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+  }
+}
+
 APlayerController* AEchoCharacter::GetPlayerController() const {
   return CastChecked<APlayerController>(Controller);
 }
@@ -300,4 +318,21 @@ UEnhancedInputLocalPlayerSubsystem* AEchoCharacter::GetSubsystem() const {
     return ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
   }
   return nullptr;
+}
+
+void AEchoCharacter::SetOverlappingItem(AItem* const Item) {
+  if (Item == nullptr) {
+    OverlappingItem = nullptr;
+    return;
+  }
+
+  if (OverlappingItem.Get() == Item) {
+    return;
+  }
+
+  OverlappingItem = Item;
+}
+
+AItem* AEchoCharacter::GetOverlappingItem() const {
+  return OverlappingItem.Get();
 }

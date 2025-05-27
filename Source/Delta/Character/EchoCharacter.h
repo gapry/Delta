@@ -17,6 +17,7 @@ class UInputMappingContext;
 class UInputAction;
 class UEnhancedInputLocalPlayerSubsystem;
 class UGroomComponent;
+class AItem;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -33,6 +34,10 @@ public:
   virtual void Jump() override;
   void         Move(const FInputActionValue& Value);
   void         Look(const FInputActionValue& Value);
+  void         Equip(const FInputActionValue& Value);
+
+  void   SetOverlappingItem(AItem* const Item);
+  AItem* GetOverlappingItem() const;
 
 protected:
   virtual void BeginPlay() override;
@@ -57,6 +62,7 @@ private:
   TObjectPtr<UInputAction>         MoveAction;
   TObjectPtr<UInputAction>         LookAction;
   TObjectPtr<UInputAction>         JumpAction;
+  TObjectPtr<UInputAction>         EquipAction;
 
   UPROPERTY(VisibleAnywhere,
             BlueprintReadOnly,
@@ -69,4 +75,7 @@ private:
             Category = "EchoCharacter",
             meta     = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UGroomComponent> EyebrowsComponent;
+
+  UPROPERTY(VisibleInstanceOnly)
+  TObjectPtr<AItem> OverlappingItem;
 };
