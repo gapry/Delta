@@ -21,6 +21,8 @@ public class Delta : ModuleRules
       "EnhancedInput",
       "HairStrandsCore",
       "Niagara",
+      "ControlRig",
+      "RigVM",
     });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });

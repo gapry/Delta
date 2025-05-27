@@ -285,9 +285,9 @@ void AEchoCharacter::Look(const FInputActionValue& Value) {
 }
 
 void AEchoCharacter::Jump() {
-  if (GetCharacterMovement()->IsFalling()) {
-    return;
-  }
+  // if (GetCharacterMovement()->IsFalling()) {
+  //   return;
+  // }
   Super::Jump();
 }
 
