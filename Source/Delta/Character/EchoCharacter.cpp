@@ -3,10 +3,6 @@
 // See LICENSE file in the project root for full license information.
 
 #include "EchoCharacter.h"
-
-#include "../Common/Finder.h"
-#include "../Common/LogUtil.h"
-
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -18,6 +14,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
+#include "../Common/Finder.h"
+#include "../Common/LogUtil.h"
 
 AEchoCharacter::AEchoCharacter() {
   {
@@ -108,6 +106,16 @@ AEchoCharacter::AEchoCharacter() {
       "/Script/Engine.AnimBlueprint'/Game/Delta/Character/ABP_EchoCharacter.ABP_EchoCharacter_C'")};
     DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
   }
+
+  {
+    SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+                                                         ECollisionResponse::ECR_Ignore);
+    SkeletalMeshComponent->UpdateCollisionProfile();
+  }
 }
 
 void AEchoCharacter::PostInitializeComponents() {
@@ -130,14 +138,6 @@ void AEchoCharacter::PostInitializeSkeletalMeshComponent() {
                                                          FVector(1.f, 1.f, 1.f)));  // Scale
 
   SkeletalMeshComponent->SetGenerateOverlapEvents(true);
-
-  SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-  SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-  SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-  SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-  SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                                       ECollisionResponse::ECR_Ignore);
-  SkeletalMeshComponent->UpdateCollisionProfile();
 }
 
 void AEchoCharacter::PostInitializeCapsuleComponent() {

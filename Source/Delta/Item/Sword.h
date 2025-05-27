@@ -6,14 +6,14 @@
 
 #include "CoreMinimal.h"
 #include "Item.h"
-#include "QuadPyramid.generated.h"
+#include "Sword.generated.h"
 
 UCLASS()
-class DELTA_API AQuadPyramid : public AItem {
+class DELTA_API ASword : public AItem {
   GENERATED_BODY()
 
 public:
-  AQuadPyramid();
+  ASword();
 
   virtual void TickAction(const float DeltaTime) override;
 

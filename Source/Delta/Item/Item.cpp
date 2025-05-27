@@ -3,53 +3,42 @@
 // See LICENSE file in the project root for full license information.
 
 #include "Item.h"
+#include "Components/SphereComponent.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
 
 AItem::AItem() {
-  PrimaryActorTick.bCanEverTick = true;
+  {
+    PrimaryActorTick.bCanEverTick = true;
+  }
 
-  static const TCHAR* const ComponentName = TEXT("StaticMeshComponent");
-  StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(ComponentName);
+  {
+    static const TCHAR* const ComponentName = TEXT("StaticMeshComponent");
+    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(ComponentName);
+  }
 
-  if (StaticMeshComponent) {
-    RootComponent = StaticMeshComponent;
+  {
+    if (StaticMeshComponent) {
+      RootComponent = StaticMeshComponent;
+    }
+  }
+
+  {
+    SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+    SphereComponent->SetupAttachment(GetRootComponent());
   }
 }
 
 void AItem::OnConstruction(const FTransform& Transform) {
   Super::OnConstruction(Transform);
-
-  InitializeCollision();
-  InitializeRootComponent();
-}
-
-void AItem::InitializeCollision() {
-  if (!StaticMeshComponent) {
-    DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null"));
-    return;
-  }
-
-  StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-  StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-  StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-  StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
-                                                     ECollisionResponse::ECR_Ignore);
-  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                                     ECollisionResponse::ECR_Overlap);
-}
-
-void AItem::InitializeRootComponent() {
-  if (!RootComponent) {
-    DELTA_LOG("{}", DeltaFormat("RootComponent is null"));
-    return;
-  }
-  RootComponent->SetMobility(EComponentMobility::Movable);
 }
 
 void AItem::BeginPlay() {
   Super::BeginPlay();
+
+  SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereBeginOverlap);
+  SphereComponent->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
+
   BeginPlayAction();
 }
 
@@ -59,17 +48,27 @@ void AItem::BeginPlayAction() {
   UpdateForwardDirection();
 }
 
-void AItem::PostInitializeComponents() {
-  Super::PostInitializeComponents();
-  PostInitializeStaticMeshComponent();
-}
-
 void AItem::PostInitializeStaticMeshComponent() {
   if (!StaticMeshComponent) {
     DELTA_LOG("{}", DeltaFormat("StaticMeshComponent is null"));
     return;
   }
   StaticMeshComponent->SetMobility(EComponentMobility::Movable);
+}
+
+void AItem::PostInitializeRootComponent() {
+  if (!RootComponent) {
+    DELTA_LOG("{}", DeltaFormat("RootComponent is null"));
+    return;
+  }
+  RootComponent->SetMobility(EComponentMobility::Movable);
+}
+
+void AItem::PostInitializeComponents() {
+  Super::PostInitializeComponents();
+
+  PostInitializeStaticMeshComponent();
+  PostInitializeRootComponent();
 }
 
 void AItem::Tick(float DeltaTime) {
@@ -128,4 +127,18 @@ float AItem::GetSineOscillationOffset() const {
 
 float AItem::GetCosineOscillationOffset() const {
   return FMath::Cos(2.f * PI * Frequency * RunningTime) * Amplitude;
+}
+
+void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                 AActor*              OtherActor,
+                                 UPrimitiveComponent* OtherComp,
+                                 int32                OtherBodyIndex,
+                                 bool                 bFromSweep,
+                                 const FHitResult&    SweepResult) {
+}
+
+void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                               AActor*              OtherActor,
+                               UPrimitiveComponent* OtherComp,
+                               int32                OtherBodyIndex) {
 }
