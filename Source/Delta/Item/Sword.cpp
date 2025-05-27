@@ -2,19 +2,20 @@
 // Licensed under the MIT License.
 // See LICENSE file in the project root for full license information.
 
-#include "QuadPyramid.h"
+#include "Sword.h"
 #include "Components/SphereComponent.h"
 #include "../Common/Finder.h"
 
-AQuadPyramid::AQuadPyramid() {
+ASword::ASword() {
   {
     static const TCHAR* const Path =
-      TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_QuadPyramid'");
+      TEXT("/Script/Engine.StaticMesh'/Game/Fab/Megascans/3D/Sword_uitlbiaga/Medium/"
+           "SM_uitlbiaga_tier_2.SM_uitlbiaga_tier_2'");
     DELTA_SET_STATIC_MESH(StaticMeshComponent, Path);
   }
 
   {
-    SphereComponent->SetSphereRadius(105.f);
+    SphereComponent->SetSphereRadius(52.f);
   }
 
   {
@@ -30,28 +31,37 @@ AQuadPyramid::AQuadPyramid() {
   }
 }
 
-void AQuadPyramid::BeginPlayAction() {
+void ASword::BeginPlayAction() {
 }
 
-void AQuadPyramid::TickAction(const float DeltaTime) {
+void ASword::TickAction(const float DeltaTime) {
+  const float DeltaZ = GetSineOscillationOffset();
+
+  FVector MoveLocation = GetActorLocation();
+  MoveLocation.Z += DeltaZ;
+  SetActorLocation(MoveLocation);
+
+  FRotator MoveRotation = GetActorRotation();
+  MoveRotation.Yaw += RotationRate * DeltaTime;
+  SetActorRotation(MoveRotation);
 }
 
-void AQuadPyramid::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
-                                        AActor*              OtherActor,
-                                        UPrimitiveComponent* OtherComp,
-                                        int32                OtherBodyIndex,
-                                        bool                 bFromSweep,
-                                        const FHitResult&    SweepResult) {
+void ASword::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                  AActor*              OtherActor,
+                                  UPrimitiveComponent* OtherComp,
+                                  int32                OtherBodyIndex,
+                                  bool                 bFromSweep,
+                                  const FHitResult&    SweepResult) {
   const FString& OtherActorName = FString("Begining Overlap with: ") + OtherActor->GetName();
   if (GEngine) {
     GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
   }
 }
 
-void AQuadPyramid::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
-                                      AActor*              OtherActor,
-                                      UPrimitiveComponent* OtherComp,
-                                      int32                OtherBodyIndex) {
+void ASword::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                                AActor*              OtherActor,
+                                UPrimitiveComponent* OtherComp,
+                                int32                OtherBodyIndex) {
   const FString OtherActorName = FString("Ending Overlap with: ") + OtherActor->GetName();
   if (GEngine) {
     GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);

@@ -7,6 +7,8 @@
 #include "CoreMinimal.h"
 #include "Item.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class DELTA_API AItem : public AActor {
   GENERATED_BODY()
@@ -15,9 +17,6 @@ public:
   AItem();
 
   virtual void OnConstruction(const FTransform& Transform) override;
-
-  virtual void InitializeCollision();
-  virtual void InitializeRootComponent();
 
   virtual void Tick(float DeltaTime) override;
   virtual void TickAction(const float DeltaTime);
@@ -34,7 +33,22 @@ protected:
   virtual void BeginPlayAction();
 
   virtual void PostInitializeComponents() override;
+  virtual void PostInitializeRootComponent();
   virtual void PostInitializeStaticMeshComponent();
+
+  UFUNCTION()
+  virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                    AActor*              OtherActor,
+                                    UPrimitiveComponent* OtherComp,
+                                    int32                OtherBodyIndex,
+                                    bool                 bFromSweep,
+                                    const FHitResult&    SweepResult);
+
+  UFUNCTION()
+  virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                                  AActor*              OtherActor,
+                                  UPrimitiveComponent* OtherComp,
+                                  int32                OtherBodyIndex);
 
   UFUNCTION(BlueprintCallable, Category = "Item")
   float GetSineOscillationOffset() const;
@@ -45,7 +59,9 @@ protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
   TObjectPtr<UStaticMeshComponent> StaticMeshComponent{nullptr};
 
-private:
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item")
+  TObjectPtr<USphereComponent> SphereComponent{nullptr};
+
   UPROPERTY(BlueprintReadWrite,
             EditAnywhere,
             Category = "Item",
@@ -58,6 +74,7 @@ private:
             meta     = (AllowPrivateAccess = "true"))
   float RotationRate{45.f};
 
+private:
   UPROPERTY(VisibleAnywhere, Category = "Item")
   FVector ForwardDirection{FVector::ForwardVector};
 
