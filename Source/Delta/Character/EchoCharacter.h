@@ -19,6 +19,7 @@ class UInputAction;
 class UEnhancedInputLocalPlayerSubsystem;
 class UGroomComponent;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -44,6 +45,12 @@ public:
   ECharacterState GetCharacterState() const;
   void            SetCharacterState(ECharacterState NewState);
 
+  void PlayAttackMontage() const;
+
+  void AttackAnimNotify();
+
+  bool CanAttack() const;
+
 protected:
   virtual void BeginPlay() override;
   virtual void PostInitializeComponents() override;
@@ -59,6 +66,7 @@ private:
   UEnhancedInputLocalPlayerSubsystem* GetSubsystem() const;
 
   ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+  EActionState    ActionState    = EActionState::EAS_Unoccupied;
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
@@ -84,6 +92,9 @@ private:
             meta     = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UGroomComponent> EyebrowsComponent;
 
-  UPROPERTY(VisibleInstanceOnly)
+  UPROPERTY(VisibleInstanceOnly, Category = "EchoCharacter")
   TObjectPtr<AItem> OverlappingItem;
+
+  UPROPERTY(EditDefaultsOnly, Category = "EchoCharacter")
+  TObjectPtr<UAnimMontage> AttackMontage{nullptr};
 };

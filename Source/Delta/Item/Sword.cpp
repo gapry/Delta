@@ -36,15 +36,19 @@ void ASword::BeginPlayAction() {
 }
 
 void ASword::TickAction(const float DeltaTime) {
-  // const float DeltaZ = GetSineOscillationOffset();
+  if (ItemState != EItemState::EIS_Hovering) {
+    return;
+  }
 
-  // FVector MoveLocation = GetActorLocation();
-  // MoveLocation.Z += DeltaZ;
-  // SetActorLocation(MoveLocation);
+  const float DeltaZ = GetSineOscillationOffset();
 
-  // FRotator MoveRotation = GetActorRotation();
-  // MoveRotation.Yaw += RotationRate * DeltaTime;
-  // SetActorRotation(MoveRotation);
+  FVector MoveLocation = GetActorLocation();
+  MoveLocation.Z += DeltaZ;
+  SetActorLocation(MoveLocation);
+
+  FRotator MoveRotation = GetActorRotation();
+  MoveRotation.Yaw += RotationRate * DeltaTime;
+  SetActorRotation(MoveRotation);
 }
 
 void ASword::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -53,23 +57,26 @@ void ASword::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                   int32                OtherBodyIndex,
                                   bool                 bFromSweep,
                                   const FHitResult&    SweepResult) {
-  AEchoCharacter* EchoCharacter = Cast<AEchoCharacter>(OtherActor);
-  if (EchoCharacter) {
-    EchoCharacter->SetOverlappingItem(this);
+  auto* const EchoCharacter = Cast<AEchoCharacter>(OtherActor);
+  if (EchoCharacter == nullptr) {
+    return;
   }
+  EchoCharacter->SetOverlappingItem(this);
 }
 
 void ASword::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
                                 AActor*              OtherActor,
                                 UPrimitiveComponent* OtherComp,
                                 int32                OtherBodyIndex) {
-  AEchoCharacter* EchoCharacter = Cast<AEchoCharacter>(OtherActor);
-  if (EchoCharacter) {
-    EchoCharacter->SetOverlappingItem(nullptr);
+  auto* const EchoCharacter = Cast<AEchoCharacter>(OtherActor);
+  if (EchoCharacter == nullptr) {
+    return;
   }
+  EchoCharacter->SetOverlappingItem(nullptr);
 }
 
 void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
   FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
   StaticMeshComponent->AttachToComponent(InParent, TransformRules, InSocketName);
+  ItemState = EItemState::EIS_Equipped;
 }

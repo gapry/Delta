@@ -127,3 +127,20 @@
     SkeletalMeshComponent->SetAnimInstanceClass(AnimBlueprintFinder.Class);                        \
   } while (false)
 // ----
+
+#define DELTA_SET_ANIMATION_MONTAGE(AnimationMontage, AnimationMontagePath)                        \
+  do {                                                                                             \
+    if (!(AnimationMontagePath)) {                                                                 \
+      DELTA_LOG("{}", DeltaFormat("AnimationMontagePath is null"));                                \
+      break;                                                                                       \
+    }                                                                                              \
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> Finder(AnimationMontagePath);           \
+    if (!Finder.Succeeded()) {                                                                     \
+      DELTA_LOG(                                                                                   \
+        "{}",                                                                                      \
+        DeltaFormat("Failed to load animation montage: {}", TCHAR_TO_UTF8(AnimationMontagePath))); \
+      break;                                                                                       \
+    }                                                                                              \
+    AnimationMontage = Finder.Object;                                                              \
+  } while (false)
+// ----
