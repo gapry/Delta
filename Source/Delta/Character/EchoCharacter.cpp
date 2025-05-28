@@ -73,6 +73,11 @@ AEchoCharacter::AEchoCharacter() {
       TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
            "IA_Echo_Equip.IA_Echo_Equip'")};
     DELTA_SET_InputAction(EquipAction, EquipActionPath);
+
+    static constexpr const TCHAR* const AttackActionPath{
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
+           "IA_Echo_Attack.IA_Echo_Attack'")};
+    DELTA_SET_InputAction(AttackAction, AttackActionPath);
   }
 
   {
@@ -108,8 +113,9 @@ AEchoCharacter::AEchoCharacter() {
   }
 
   {
-    static constexpr const TCHAR* const AnimBlueprintPath{TEXT(
-      "/Script/Engine.AnimBlueprint'/Game/Delta/Character/ABP_EchoCharacter.ABP_EchoCharacter_C'")};
+    static constexpr const TCHAR* const AnimBlueprintPath{
+      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Character/Animation/Blueprint/"
+           "ABP_EchoCharacter.ABP_EchoCharacter_C'")};
     DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
   }
 
@@ -236,6 +242,16 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     return;
   }
 
+  if (!EquipAction) {
+    DELTA_LOG("{}", DeltaFormat("EquipAction is null"));
+    return;
+  }
+
+  if (!AttackAction) {
+    DELTA_LOG("{}", DeltaFormat("AttackAction is null"));
+    return;
+  }
+
   EnhancedInputComponent->BindAction(MoveAction,
                                      ETriggerEvent::Triggered,
                                      this,
@@ -255,6 +271,11 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
                                      ETriggerEvent::Triggered,
                                      this,
                                      &AEchoCharacter::Equip);
+
+  EnhancedInputComponent->BindAction(AttackAction,
+                                     ETriggerEvent::Triggered,
+                                     this,
+                                     &AEchoCharacter::Attack);
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value) {
@@ -308,6 +329,10 @@ void AEchoCharacter::Equip(const FInputActionValue& Value) {
     OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
     CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
   }
+}
+
+void AEchoCharacter::Attack(const FInputActionValue& Value) {
+  DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "Attack action triggered"));
 }
 
 APlayerController* AEchoCharacter::GetPlayerController() const {

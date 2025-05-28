@@ -20,3 +20,13 @@
     - Skin: Without Skin
     - FPS: 30
     - Keyframe Reduction: none
+  - axe Standing Melee Attack 360 High
+    - Format: *.fbx
+    - Skin: Without Skin
+    - FPS: 30
+    - Keyframe Reduction: none
+  - axe Standing Melee Attack Downward
+    - Format: *.fbx
+    - Skin: Without Skin
+    - FPS: 30
+    - Keyframe Reduction: none

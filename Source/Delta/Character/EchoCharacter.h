@@ -36,6 +36,7 @@ public:
   void         Move(const FInputActionValue& Value);
   void         Look(const FInputActionValue& Value);
   void         Equip(const FInputActionValue& Value);
+  void         Attack(const FInputActionValue& Value);
 
   void   SetOverlappingItem(AItem* const Item);
   AItem* GetOverlappingItem() const;
@@ -69,6 +70,7 @@ private:
   TObjectPtr<UInputAction>         LookAction;
   TObjectPtr<UInputAction>         JumpAction;
   TObjectPtr<UInputAction>         EquipAction;
+  TObjectPtr<UInputAction>         AttackAction;
 
   UPROPERTY(VisibleAnywhere,
             BlueprintReadOnly,
