@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "CharacterTypes.h"
 #include "EchoCharacter.generated.h"
 
 class USkeletalMeshComponent;
@@ -39,6 +40,9 @@ public:
   void   SetOverlappingItem(AItem* const Item);
   AItem* GetOverlappingItem() const;
 
+  ECharacterState GetCharacterState() const;
+  void            SetCharacterState(ECharacterState NewState);
+
 protected:
   virtual void BeginPlay() override;
   virtual void PostInitializeComponents() override;
@@ -52,6 +56,8 @@ protected:
 private:
   APlayerController*                  GetPlayerController() const;
   UEnhancedInputLocalPlayerSubsystem* GetSubsystem() const;
+
+  ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;

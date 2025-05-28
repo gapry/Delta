@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "CharacterTypes.h"
 #include "EchoAnimInstance.generated.h"
 
 class AEchoCharacter;
@@ -31,4 +32,9 @@ private:
 
   UPROPERTY(BlueprintReadOnly, Category = "EchoAnimInstance", meta = (AllowPrivateAccess = "true"))
   bool IsFalling{false};
+
+  UPROPERTY(BlueprintReadOnly,
+            Category = "EchoAnimInstance | CharacterState",
+            meta     = (AllowPrivateAccess = "true"))
+  ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 };

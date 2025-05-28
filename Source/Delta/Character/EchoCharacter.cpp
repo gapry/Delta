@@ -306,6 +306,7 @@ void AEchoCharacter::Equip(const FInputActionValue& Value) {
   auto* const OverlappingWeapon = Cast<ASword>(OverlappingItem);
   if (OverlappingWeapon) {
     OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+    CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
   }
 }
 
@@ -335,4 +336,15 @@ void AEchoCharacter::SetOverlappingItem(AItem* const Item) {
 
 AItem* AEchoCharacter::GetOverlappingItem() const {
   return OverlappingItem.Get();
+}
+
+ECharacterState AEchoCharacter::GetCharacterState() const {
+  return CharacterState;
+}
+
+void AEchoCharacter::SetCharacterState(ECharacterState NewState) {
+  if (CharacterState == NewState) {
+    return;
+  }
+  CharacterState = NewState;
 }
