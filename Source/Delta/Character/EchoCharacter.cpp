@@ -30,8 +30,8 @@ AEchoCharacter::AEchoCharacter() {
   {
     SkeletalMeshComponent = GetMesh();
 
-    static constexpr const TCHAR* const SkeletalMeshPath{
-      TEXT("/Script/Engine.SkeletalMesh'/Game/AncientContent/Characters/Echo/Meshes/Echo.Echo'")};
+    static constexpr const TCHAR* const SkeletalMeshPath{TEXT(
+      "/Script/Engine.SkeletalMesh'/Game/Delta/AncientContent/Characters/Echo/Meshes/Echo.Echo'")};
 
     DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
   }
