@@ -14,6 +14,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
+#include "Animation/AnimMontage.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Item/Sword.h"
@@ -73,6 +74,11 @@ AEchoCharacter::AEchoCharacter() {
       TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
            "IA_Echo_Equip.IA_Echo_Equip'")};
     DELTA_SET_InputAction(EquipAction, EquipActionPath);
+
+    static constexpr const TCHAR* const AttackActionPath{
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
+           "IA_Echo_Attack.IA_Echo_Attack'")};
+    DELTA_SET_InputAction(AttackAction, AttackActionPath);
   }
 
   {
@@ -108,9 +114,16 @@ AEchoCharacter::AEchoCharacter() {
   }
 
   {
-    static constexpr const TCHAR* const AnimBlueprintPath{TEXT(
-      "/Script/Engine.AnimBlueprint'/Game/Delta/Character/ABP_EchoCharacter.ABP_EchoCharacter_C'")};
+    static constexpr const TCHAR* const AnimBlueprintPath{
+      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Character/Animation/Blueprint/"
+           "ABP_EchoCharacter.ABP_EchoCharacter_C'")};
     DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
+  }
+
+  {
+    static constexpr const TCHAR* const AnimMontagePath{TEXT(
+      "/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/AM_Attack.AM_Attack'")};
+    DELTA_SET_ANIMATION_MONTAGE(AttackMontage, AnimMontagePath);
   }
 
   {
@@ -236,6 +249,16 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     return;
   }
 
+  if (!EquipAction) {
+    DELTA_LOG("{}", DeltaFormat("EquipAction is null"));
+    return;
+  }
+
+  if (!AttackAction) {
+    DELTA_LOG("{}", DeltaFormat("AttackAction is null"));
+    return;
+  }
+
   EnhancedInputComponent->BindAction(MoveAction,
                                      ETriggerEvent::Triggered,
                                      this,
@@ -255,12 +278,20 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
                                      ETriggerEvent::Triggered,
                                      this,
                                      &AEchoCharacter::Equip);
+
+  EnhancedInputComponent->BindAction(AttackAction,
+                                     ETriggerEvent::Triggered,
+                                     this,
+                                     &AEchoCharacter::Attack);
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value) {
-
   if (Controller == nullptr) {
     DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "Controller is null"));
+    return;
+  }
+
+  if (ActionState == EActionState::EAS_Attacking) {
     return;
   }
 
@@ -296,18 +327,36 @@ void AEchoCharacter::Look(const FInputActionValue& Value) {
 }
 
 void AEchoCharacter::Jump() {
-  // if (GetCharacterMovement()->IsFalling()) {
-  //   return;
-  // }
   Super::Jump();
 }
 
 void AEchoCharacter::Equip(const FInputActionValue& Value) {
   auto* const OverlappingWeapon = Cast<ASword>(OverlappingItem);
-  if (OverlappingWeapon) {
-    OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
-    CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+
+  if (OverlappingWeapon == nullptr) {
+    return;
   }
+
+  OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+  CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+}
+
+void AEchoCharacter::Attack(const FInputActionValue& Value) {
+  if (Controller == nullptr) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "Controller is null"));
+    return;
+  }
+
+  if (!CanAttack()) {
+    return;
+  }
+
+  if (!Value.Get<bool>()) {
+    return;
+  }
+
+  PlayAttackMontage();
+  ActionState = EActionState::EAS_Attacking;
 }
 
 APlayerController* AEchoCharacter::GetPlayerController() const {
@@ -315,10 +364,14 @@ APlayerController* AEchoCharacter::GetPlayerController() const {
 }
 
 UEnhancedInputLocalPlayerSubsystem* AEchoCharacter::GetSubsystem() const {
-  if (auto* const PC = GetPlayerController()) {
-    return ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
+  auto* const PC = GetPlayerController();
+
+  if (PC == nullptr) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "PlayerController is null"));
+    return nullptr;
   }
-  return nullptr;
+
+  return ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
 }
 
 void AEchoCharacter::SetOverlappingItem(AItem* const Item) {
@@ -347,4 +400,39 @@ void AEchoCharacter::SetCharacterState(ECharacterState NewState) {
     return;
   }
   CharacterState = NewState;
+}
+
+void AEchoCharacter::PlayAttackMontage() const {
+  UAnimInstance* const AnimInstance = SkeletalMeshComponent->GetAnimInstance();
+
+  if (!AnimInstance) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "AnimInstance is null"));
+    return;
+  }
+
+  if (!AttackMontage) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "AttackMontage is null"));
+    return;
+  }
+
+  AnimInstance->Montage_Play(AttackMontage);
+
+  const int32  Selection   = FMath::RandRange(0, 2);
+  static FName SectionName = FName();
+  switch (Selection) {
+    case 0: SectionName = FName("Attack_Horizontal"); break;
+    case 1: SectionName = FName("Attack_360"); break;
+    case 2: SectionName = FName("Attack_Downward"); break;
+    default: break;
+  }
+  AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+}
+
+void AEchoCharacter::AttackAnimNotify() {
+  ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool AEchoCharacter::CanAttack() const {
+  return ActionState == EActionState::EAS_Unoccupied &&
+         CharacterState != ECharacterState::ECS_Unequipped;
 }

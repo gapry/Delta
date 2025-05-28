@@ -5,6 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemState.h"
 #include "Item.generated.h"
 
 class USphereComponent;
@@ -73,6 +74,8 @@ protected:
             Category = "Item",
             meta     = (AllowPrivateAccess = "true"))
   float RotationRate{45.f};
+
+  EItemState ItemState = EItemState::EIS_Hovering;
 
 private:
   UPROPERTY(VisibleAnywhere, Category = "Item")

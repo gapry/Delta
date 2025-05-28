@@ -7,7 +7,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "CharacterTypes.h"
+#include "State/CharacterState.h"
+#include "State/ActionState.h"
 #include "EchoCharacter.generated.h"
 
 class USkeletalMeshComponent;
@@ -19,6 +20,7 @@ class UInputAction;
 class UEnhancedInputLocalPlayerSubsystem;
 class UGroomComponent;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -36,12 +38,19 @@ public:
   void         Move(const FInputActionValue& Value);
   void         Look(const FInputActionValue& Value);
   void         Equip(const FInputActionValue& Value);
+  void         Attack(const FInputActionValue& Value);
 
   void   SetOverlappingItem(AItem* const Item);
   AItem* GetOverlappingItem() const;
 
   ECharacterState GetCharacterState() const;
   void            SetCharacterState(ECharacterState NewState);
+
+  void PlayAttackMontage() const;
+
+  void AttackAnimNotify();
+
+  bool CanAttack() const;
 
 protected:
   virtual void BeginPlay() override;
@@ -58,6 +67,7 @@ private:
   UEnhancedInputLocalPlayerSubsystem* GetSubsystem() const;
 
   ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+  EActionState    ActionState    = EActionState::EAS_Unoccupied;
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
@@ -69,6 +79,7 @@ private:
   TObjectPtr<UInputAction>         LookAction;
   TObjectPtr<UInputAction>         JumpAction;
   TObjectPtr<UInputAction>         EquipAction;
+  TObjectPtr<UInputAction>         AttackAction;
 
   UPROPERTY(VisibleAnywhere,
             BlueprintReadOnly,
@@ -82,6 +93,9 @@ private:
             meta     = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UGroomComponent> EyebrowsComponent;
 
-  UPROPERTY(VisibleInstanceOnly)
+  UPROPERTY(VisibleInstanceOnly, Category = "EchoCharacter")
   TObjectPtr<AItem> OverlappingItem;
+
+  UPROPERTY(EditDefaultsOnly, Category = "EchoCharacter")
+  TObjectPtr<UAnimMontage> AttackMontage{nullptr};
 };

@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "CharacterTypes.h"
+#include "State/CharacterState.h"
 #include "EchoAnimInstance.generated.h"
 
 class AEchoCharacter;
