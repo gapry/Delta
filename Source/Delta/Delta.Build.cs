@@ -23,6 +23,10 @@ public class Delta : ModuleRules
       "Niagara",
       "ControlRig",
       "RigVM",
+      "AudioExtensions",
+      "MetasoundEngine",
+      "MetasoundFrontend",
+      "MetasoundGraphCore"
     });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });

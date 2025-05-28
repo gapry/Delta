@@ -30,3 +30,12 @@
     - Skin: Without Skin
     - FPS: 30
     - Keyframe Reduction: none
+
+## Effects
+- https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Effects
+
+## Sounds
+- https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Sounds
+
+## Textures
+- https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Textures
