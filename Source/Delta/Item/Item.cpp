@@ -37,11 +37,6 @@ void AItem::BeginPlay() {
 
   SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereBeginOverlap);
   SphereComponent->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
-
-  BeginPlayAction();
-}
-
-void AItem::BeginPlayAction() {
 }
 
 void AItem::PostInitializeStaticMeshComponent() {
@@ -70,11 +65,6 @@ void AItem::PostInitializeComponents() {
 void AItem::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
   RunningTime += DeltaTime;
-
-  TickAction(DeltaTime);
-}
-
-void AItem::TickAction(const float DeltaTime) {
 }
 
 void AItem::SetLocation(const FVector& NewLocation) {

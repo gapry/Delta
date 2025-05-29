@@ -29,12 +29,16 @@ void ADebugItem::RenderDebugShapeOneFrame(const float DeltaTime) {
   RenderDebugShape();
 }
 
-void ADebugItem::BeginPlayAction() {
+void ADebugItem::BeginPlay() {
+  Super::BeginPlay();
+
   SetLocation(FVector(0.f, 0.f, 50.f));
   SetRotation(FRotator(0.f, 45.f, 0.f));
   UpdateForwardDirection();
 }
 
-void ADebugItem::TickAction(const float DeltaTime) {
+void ADebugItem::Tick(const float DeltaTime) {
+  Super::Tick(DeltaTime);
+
   RenderDebugShapeOneFrame(DeltaTime);
 }

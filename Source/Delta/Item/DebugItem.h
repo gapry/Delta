@@ -13,10 +13,11 @@ class DELTA_API ADebugItem : public AItem {
   GENERATED_BODY()
 
 public:
+  virtual void Tick(const float DeltaTime) override;
+
   void RenderDebugShape() const;
   void RenderDebugShapeOneFrame(const float DeltaTime);
 
 protected:
-  virtual void BeginPlayAction() override;
-  virtual void TickAction(const float DeltaTime) override;
+  virtual void BeginPlay() override;
 };
