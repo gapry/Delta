@@ -4,6 +4,7 @@
 
 #include "Sword.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "../../Common/Finder.h"
 #include "../../Common/LogUtil.h"
@@ -37,6 +38,11 @@ ASword::ASword() {
                                                        ECollisionResponse::ECR_Overlap);
     StaticMeshComponent->UpdateCollisionProfile();
   }
+
+  {
+    WeaponBox->SetBoxExtent(FVector(2.029312, 1.120226, 40.305506));
+    WeaponBox->SetRelativeLocation(FVector(0, 0, 11.5));
+  }
 }
 
 void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
@@ -54,4 +60,13 @@ void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
 
   SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
   UGameplayStatics::PlaySoundAtLocation(this, EquipSound, GetActorLocation());
+}
+
+void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                     AActor*              OtherActor,
+                                     UPrimitiveComponent* OtherComp,
+                                     int32                OtherBodyIndex,
+                                     bool                 bFromSweep,
+                                     const FHitResult&    SweepResult) {
+  DebugOverlap(OtherActor);
 }

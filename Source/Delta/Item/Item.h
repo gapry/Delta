@@ -20,7 +20,6 @@ public:
   virtual void OnConstruction(const FTransform& Transform) override;
 
   virtual void Tick(float DeltaTime) override;
-  virtual void TickAction(const float DeltaTime);
 
   void SetLocation(const FVector& NewLocation);
   void SetRotation(const FRotator& NewRotation);
@@ -28,7 +27,6 @@ public:
 
 protected:
   virtual void BeginPlay() override;
-  virtual void BeginPlayAction();
 
   virtual void PostInitializeComponents() override;
   virtual void PostInitializeRootComponent();
