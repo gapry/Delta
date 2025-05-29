@@ -61,6 +61,8 @@ public:
 
   bool CanAttack() const;
 
+  void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+
 protected:
   virtual void BeginPlay() override;
   virtual void PostInitializeComponents() override;

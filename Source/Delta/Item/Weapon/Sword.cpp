@@ -28,6 +28,8 @@ ASword::ASword() {
   }
 
   {
+    StaticMeshComponent->SetGenerateOverlapEvents(false);
+
     StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
     StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
@@ -46,7 +48,7 @@ ASword::ASword() {
     WeaponBox->SetGenerateOverlapEvents(true);
 
     WeaponBox->SetCollisionProfileName(TEXT("Custom"));
-    WeaponBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    WeaponBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     WeaponBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
@@ -86,8 +88,7 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
   const FVector Start = BoxTraceStart->GetComponentLocation();
   const FVector End   = BoxTraceEnd->GetComponentLocation();
 
-  TArray<AActor*> ActorsToIgnore;
-
+  TArray<TObjectPtr<AActor>> ActorsToIgnore;
   ActorsToIgnore.Add(this);
 
   FHitResult BoxHit;
