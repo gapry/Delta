@@ -5,7 +5,6 @@
 #include "Item.h"
 #include "Components/SphereComponent.h"
 #include "../Common/LogUtil.h"
-#include "../Common/DebugShape.h"
 
 AItem::AItem() {
   {
@@ -43,9 +42,6 @@ void AItem::BeginPlay() {
 }
 
 void AItem::BeginPlayAction() {
-  SetLocation(FVector(0.f, 0.f, 50.f));
-  SetRotation(FRotator(0.f, 45.f, 0.f));
-  UpdateForwardDirection();
 }
 
 void AItem::PostInitializeStaticMeshComponent() {
@@ -79,31 +75,6 @@ void AItem::Tick(float DeltaTime) {
 }
 
 void AItem::TickAction(const float DeltaTime) {
-  RenderDebugShapeOneFrame(DeltaTime);
-}
-
-void AItem::RenderDebugShape() const {
-  static const FVector& CurrentLocation = GetActorLocation();
-
-  DELTA_DEBUG_SPHERE_ONE_FRAME(CurrentLocation);
-  DELTA_DEBUG_ARROW_ONE_FRAME(CurrentLocation,
-                              CurrentLocation + GetActorForwardVector().GetSafeNormal() * 100.f);
-}
-
-void AItem::RenderDebugShapeOneFrame(const float DeltaTime) {
-  // Frequency * RunningTime
-  //      (Hz) * (s)         = (1 / s) * (s) = 1 = scalar = unitless
-  const float DeltaZ = GetSineOscillationOffset();
-
-  // MovementRate * DeltaTime
-  //       (cm/s) * (s/frame) = (cm/frame)
-  AddActorWorldOffset(FVector(MovementRate * DeltaTime, 0.f, DeltaZ));
-
-  // RotationRate * DeltaTime
-  //  (degrees/s) * (s/frame) = (degrees/frame)
-  AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
-
-  RenderDebugShape();
 }
 
 void AItem::SetLocation(const FVector& NewLocation) {

@@ -30,6 +30,21 @@
     - Skin: Without Skin
     - FPS: 30
     - Keyframe Reduction: none
+  - axe Standing Disarm Over Shoulder
+    - Format: *.fbx
+    - Skin: Without Skin
+    - FPS: 30
+    - Keyframe Reduction: none
+  - axe Unarmed Idle
+    - Format: *.fbx
+    - Skin: Without Skin
+    - FPS: 30
+    - Keyframe Reduction: none
+  - axe Unarmed Equip Over Shoulder
+    - Format: *.fbx
+    - Skin: Without Skin
+    - FPS: 30
+    - Keyframe Reduction: none  
 
 ## Effects
 - https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Effects

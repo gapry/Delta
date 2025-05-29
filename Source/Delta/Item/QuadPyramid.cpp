@@ -30,12 +30,6 @@ AQuadPyramid::AQuadPyramid() {
   }
 }
 
-void AQuadPyramid::BeginPlayAction() {
-}
-
-void AQuadPyramid::TickAction(const float DeltaTime) {
-}
-
 void AQuadPyramid::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                         AActor*              OtherActor,
                                         UPrimitiveComponent* OtherComp,

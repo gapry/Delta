@@ -5,7 +5,6 @@
 #include "Sword.h"
 #include "Components/SphereComponent.h"
 #include "../Common/Finder.h"
-#include "../Character/EchoCharacter.h"
 
 ASword::ASword() {
   {
@@ -30,53 +29,4 @@ ASword::ASword() {
                                                        ECollisionResponse::ECR_Overlap);
     StaticMeshComponent->UpdateCollisionProfile();
   }
-}
-
-void ASword::BeginPlayAction() {
-}
-
-void ASword::TickAction(const float DeltaTime) {
-  if (ItemState != EItemState::EIS_Hovering) {
-    return;
-  }
-
-  const float DeltaZ = GetSineOscillationOffset();
-
-  FVector MoveLocation = GetActorLocation();
-  MoveLocation.Z += DeltaZ;
-  SetActorLocation(MoveLocation);
-
-  FRotator MoveRotation = GetActorRotation();
-  MoveRotation.Yaw += RotationRate * DeltaTime;
-  SetActorRotation(MoveRotation);
-}
-
-void ASword::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
-                                  AActor*              OtherActor,
-                                  UPrimitiveComponent* OtherComp,
-                                  int32                OtherBodyIndex,
-                                  bool                 bFromSweep,
-                                  const FHitResult&    SweepResult) {
-  auto* const EchoCharacter = Cast<AEchoCharacter>(OtherActor);
-  if (EchoCharacter == nullptr) {
-    return;
-  }
-  EchoCharacter->SetOverlappingItem(this);
-}
-
-void ASword::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
-                                AActor*              OtherActor,
-                                UPrimitiveComponent* OtherComp,
-                                int32                OtherBodyIndex) {
-  auto* const EchoCharacter = Cast<AEchoCharacter>(OtherActor);
-  if (EchoCharacter == nullptr) {
-    return;
-  }
-  EchoCharacter->SetOverlappingItem(nullptr);
-}
-
-void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
-  FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-  StaticMeshComponent->AttachToComponent(InParent, TransformRules, InSocketName);
-  ItemState = EItemState::EIS_Equipped;
 }

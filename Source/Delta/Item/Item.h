@@ -26,9 +26,6 @@ public:
   void SetRotation(const FRotator& NewRotation);
   void UpdateForwardDirection();
 
-  void RenderDebugShape() const;
-  void RenderDebugShapeOneFrame(const float DeltaTime);
-
 protected:
   virtual void BeginPlay() override;
   virtual void BeginPlayAction();

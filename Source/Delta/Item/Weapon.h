@@ -6,14 +6,14 @@
 
 #include "CoreMinimal.h"
 #include "Item.h"
-#include "QuadPyramid.generated.h"
+#include "Weapon.generated.h"
 
 UCLASS()
-class DELTA_API AQuadPyramid : public AItem {
+class DELTA_API AWeapon : public AItem {
   GENERATED_BODY()
 
 public:
-  AQuadPyramid();
+  virtual void TickAction(const float DeltaTime) override;
 
   virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                     AActor*              OtherActor,
@@ -26,4 +26,8 @@ public:
                                   AActor*              OtherActor,
                                   UPrimitiveComponent* OtherComp,
                                   int32                OtherBodyIndex) override;
+
+  void Equip(USceneComponent* InParent, FName InSocketName);
+
+  void AttackMeshToSocket(USceneComponent* const InParent, const FName InSocketName) const;
 };
