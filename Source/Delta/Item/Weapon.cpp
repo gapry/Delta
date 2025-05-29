@@ -3,7 +3,12 @@
 // See LICENSE file in the project root for full license information.
 
 #include "Weapon.h"
+#include "Sound/SoundBase.h"
 #include "../Character/EchoCharacter.h"
+#include "../Common/LogUtil.h"
+
+AWeapon::AWeapon() {
+}
 
 void AWeapon::TickAction(const float DeltaTime) {
   if (ItemState != EItemState::EIS_Hovering) {

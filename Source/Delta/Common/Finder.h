@@ -144,3 +144,18 @@
     AnimationMontage = Finder.Object;                                                              \
   } while (false)
 // ----
+
+#define DELTA_SET_SOUNDBASE(SoundBase, SoundPath)                                         \
+  do {                                                                                    \
+    if (SoundPath == nullptr) {                                                           \
+      DELTA_LOG("{}", DeltaFormat("SoundPath is null"));                                  \
+      break;                                                                              \
+    }                                                                                     \
+    static ConstructorHelpers::FObjectFinder<USoundBase> Finder(SoundPath);               \
+    if (!Finder.Succeeded()) {                                                            \
+      DELTA_LOG("{}", DeltaFormat("Failed to load sound: {}", TCHAR_TO_UTF8(SoundPath))); \
+      break;                                                                              \
+    }                                                                                     \
+    SoundBase = Finder.Object;                                                            \
+  } while (false)
+// ----
