@@ -130,7 +130,7 @@ AEchoCharacter::AEchoCharacter() {
   {
     static constexpr const TCHAR* const MontagePath{
       TEXT("/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/"
-           "AM_Equip_Unequip.AM_Equip_Unequip'")};
+           "AM_EquipUnequip.AM_EquipUnequip'")};
     DELTA_SET_ANIMATION_MONTAGE(EquipUnequipMontage, MontagePath);
   }
 
