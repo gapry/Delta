@@ -4,8 +4,8 @@
 
 #include "Weapon.h"
 #include "Sound/SoundBase.h"
-#include "../Character/EchoCharacter.h"
-#include "../Common/LogUtil.h"
+#include "../../Character/EchoCharacter.h"
+#include "../../Common/LogUtil.h"
 
 AWeapon::AWeapon() {
 }

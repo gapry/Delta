@@ -5,8 +5,8 @@
 #include "Sword.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "../Common/Finder.h"
-#include "../Common/LogUtil.h"
+#include "../../Common/Finder.h"
+#include "../../Common/LogUtil.h"
 
 ASword::ASword() {
   {

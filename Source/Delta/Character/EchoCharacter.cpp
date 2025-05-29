@@ -17,8 +17,8 @@
 #include "Animation/AnimMontage.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
-#include "../Item/Weapon.h"
-#include "../Item/Sword.h"
+#include "../Item/Weapon/Weapon.h"
+#include "../Item/Weapon/Sword.h"
 
 AEchoCharacter::AEchoCharacter() {
   {
