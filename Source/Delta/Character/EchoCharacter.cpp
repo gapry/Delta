@@ -36,10 +36,10 @@ AEchoCharacter::AEchoCharacter() {
       "/Script/Engine.SkeletalMesh'/Game/Delta/AncientContent/Characters/Echo/Meshes/Echo.Echo'")};
 
     DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
-  }
 
-  {
-    CapsuleComponent = GetCapsuleComponent();
+    SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), // Rotation
+                                                           FVector(0.f, 0.f, -90.f),  // Translation
+                                                           FVector(1.f, 1.f, 1.f)));  // Scale
   }
 
   {
@@ -160,14 +160,12 @@ void AEchoCharacter::PostInitializeSkeletalMeshComponent() {
     DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "SkeletalMeshComponent is not valid"));
   }
 
-  SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), // Rotation
-                                                         FVector(0.f, 0.f, -90.f),  // Translation
-                                                         FVector(1.f, 1.f, 1.f)));  // Scale
-
   SkeletalMeshComponent->SetGenerateOverlapEvents(true);
 }
 
 void AEchoCharacter::PostInitializeCapsuleComponent() {
+  CapsuleComponent = GetCapsuleComponent();
+
   if (!CapsuleComponent.IsValid()) {
     DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CapsuleComponent is not valid"));
   }
@@ -214,19 +212,12 @@ void AEchoCharacter::PostInitializeCharacterMovementComponent() {
 void AEchoCharacter::BeginPlay() {
   Super::BeginPlay();
 
-  auto* const Subsystem = GetSubsystem();
-  if (!Subsystem) {
-    DELTA_LOG("{}", DeltaFormat("Subsystem is null"));
-    return;
+  if (const auto* const PlayerController = Cast<APlayerController>(Controller)) {
+    if (auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+          PlayerController->GetLocalPlayer())) {
+      Subsystem->AddMappingContext(InputMappingContext, 0);
+    }
   }
-
-  if (!InputMappingContext) {
-    DELTA_LOG("{}", DeltaFormat("InputMappingContext is null"));
-    return;
-  }
-
-  static constexpr const int32 Priority = 0;
-  Subsystem->AddMappingContext(InputMappingContext, Priority);
 }
 
 void AEchoCharacter::Tick(float DeltaTime) {
