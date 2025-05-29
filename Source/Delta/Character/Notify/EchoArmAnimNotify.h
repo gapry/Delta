@@ -5,13 +5,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Weapon.h"
-#include "Sword.generated.h"
+#include "EchoBaseAnimNotify.h"
+#include "EchoArmAnimNotify.generated.h"
 
 UCLASS()
-class DELTA_API ASword : public AWeapon {
+class DELTA_API UEchoArmAnimNotify : public UEchoBaseAnimNotify {
   GENERATED_BODY()
 
-public:
-  ASword();
+protected:
+  virtual void ExecuteNotifyAction() override;
 };

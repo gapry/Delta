@@ -17,6 +17,7 @@
 #include "Animation/AnimMontage.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
+#include "../Item/Weapon.h"
 #include "../Item/Sword.h"
 
 AEchoCharacter::AEchoCharacter() {
@@ -121,9 +122,16 @@ AEchoCharacter::AEchoCharacter() {
   }
 
   {
-    static constexpr const TCHAR* const AnimMontagePath{TEXT(
+    static constexpr const TCHAR* const MontagePath{TEXT(
       "/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/AM_Attack.AM_Attack'")};
-    DELTA_SET_ANIMATION_MONTAGE(AttackMontage, AnimMontagePath);
+    DELTA_SET_ANIMATION_MONTAGE(AttackMontage, MontagePath);
+  }
+
+  {
+    static constexpr const TCHAR* const MontagePath{
+      TEXT("/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/"
+           "AM_Equip_Unequip.AM_Equip_Unequip'")};
+    DELTA_SET_ANIMATION_MONTAGE(EquipUnequipMontage, MontagePath);
   }
 
   {
@@ -291,7 +299,8 @@ void AEchoCharacter::Move(const FInputActionValue& Value) {
     return;
   }
 
-  if (ActionState == EActionState::EAS_Attacking) {
+  if (ActionState == EActionState::EAS_Attacking ||
+      ActionState == EActionState::EAS_EquippingWeapon) {
     return;
   }
 
@@ -334,11 +343,26 @@ void AEchoCharacter::Equip(const FInputActionValue& Value) {
   auto* const OverlappingWeapon = Cast<ASword>(OverlappingItem);
 
   if (OverlappingWeapon == nullptr) {
+    if (CanDisarm()) {
+      PlayEquipUnequipMontage(FName("Unequip"));
+      CharacterState = ECharacterState::ECS_Unequipped;
+      ActionState    = EActionState::EAS_EquippingWeapon;
+      return;
+    }
+
+    if (CanArm()) {
+      PlayEquipUnequipMontage(FName("Equip"));
+      CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+      ActionState    = EActionState::EAS_EquippingWeapon;
+      return;
+    }
     return;
   }
 
   OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
-  CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+  CharacterState  = ECharacterState::ECS_EquippedOneHandedWeapon;
+  EquippedWeapon  = OverlappingWeapon;
+  OverlappingItem = nullptr;
 }
 
 void AEchoCharacter::Attack(const FInputActionValue& Value) {
@@ -428,11 +452,60 @@ void AEchoCharacter::PlayAttackMontage() const {
   AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
 }
 
+void AEchoCharacter::PlayEquipUnequipMontage(const FName SectionName) const {
+  UAnimInstance* const AnimInstance = SkeletalMeshComponent->GetAnimInstance();
+
+  if (!AnimInstance) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "AnimInstance is null"));
+    return;
+  }
+
+  if (!EquipUnequipMontage) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "EquipUnequipMontage is null"));
+    return;
+  }
+
+  AnimInstance->Montage_Play(EquipUnequipMontage);
+  AnimInstance->Montage_JumpToSection(SectionName, EquipUnequipMontage);
+}
+
 void AEchoCharacter::AttackAnimNotify() {
   ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool AEchoCharacter::CanArm() const {
+  return ActionState == EActionState::EAS_Unoccupied &&       //
+         CharacterState == ECharacterState::ECS_Unequipped && //
+         EquippedWeapon != nullptr;                           //
+}
+
+bool AEchoCharacter::CanDisarm() const {
+  return ActionState == EActionState::EAS_Unoccupied &&       //
+         CharacterState != ECharacterState::ECS_Unequipped && //
+         EquipUnequipMontage != nullptr;                      //
 }
 
 bool AEchoCharacter::CanAttack() const {
   return ActionState == EActionState::EAS_Unoccupied &&
          CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+void AEchoCharacter::Arm() {
+  if (!EquippedWeapon) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "EquippedWeapon is null"));
+    return;
+  }
+  EquippedWeapon->AttackMeshToSocket(GetMesh(), FName("RightHandSocket"));
+}
+
+void AEchoCharacter::Disarm() {
+  if (!EquippedWeapon) {
+    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "EquippedWeapon is null"));
+    return;
+  }
+  EquippedWeapon->AttackMeshToSocket(GetMesh(), FName("SpineSocket"));
+}
+
+void AEchoCharacter::FinishEquipping() {
+  ActionState = EActionState::EAS_Unoccupied;
 }

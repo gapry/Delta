@@ -21,6 +21,7 @@ class UEnhancedInputLocalPlayerSubsystem;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
+class AWeapon;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ACharacter {
@@ -47,8 +48,16 @@ public:
   void            SetCharacterState(ECharacterState NewState);
 
   void PlayAttackMontage() const;
+  void PlayEquipUnequipMontage(const FName SectionName) const;
 
   void AttackAnimNotify();
+
+  void Arm();
+  void Disarm();
+  void FinishEquipping();
+
+  bool CanArm() const;
+  bool CanDisarm() const;
 
   bool CanAttack() const;
 
@@ -83,19 +92,25 @@ private:
 
   UPROPERTY(VisibleAnywhere,
             BlueprintReadOnly,
-            Category = "EchoCharacter",
+            Category = "Hair",
             meta     = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UGroomComponent> HairComponent;
 
   UPROPERTY(VisibleAnywhere,
             BlueprintReadOnly,
-            Category = "EchoCharacter",
+            Category = "Eye",
             meta     = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UGroomComponent> EyebrowsComponent;
 
-  UPROPERTY(VisibleInstanceOnly, Category = "EchoCharacter")
+  UPROPERTY(VisibleInstanceOnly, Category = "Item")
   TObjectPtr<AItem> OverlappingItem;
 
-  UPROPERTY(EditDefaultsOnly, Category = "EchoCharacter")
+  UPROPERTY(VisibleAnywhere, Category = "Weapon")
+  TObjectPtr<AWeapon> EquippedWeapon;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montage")
   TObjectPtr<UAnimMontage> AttackMontage{nullptr};
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montage")
+  TObjectPtr<UAnimMontage> EquipUnequipMontage{nullptr};
 };
