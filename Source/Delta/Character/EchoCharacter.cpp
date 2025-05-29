@@ -15,6 +15,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
 #include "Animation/AnimMontage.h"
+#include "Components/BoxComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Item/Weapon/Weapon.h"
@@ -512,4 +513,16 @@ void AEchoCharacter::Disarm() {
 
 void AEchoCharacter::FinishEquipping() {
   ActionState = EActionState::EAS_Unoccupied;
+}
+
+void AEchoCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled) {
+  if (EquippedWeapon == nullptr) {
+    return;
+  }
+
+  auto* const WeaponBox = EquippedWeapon->GetWeaponBox();
+  if (WeaponBox == nullptr) {
+    return;
+  }
+  WeaponBox->SetCollisionEnabled(CollisionEnabled);
 }

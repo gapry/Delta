@@ -44,6 +44,8 @@ public:
 
   void AttackMeshToSocket(USceneComponent* const InParent, const FName InSocketName) const;
 
+  UBoxComponent* GetWeaponBox() const;
+
 protected:
   virtual void BeginPlay() override;
 

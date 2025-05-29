@@ -97,3 +97,7 @@ void AWeapon::DebugOverlap(AActor* OtherActor) {
     DrawDebugSphere(GetWorld(), OtherActor->GetActorLocation(), 50.f, 12, FColor::Red, false, 5.f);
   }
 }
+
+UBoxComponent* AWeapon::GetWeaponBox() const {
+  return WeaponBox;
+}
