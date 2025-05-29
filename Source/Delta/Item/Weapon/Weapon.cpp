@@ -9,8 +9,18 @@
 #include "../../Common/LogUtil.h"
 
 AWeapon::AWeapon() {
-  WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponBox"));
-  WeaponBox->SetupAttachment(GetRootComponent());
+  {
+    WeaponBox = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponBox"));
+    WeaponBox->SetupAttachment(GetRootComponent());
+  }
+
+  {
+    BoxTraceStart = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace Start"));
+    BoxTraceStart->SetupAttachment(GetRootComponent());
+
+    BoxTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace End"));
+    BoxTraceEnd->SetupAttachment(GetRootComponent());
+  }
 }
 
 void AWeapon::BeginPlay() {

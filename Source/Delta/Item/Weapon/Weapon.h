@@ -54,4 +54,10 @@ protected:
 
   UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
   TObjectPtr<UBoxComponent> WeaponBox{nullptr};
+
+  UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+  TObjectPtr<USceneComponent> BoxTraceStart{nullptr};
+
+  UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+  TObjectPtr<USceneComponent> BoxTraceEnd{nullptr};
 };

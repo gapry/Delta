@@ -42,6 +42,21 @@ ASword::ASword() {
   {
     WeaponBox->SetBoxExtent(FVector(2.029312, 1.120226, 40.305506));
     WeaponBox->SetRelativeLocation(FVector(0, 0, 11.5));
+
+    WeaponBox->SetGenerateOverlapEvents(true);
+
+    WeaponBox->SetCollisionProfileName(TEXT("Custom"));
+    WeaponBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    WeaponBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+                                             ECollisionResponse::ECR_Ignore);
+    WeaponBox->UpdateCollisionProfile();
+  }
+
+  {
+    BoxTraceStart->SetRelativeLocation(FVector(0.000000, 0.468142, -27.463856));
+    BoxTraceEnd->SetRelativeLocation(FVector(0.483424, -0.391544, 50.757500));
   }
 }
 
@@ -68,5 +83,24 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                      int32                OtherBodyIndex,
                                      bool                 bFromSweep,
                                      const FHitResult&    SweepResult) {
-  DebugOverlap(OtherActor);
+  const FVector Start = BoxTraceStart->GetComponentLocation();
+  const FVector End   = BoxTraceEnd->GetComponentLocation();
+
+  TArray<AActor*> ActorsToIgnore;
+
+  ActorsToIgnore.Add(this);
+
+  FHitResult BoxHit;
+
+  UKismetSystemLibrary::BoxTraceSingle(this,                                  // WorldContextObject
+                                       Start,                                 //
+                                       End,                                   //
+                                       FVector(5.f, 5.f, 5.f),                // BoxExtent
+                                       BoxTraceStart->GetComponentRotation(), // Orientation
+                                       ETraceTypeQuery::TraceTypeQuery1,      //
+                                       false,                                 // bTraceComplex
+                                       ActorsToIgnore,                        //
+                                       EDrawDebugTrace::ForDuration,          //
+                                       BoxHit,                                //
+                                       true);                                 // bIgnoreSelf
 }
