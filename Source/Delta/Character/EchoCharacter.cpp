@@ -36,10 +36,38 @@ AEchoCharacter::AEchoCharacter() {
       "/Script/Engine.SkeletalMesh'/Game/Delta/AncientContent/Characters/Echo/Meshes/Echo.Echo'")};
 
     DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
+
+    SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), // Rotation
+                                                           FVector(0.f, 0.f, -90.f),  // Translation
+                                                           FVector(1.f, 1.f, 1.f)));  // Scale
+
+    SkeletalMeshComponent->SetGenerateOverlapEvents(true);
+
+    SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
+                                                         ECollisionResponse::ECR_Block);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic,
+                                                         ECollisionResponse::ECR_Overlap);
+    SkeletalMeshComponent->UpdateCollisionProfile();
   }
 
   {
     CapsuleComponent = GetCapsuleComponent();
+
+    CapsuleComponent->SetGenerateOverlapEvents(true);
+
+    CapsuleComponent->SetCollisionProfileName(TEXT("Custom"));
+    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+    CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
+                                                    ECollisionResponse::ECR_Ignore);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
+                                                    ECollisionResponse::ECR_Ignore);
+    CapsuleComponent->UpdateCollisionProfile();
   }
 
   {
@@ -133,16 +161,6 @@ AEchoCharacter::AEchoCharacter() {
            "AM_EquipUnequip.AM_EquipUnequip'")};
     DELTA_SET_ANIMATION_MONTAGE(EquipUnequipMontage, MontagePath);
   }
-
-  {
-    SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                                         ECollisionResponse::ECR_Ignore);
-    SkeletalMeshComponent->UpdateCollisionProfile();
-  }
 }
 
 void AEchoCharacter::PostInitializeComponents() {
@@ -159,19 +177,12 @@ void AEchoCharacter::PostInitializeSkeletalMeshComponent() {
   if (!SkeletalMeshComponent.IsValid()) {
     DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "SkeletalMeshComponent is not valid"));
   }
-
-  SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), // Rotation
-                                                         FVector(0.f, 0.f, -90.f),  // Translation
-                                                         FVector(1.f, 1.f, 1.f)));  // Scale
-
-  SkeletalMeshComponent->SetGenerateOverlapEvents(true);
 }
 
 void AEchoCharacter::PostInitializeCapsuleComponent() {
   if (!CapsuleComponent.IsValid()) {
     DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CapsuleComponent is not valid"));
   }
-
   CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
 }
 
@@ -214,19 +225,12 @@ void AEchoCharacter::PostInitializeCharacterMovementComponent() {
 void AEchoCharacter::BeginPlay() {
   Super::BeginPlay();
 
-  auto* const Subsystem = GetSubsystem();
-  if (!Subsystem) {
-    DELTA_LOG("{}", DeltaFormat("Subsystem is null"));
-    return;
+  if (const auto* const PlayerController = Cast<APlayerController>(Controller)) {
+    if (auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+          PlayerController->GetLocalPlayer())) {
+      Subsystem->AddMappingContext(InputMappingContext, 0);
+    }
   }
-
-  if (!InputMappingContext) {
-    DELTA_LOG("{}", DeltaFormat("InputMappingContext is null"));
-    return;
-  }
-
-  static constexpr const int32 Priority = 0;
-  Subsystem->AddMappingContext(InputMappingContext, Priority);
 }
 
 void AEchoCharacter::Tick(float DeltaTime) {
