@@ -8,11 +8,15 @@
 #include "Item.h"
 #include "Weapon.generated.h"
 
+class USoundBase;
+
 UCLASS()
 class DELTA_API AWeapon : public AItem {
   GENERATED_BODY()
 
 public:
+  AWeapon();
+
   virtual void TickAction(const float DeltaTime) override;
 
   virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -27,7 +31,11 @@ public:
                                   UPrimitiveComponent* OtherComp,
                                   int32                OtherBodyIndex) override;
 
-  void Equip(USceneComponent* InParent, FName InSocketName);
+  virtual void Equip(USceneComponent* InParent, FName InSocketName);
 
   void AttackMeshToSocket(USceneComponent* const InParent, const FName InSocketName) const;
+
+protected:
+  UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+  TObjectPtr<USoundBase> EquipSound{nullptr};
 };
