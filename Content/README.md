@@ -11,3 +11,6 @@
 - [Sandstone Boulder](https://fab.com/s/8dd3573f6707)
 - [Sword](https://fab.com/s/e27722081ab5)
 - [Paragon: Minions](https://fab.com/s/b10a836dd790)
+- [Wild Grass](https://fab.com/s/448a9958e501)
+- [Rock](https://fab.com/s/9ccc46755e7b)
+- [DZ Sample Trees](https://fab.com/s/0934c888522c)
