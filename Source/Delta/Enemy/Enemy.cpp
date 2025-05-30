@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
+#include "../Common/DebugShape.h"
 
 AEnemy::AEnemy() {
   {
@@ -18,8 +19,9 @@ AEnemy::AEnemy() {
   {
     SkeletalMeshComponent = GetMesh();
 
-    static constexpr const TCHAR* const SkeletalMeshPath{TEXT(
-      "/Script/Engine.SkeletalMesh'/Game/Mixamo/Paladin/Paladin_J_Nordstrom.Paladin_J_Nordstrom'")};
+    static constexpr const TCHAR* const SkeletalMeshPath{
+      TEXT("/Script/Engine.SkeletalMesh'/Game/Mixamo/Paladin/"
+           "Sword_And_Shield_Idle.Sword_And_Shield_Idle'")};
 
     DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
 
@@ -57,4 +59,5 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 }
 
 void AEnemy::GetHit(const FVector& ImpactPoint) {
+  DELTA_DEBUG_SPHERE_COLOR(ImpactPoint, FColor::Orange);
 }

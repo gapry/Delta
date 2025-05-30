@@ -7,47 +7,74 @@
     - Format: *.fbx
     - Pose: T-pose
 - Animations
-  - axe Standing Idle
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none
-  - axe Standing Melee Attack Horizontal 
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none
-  - axe Standing Run Forward 
-    - In Place: Unchecked
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none
-  - axe Standing Melee Attack 360 High
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none
-  - axe Standing Melee Attack Downward
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none
-  - axe Standing Disarm Over Shoulder
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none
-  - axe Unarmed Idle
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none
-  - axe Unarmed Equip Over Shoulder
-    - Format: *.fbx
-    - Skin: Without Skin
-    - FPS: 30
-    - Keyframe Reduction: none  
+  - axe 
+    - Standing Idle
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none
+    - Standing Melee Attack Horizontal 
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none
+    - Standing Run Forward 
+      - In Place: Unchecked
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none
+    - Standing Melee Attack 360 High
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none
+    - Standing Melee Attack Downward
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none
+    - Standing Disarm Over Shoulder
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none
+    - Unarmed Idle
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none
+    - Unarmed Equip Over Shoulder
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none  
+  - Paladin J Nordstrom 
+    - Sword And Shield Idle
+      - Format: *.fbx
+      - Skin: With Skin
+      - FPS: 30
+      - Keyframe Reduction: none  
+    - Standing React Large From Front
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none  
+    - Standing React Large From Back
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Standing React Large From Left
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Standing React Large From Right
+      - Format: *.fbx
+      - Skin: Without Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
 
 ## Effects
 - https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Effects
@@ -57,6 +84,9 @@
 
 ## Textures
 - https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Textures
+
+## Blender Addon
+- [Mixamo Converter](https://github.com/brkeejp/mixamo_converter)
 
 ## References 
 - [Sketchfab](https://sketchfab.com/)

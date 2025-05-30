@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "../../Interface/HitInterface.h"
 #include "../../Common/Finder.h"
 #include "../../Common/LogUtil.h"
 
@@ -104,4 +105,11 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                        EDrawDebugTrace::ForDuration,          //
                                        BoxHit,                                //
                                        true);                                 // bIgnoreSelf
+
+  if (BoxHit.GetActor()) {
+    IHitInterface* const HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
+    if (HitInterface) {
+      HitInterface->GetHit(BoxHit.ImpactPoint);
+    }
+  }
 }
