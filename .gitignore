@@ -103,8 +103,5 @@ Content/AncientContent/*
 Content/Fab/*
 
 # Assets
-Assets/Mixamo/Animations/*.fbx
-Assets/Mixamo/*.fbx
-Assets/Sounds/*.*
-Assets/Sounds/PotBreaks/*.*
-Assets/Sounds/Raptor/*.*
+Assets/*
+!Assets/README.md

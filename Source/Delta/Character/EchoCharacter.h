@@ -9,6 +9,7 @@
 #include "InputActionValue.h"
 #include "State/CharacterState.h"
 #include "State/ActionState.h"
+#include "BaseCharacter.h"
 #include "EchoCharacter.generated.h"
 
 class USkeletalMeshComponent;
@@ -24,7 +25,7 @@ class UAnimMontage;
 class AWeapon;
 
 UCLASS()
-class DELTA_API AEchoCharacter : public ACharacter {
+class DELTA_API AEchoCharacter : public ABaseCharacter {
   GENERATED_BODY()
 
 public:
@@ -79,11 +80,6 @@ private:
 
   ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
   EActionState    ActionState    = EActionState::EAS_Unoccupied;
-
-  TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
-  TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
-  TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
-  TWeakObjectPtr<UCameraComponent>       CameraComponent;
 
   TObjectPtr<UInputMappingContext> InputMappingContext;
   TObjectPtr<UInputAction>         MoveAction;

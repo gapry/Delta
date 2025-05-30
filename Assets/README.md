@@ -3,6 +3,9 @@
   - X Bot 
     - Format: *.fbx
     - Pose: T-pose
+  - Paladin J Nordstrom 
+    - Format: *.fbx
+    - Pose: T-pose
 - Animations
   - axe Standing Idle
     - Format: *.fbx
@@ -54,3 +57,15 @@
 
 ## Textures
 - https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Textures
+
+## References 
+- [Sketchfab](https://sketchfab.com/)
+- [Poly Haven](https://polyhaven.com/)
+- [Superhive](https://superhivemarket.com/)
+- [Open3DModel](https://open3dmodel.com/)
+- [Free3D](https://free3d.com/)
+- [CGTrader](https://www.cgtrader.com/)
+- [Blend Swap](https://www.blendswap.com/)
+- [Kenney.nl](https://kenney.nl/)
+- [itch.io](https://itch.io/)
+- [Smithsonian Open Access](https://www.si.edu/openaccess)
