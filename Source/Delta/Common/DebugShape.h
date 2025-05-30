@@ -26,6 +26,9 @@
 
 #define DELTA_DEBUG_SPHERE(CurrentLocation) DELTA_INTERNAL_DEBUG_SPHERE(CurrentLocation, true)
 
+#define DELTA_DEBUG_SPHERE_COLOR(Location, Color) \
+  DrawDebugSphere(GetWorld(), Location, 8.f, 12, Color, false, 5.f);
+
 #define DELTA_DEBUG_SPHERE_ONE_FRAME(CurrentLocation) \
   DELTA_INTERNAL_DEBUG_SPHERE(CurrentLocation, false)
 
