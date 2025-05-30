@@ -3,6 +3,9 @@
   - X Bot 
     - Format: *.fbx
     - Pose: T-pose
+  - Paladin J Nordstrom
+    - Format: *.fbx
+    - Pose: T-pose
 - Animations
   - axe Standing Idle
     - Format: *.fbx
