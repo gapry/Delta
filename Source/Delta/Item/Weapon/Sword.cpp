@@ -9,6 +9,7 @@
 #include "../../Interface/HitInterface.h"
 #include "../../Common/Finder.h"
 #include "../../Common/LogUtil.h"
+#include "../../Common/DebugShape.h"
 
 ASword::ASword() {
   {
@@ -58,8 +59,8 @@ ASword::ASword() {
   }
 
   {
-    BoxTraceStart->SetRelativeLocation(FVector(0.000000, 0.468142, -27.463856));
-    BoxTraceEnd->SetRelativeLocation(FVector(0.483424, -0.391544, 50.757500));
+    BoxTraceStart->SetRelativeLocation(FVector(0.483424, -0.391544, 50.757500));
+    BoxTraceEnd->SetRelativeLocation(FVector(0.000000, 0.468142, -27.463856));
   }
 }
 
@@ -92,7 +93,16 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
   TArray<TObjectPtr<AActor>> ActorsToIgnore;
   ActorsToIgnore.Add(this);
 
+  for (AActor* Actor : IgnoreActors) {
+    ActorsToIgnore.AddUnique(Actor);
+  }
+
   FHitResult BoxHit;
+
+  EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::None;
+#if DELTA_DEBUG_HIT_RENDER
+  DrawDebugType = EDrawDebugTrace::ForDuration;
+#endif
 
   UKismetSystemLibrary::BoxTraceSingle(this,                                  // WorldContextObject
                                        Start,                                 //
@@ -102,7 +112,7 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                        ETraceTypeQuery::TraceTypeQuery1,      //
                                        false,                                 // bTraceComplex
                                        ActorsToIgnore,                        //
-                                       EDrawDebugTrace::ForDuration,          //
+                                       DrawDebugType,                         //
                                        BoxHit,                                //
                                        true);                                 // bIgnoreSelf
 
@@ -111,5 +121,6 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
     if (HitInterface) {
       HitInterface->GetHit(BoxHit.ImpactPoint);
     }
+    IgnoreActors.AddUnique(BoxHit.GetActor());
   }
 }

@@ -46,6 +46,8 @@ public:
 
   UBoxComponent* GetWeaponBox() const;
 
+  TArray<TObjectPtr<AActor>> IgnoreActors;
+
 protected:
   virtual void BeginPlay() override;
 

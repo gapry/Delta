@@ -519,6 +519,7 @@ void AEchoCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type Collision
   if (EquippedWeapon == nullptr) {
     return;
   }
+  EquippedWeapon->IgnoreActors.Empty();
 
   auto* const WeaponBox = EquippedWeapon->GetWeaponBox();
   if (WeaponBox == nullptr) {

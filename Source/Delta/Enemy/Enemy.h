@@ -10,6 +10,8 @@
 #include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
 
+class UAnimMontage;
+
 UCLASS()
 class DELTA_API AEnemy : public ABaseCharacter, public IHitInterface {
   GENERATED_BODY()
@@ -23,6 +25,13 @@ public:
 
   virtual void GetHit(const FVector& ImpactPoint) override;
 
+  void PlayHitReactMontage(const FName& SectionName);
+
+  void DirectionalHitReact(const FVector& ImpactPoint);
+
 protected:
   virtual void BeginPlay() override;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montages")
+  TObjectPtr<UAnimMontage> HitReactMontage;
 };

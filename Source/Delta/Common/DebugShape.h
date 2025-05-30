@@ -6,6 +6,8 @@
 
 #include "DrawDebugHelpers.h"
 
+#define DELTA_DEBUG_HIT_RENDER 0
+
 #define DELTA_INTERNAL_DEBUG_SPHERE(CurrentLocation, IsPersistentFlag)            \
   do {                                                                            \
     if (const UWorld* const CurrentWorld = GetWorld(); CurrentWorld != nullptr) { \
