@@ -31,7 +31,7 @@ void ABaseFieldSystemActor::BeginPlay() {
     return;
   }
 
-  static const FVector ActorLocation = GetActorLocation();
+  const FVector ActorLocation = GetActorLocation();
 
   ApplyRadialFalloffField(1000000.0f,
                           0.8f,
