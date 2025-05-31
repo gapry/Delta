@@ -26,7 +26,8 @@ public class Delta : ModuleRules
       "AudioExtensions",
       "MetasoundEngine",
       "MetasoundFrontend",
-      "MetasoundGraphCore"
+      "MetasoundGraphCore",
+      "GeometryCollectionEngine",
     });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });
