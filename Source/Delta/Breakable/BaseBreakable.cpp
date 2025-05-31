@@ -4,16 +4,23 @@
 
 #include "BaseBreakable.h"
 #include "GeometryCollection/GeometryCollectionComponent.h"
+#include "Misc/AssertionMacros.h"
 #include "../Common/LogUtil.h"
 
 ABaseBreakable::ABaseBreakable() {
-  GeometryCollectionComponent =
-    CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
-
-  if (!GeometryCollectionComponent) {
-    DELTA_LOG("{}", DeltaFormat("Failed to create GeometryCollectionComponent"));
+  {
+    PrimaryActorTick.bCanEverTick = true;
   }
-  RootComponent = GeometryCollectionComponent;
+
+  {
+    GeometryCollectionComponent =
+      CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
+
+    check(GeometryCollectionComponent);
+    DELTA_LOG("{}", DeltaFormat("GeometryCollectionComponent created successfully"));
+
+    RootComponent = GeometryCollectionComponent;
+  }
 }
 
 void ABaseBreakable::BeginPlay() {

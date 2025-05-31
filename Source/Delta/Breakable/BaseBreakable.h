@@ -21,6 +21,6 @@ public:
 protected:
   virtual void BeginPlay() override;
 
-  UPROPERTY(EditAnywhere)
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Geometry Collection")
   TObjectPtr<UGeometryCollectionComponent> GeometryCollectionComponent{nullptr};
 };
