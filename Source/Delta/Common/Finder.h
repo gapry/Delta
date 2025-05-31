@@ -159,3 +159,22 @@
     SoundBase = Finder.Object;                                                            \
   } while (false)
 // ----
+
+#define DELTA_SET_GEOMETRY_COLLECTION(GeometryCollectionComponent, GeometryCollectionPath)        \
+  do {                                                                                            \
+    if (!(GeometryCollectionComponent) || !(GeometryCollectionPath)) {                            \
+      DELTA_LOG(                                                                                  \
+        "{}",                                                                                     \
+        DeltaFormat("GeometryCollectionComponent is null or GeometryCollectionPath is null"));    \
+      break;                                                                                      \
+    }                                                                                             \
+    static ConstructorHelpers::FObjectFinder<UGeometryCollection> Finder(GeometryCollectionPath); \
+    if (!Finder.Succeeded()) {                                                                    \
+      DELTA_LOG("{}",                                                                             \
+                DeltaFormat("Failed to load geometry collection: {}",                             \
+                            TCHAR_TO_UTF8(GeometryCollectionPath)));                              \
+      break;                                                                                      \
+    }                                                                                             \
+    GeometryCollectionComponent->SetRestCollection(Finder.Object);                                \
+  } while (false)
+// ---
