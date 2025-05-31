@@ -6,22 +6,20 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "../../Interface/HitInterface.h"
-#include "../../Common/Finder.h"
-#include "../../Common/LogUtil.h"
-#include "../../Common/DebugShape.h"
+#include "../Interface/HitInterface.h"
+#include "../Common/Finder.h"
+#include "../Common/LogUtil.h"
+#include "../Common/DebugShape.h"
 
 ASword::ASword() {
   {
-    static const TCHAR* const Path =
-      TEXT("/Script/Engine.StaticMesh'/Game/Fab/Megascans/3D/Sword_uitlbiaga/Medium/"
-           "SM_uitlbiaga_tier_2.SM_uitlbiaga_tier_2'");
+    static const TCHAR* const Path = TEXT("/Script/Engine.StaticMesh'/Game/Fab/Megascans/3D/Sword_uitlbiaga/Medium/"
+                                          "SM_uitlbiaga_tier_2.SM_uitlbiaga_tier_2'");
     DELTA_SET_STATIC_MESH(StaticMeshComponent, Path);
   }
 
   {
-    static const TCHAR* const Path =
-      TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_Shink.sfx_Shink'");
+    static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_Shink.sfx_Shink'");
     DELTA_SET_SOUNDBASE(EquipSound, Path);
   }
 
@@ -36,10 +34,8 @@ ASword::ASword() {
     StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
-                                                       ECollisionResponse::ECR_Ignore);
-    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                                       ECollisionResponse::ECR_Overlap);
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
     StaticMeshComponent->UpdateCollisionProfile();
   }
 
@@ -53,8 +49,7 @@ ASword::ASword() {
     WeaponBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     WeaponBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     WeaponBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-    WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                             ECollisionResponse::ECR_Ignore);
+    WeaponBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
     WeaponBox->UpdateCollisionProfile();
   }
 

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Item.h"
+#include "../Item/Item.h"
 #include "Weapon.generated.h"
 
 class USoundBase;
@@ -27,7 +27,7 @@ public:
                                     bool                 bFromSweep,
                                     const FHitResult&    SweepResult) override;
 
-  virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
+  virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, //
                                   AActor*              OtherActor,
                                   UPrimitiveComponent* OtherComp,
                                   int32                OtherBodyIndex) override;
