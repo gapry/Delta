@@ -7,9 +7,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "State/CharacterState.h"
-#include "State/ActionState.h"
-#include "BaseCharacter.h"
+#include "../Character/State/CharacterState.h"
+#include "../Character/State/ActionState.h"
+#include "../Character/BaseCharacter.h"
 #include "EchoCharacter.generated.h"
 
 class USkeletalMeshComponent;
@@ -88,16 +88,10 @@ private:
   TObjectPtr<UInputAction>         EquipAction;
   TObjectPtr<UInputAction>         AttackAction;
 
-  UPROPERTY(VisibleAnywhere,
-            BlueprintReadOnly,
-            Category = "Hair",
-            meta     = (AllowPrivateAccess = "true"))
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hair", meta = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UGroomComponent> HairComponent;
 
-  UPROPERTY(VisibleAnywhere,
-            BlueprintReadOnly,
-            Category = "Eye",
-            meta     = (AllowPrivateAccess = "true"))
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Eye", meta = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UGroomComponent> EyebrowsComponent;
 
   UPROPERTY(VisibleInstanceOnly, Category = "Item")
