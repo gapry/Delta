@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
 Language: Cpp
-ColumnLimit: 100
+ColumnLimit: 150
 TabWidth: 2
 UseTab: Never
 AllowShortCaseLabelsOnASingleLine: true

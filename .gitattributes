@@ -25,3 +25,4 @@
 *.sh text eol=crlf
 *.md text eol=crlf
 *.code-workspace text eol=crlf
+.clang-format text eol=crlf
