@@ -18,8 +18,8 @@
 #include "Components/BoxComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
-#include "../Item/Weapon/Weapon.h"
-#include "../Item/Weapon/Sword.h"
+#include "../Weapon/Weapon.h"
+#include "../Weapon/Sword.h"
 
 AEchoCharacter::AEchoCharacter() {
   {
@@ -260,13 +260,9 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
   }
 
   EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Move);
-
   EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Look);
-
   EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Jump);
-
   EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Equip);
-
   EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Attack);
 }
 
