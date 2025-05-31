@@ -33,8 +33,8 @@ AEchoCharacter::AEchoCharacter() {
   {
     SkeletalMeshComponent = GetMesh();
 
-    static constexpr const TCHAR* const SkeletalMeshPath{TEXT(
-      "/Script/Engine.SkeletalMesh'/Game/Delta/AncientContent/Characters/Echo/Meshes/Echo.Echo'")};
+    static constexpr const TCHAR* const SkeletalMeshPath{
+      TEXT("/Script/Engine.SkeletalMesh'/Game/Delta/AncientContent/Characters/Echo/Meshes/Echo.Echo'")};
 
     DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
 
@@ -48,10 +48,8 @@ AEchoCharacter::AEchoCharacter() {
     SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
-                                                         ECollisionResponse::ECR_Block);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic,
-                                                         ECollisionResponse::ECR_Overlap);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
     SkeletalMeshComponent->UpdateCollisionProfile();
   }
 
@@ -64,10 +62,8 @@ AEchoCharacter::AEchoCharacter() {
     CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
     CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
-                                                    ECollisionResponse::ECR_Ignore);
-    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
-                                                    ECollisionResponse::ECR_Ignore);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
     CapsuleComponent->UpdateCollisionProfile();
   }
 
@@ -84,40 +80,36 @@ AEchoCharacter::AEchoCharacter() {
   }
 
   {
-    static constexpr const TCHAR* const InputMappingContextPath{TEXT(
-      "/Script/EnhancedInput.InputMappingContext'/Game/Delta/Character/Input/IMC_Echo.IMC_Echo'")};
+    static constexpr const TCHAR* const InputMappingContextPath{
+      TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Delta/Character/Input/IMC_Echo.IMC_Echo'")};
     DELTA_SET_InputMappingContext(InputMappingContext, InputMappingContextPath);
 
-    static constexpr const TCHAR* const MoveActionPath{TEXT(
-      "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Move.IA_Echo_Move'")};
+    static constexpr const TCHAR* const MoveActionPath{
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Move.IA_Echo_Move'")};
     DELTA_SET_InputAction(MoveAction, MoveActionPath);
 
-    static constexpr const TCHAR* const LookActionPath{TEXT(
-      "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Look.IA_Echo_Look'")};
+    static constexpr const TCHAR* const LookActionPath{
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Look.IA_Echo_Look'")};
     DELTA_SET_InputAction(LookAction, LookActionPath);
 
-    static constexpr const TCHAR* const JumpActionPath{TEXT(
-      "/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Jump.IA_Echo_Jump'")};
+    static constexpr const TCHAR* const JumpActionPath{
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/IA_Echo_Jump.IA_Echo_Jump'")};
     DELTA_SET_InputAction(JumpAction, JumpActionPath);
 
-    static constexpr const TCHAR* const EquipActionPath{
-      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
-           "IA_Echo_Equip.IA_Echo_Equip'")};
+    static constexpr const TCHAR* const EquipActionPath{TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
+                                                             "IA_Echo_Equip.IA_Echo_Equip'")};
     DELTA_SET_InputAction(EquipAction, EquipActionPath);
 
-    static constexpr const TCHAR* const AttackActionPath{
-      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
-           "IA_Echo_Attack.IA_Echo_Attack'")};
+    static constexpr const TCHAR* const AttackActionPath{TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Character/Input/"
+                                                              "IA_Echo_Attack.IA_Echo_Attack'")};
     DELTA_SET_InputAction(AttackAction, AttackActionPath);
   }
 
   {
-    static constexpr const TCHAR* const HairPath{
-      TEXT("/Script/HairStrandsCore.GroomAsset'/Game/AncientContent/Characters/Echo/Hair/"
-           "Hair_S_UpdoBuns.Hair_S_UpdoBuns'")};
-    static constexpr const TCHAR* const MaterialPath{
-      TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Delta/Character/Hair/"
-           "MI_HairGroom.MI_HairGroom'")};
+    static constexpr const TCHAR* const HairPath{TEXT("/Script/HairStrandsCore.GroomAsset'/Game/AncientContent/Characters/Echo/Hair/"
+                                                      "Hair_S_UpdoBuns.Hair_S_UpdoBuns'")};
+    static constexpr const TCHAR* const MaterialPath{TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Delta/Character/Hair/"
+                                                          "MI_HairGroom.MI_HairGroom'")};
 
     static constexpr const TCHAR* const ComponentName{TEXT("Hair")};
     static const FString                SocketName = FString("head");
@@ -131,9 +123,8 @@ AEchoCharacter::AEchoCharacter() {
   }
 
   {
-    static constexpr const TCHAR* const EyebrowsPath{
-      TEXT("/Script/HairStrandsCore.GroomAsset'/Game/AncientContent/Characters/Echo/Hair/"
-           "Eyebrows_L_Echo.Eyebrows_L_Echo'")};
+    static constexpr const TCHAR* const EyebrowsPath{TEXT("/Script/HairStrandsCore.GroomAsset'/Game/AncientContent/Characters/Echo/Hair/"
+                                                          "Eyebrows_L_Echo.Eyebrows_L_Echo'")};
     static constexpr const TCHAR* const ComponentName{TEXT("Eyebrows")};
     static const FString                SocketName = FString("head");
 
@@ -144,22 +135,19 @@ AEchoCharacter::AEchoCharacter() {
   }
 
   {
-    static constexpr const TCHAR* const AnimBlueprintPath{
-      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Character/Animation/Blueprint/"
-           "ABP_EchoCharacter.ABP_EchoCharacter_C'")};
+    static constexpr const TCHAR* const AnimBlueprintPath{TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Character/Animation/Blueprint/"
+                                                               "ABP_EchoCharacter.ABP_EchoCharacter_C'")};
     DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
   }
 
   {
-    static constexpr const TCHAR* const MontagePath{TEXT(
-      "/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/AM_Attack.AM_Attack'")};
+    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/AM_Attack.AM_Attack'")};
     DELTA_SET_ANIMATION_MONTAGE(AttackMontage, MontagePath);
   }
 
   {
-    static constexpr const TCHAR* const MontagePath{
-      TEXT("/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/"
-           "AM_EquipUnequip.AM_EquipUnequip'")};
+    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Character/Animation/Montage/"
+                                                         "AM_EquipUnequip.AM_EquipUnequip'")};
     DELTA_SET_ANIMATION_MONTAGE(EquipUnequipMontage, MontagePath);
   }
 }
@@ -227,8 +215,7 @@ void AEchoCharacter::BeginPlay() {
   Super::BeginPlay();
 
   if (const auto* const PlayerController = Cast<APlayerController>(Controller)) {
-    if (auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-          PlayerController->GetLocalPlayer())) {
+    if (auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer())) {
       Subsystem->AddMappingContext(InputMappingContext, 0);
     }
   }
@@ -272,30 +259,15 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     return;
   }
 
-  EnhancedInputComponent->BindAction(MoveAction,
-                                     ETriggerEvent::Triggered,
-                                     this,
-                                     &AEchoCharacter::Move);
+  EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Move);
 
-  EnhancedInputComponent->BindAction(LookAction,
-                                     ETriggerEvent::Triggered,
-                                     this,
-                                     &AEchoCharacter::Look);
+  EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Look);
 
-  EnhancedInputComponent->BindAction(JumpAction,
-                                     ETriggerEvent::Triggered,
-                                     this,
-                                     &AEchoCharacter::Jump);
+  EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Jump);
 
-  EnhancedInputComponent->BindAction(EquipAction,
-                                     ETriggerEvent::Triggered,
-                                     this,
-                                     &AEchoCharacter::Equip);
+  EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Equip);
 
-  EnhancedInputComponent->BindAction(AttackAction,
-                                     ETriggerEvent::Triggered,
-                                     this,
-                                     &AEchoCharacter::Attack);
+  EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Attack);
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value) {
@@ -304,8 +276,7 @@ void AEchoCharacter::Move(const FInputActionValue& Value) {
     return;
   }
 
-  if (ActionState == EActionState::EAS_Attacking ||
-      ActionState == EActionState::EAS_EquippingWeapon) {
+  if (ActionState == EActionState::EAS_Attacking || ActionState == EActionState::EAS_EquippingWeapon) {
     return;
   }
 
@@ -491,8 +462,7 @@ bool AEchoCharacter::CanDisarm() const {
 }
 
 bool AEchoCharacter::CanAttack() const {
-  return ActionState == EActionState::EAS_Unoccupied &&
-         CharacterState != ECharacterState::ECS_Unequipped;
+  return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
 }
 
 void AEchoCharacter::Arm() {

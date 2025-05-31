@@ -5,7 +5,7 @@
 #include "Weapon.h"
 #include "Sound/SoundBase.h"
 #include "Components/BoxComponent.h"
-#include "../../Character/EchoCharacter.h"
+#include "../../Player/EchoCharacter.h"
 #include "../../Common/LogUtil.h"
 
 AWeapon::AWeapon() {
@@ -60,10 +60,7 @@ void AWeapon::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
   EchoCharacter->SetOverlappingItem(this);
 }
 
-void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
-                                 AActor*              OtherActor,
-                                 UPrimitiveComponent* OtherComp,
-                                 int32                OtherBodyIndex) {
+void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
   auto* const EchoCharacter = Cast<AEchoCharacter>(OtherActor);
   if (EchoCharacter == nullptr) {
     return;
