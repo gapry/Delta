@@ -8,19 +8,23 @@
 #include "../Common/LogUtil.h"
 
 ABaseBreakable::ABaseBreakable() {
-  {
-    PrimaryActorTick.bCanEverTick = true;
-  }
+  PrimaryActorTick.bCanEverTick = true;
 
-  {
-    GeometryCollectionComponent =
-      CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
+  GeometryCollectionComponent = CreateDefaultSubobject<UGeometryCollectionComponent>(TEXT("GeometryCollection"));
+  check(GeometryCollectionComponent);
 
-    check(GeometryCollectionComponent);
-    DELTA_LOG("{}", DeltaFormat("GeometryCollectionComponent created successfully"));
+  GeometryCollectionComponent->bUseSizeSpecificDamageThreshold = false;
+  GeometryCollectionComponent->SetGenerateOverlapEvents(true);
+  GeometryCollectionComponent->SetNotifyRigidBodyCollision(false);
 
-    RootComponent = GeometryCollectionComponent;
-  }
+  GeometryCollectionComponent->SetCollisionProfileName(TEXT("Custom"));
+  GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+  GeometryCollectionComponent->SetCollisionObjectType(ECollisionChannel::ECC_Destructible);
+  GeometryCollectionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+  GeometryCollectionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+  GeometryCollectionComponent->UpdateCollisionProfile();
+
+  RootComponent = GeometryCollectionComponent;
 }
 
 void ABaseBreakable::BeginPlay() {
