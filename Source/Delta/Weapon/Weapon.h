@@ -5,6 +5,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Field/FieldSystemActor.h"
+#include "Field/FieldSystemObjects.h"
 #include "../Item/Item.h"
 #include "Weapon.generated.h"
 
@@ -53,6 +55,21 @@ protected:
 
   void DebugOverlap(AActor* OtherActor);
 
+  void ApplyRadialFalloffField(float                 Magnitude,
+                               float                 MinRange,
+                               float                 MaxRange,
+                               float                 Default,
+                               float                 Radius,
+                               const FVector&        Position,
+                               EFieldFalloffType     FalloffType,
+                               bool                  bEnabled,
+                               EFieldPhysicsType     PhysicsType,
+                               UFieldSystemMetaData* MetaData);
+
+  void ApplyRadialVectorField(float Magnitude, const FVector& Position, bool bEnabled, EFieldPhysicsType PhysicsType, UFieldSystemMetaData* MetaData);
+
+  virtual void CreateAttackFields(const FVector& ImpactPoint);
+
   UPROPERTY(EditAnywhere, Category = "Weapon Properties")
   TObjectPtr<USoundBase> EquipSound{nullptr};
 
@@ -64,4 +81,16 @@ protected:
 
   UPROPERTY(EditAnywhere, Category = "Weapon Properties")
   TObjectPtr<USceneComponent> BoxTraceEnd{nullptr};
+
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<UFieldSystemComponent> FieldSystemComponent{nullptr};
+
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<URadialFalloff> RadialFalloffComponent{nullptr};
+
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<URadialVector> RadialVectorComponent{nullptr};
+
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+  TObjectPtr<UFieldSystemMetaDataFilter> FieldSystemMetaDataFilterComponent{nullptr};
 };

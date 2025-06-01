@@ -21,43 +21,44 @@ AEnemy::AEnemy() {
   {
     SkeletalMeshComponent = GetMesh();
 
-    static constexpr const TCHAR* const SkeletalMeshPath{
-      TEXT("/Script/Engine.SkeletalMesh'/Game/Mixamo/Paladin/"
-           "Sword_And_Shield_Idle.Sword_And_Shield_Idle'")};
+    static constexpr const TCHAR* const SkeletalMeshPath{TEXT("/Script/Engine.SkeletalMesh'/Game/Mixamo/Paladin/"
+                                                              "Sword_And_Shield_Idle.Sword_And_Shield_Idle'")};
 
     DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
 
-    SkeletalMeshComponent->SetRelativeTransform(
-      FTransform(FRotator(0.f, -90.f, 0.f), FVector(0.f, 0.f, -88.0f), FVector(1.f, 1.f, 1.f)));
+    SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), FVector(0.f, 0.f, -88.0f), FVector(1.f, 1.f, 1.f)));
 
     SkeletalMeshComponent->SetGenerateOverlapEvents(true);
 
+    SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
-                                                         ECollisionResponse::ECR_Block);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
-                                                         ECollisionResponse::ECR_Ignore);
-  }
-
-  {
-    static constexpr const TCHAR* const AnimBlueprintPath{TEXT(
-      "/Script/Engine.AnimBlueprint'/Game/Delta/Enemy/Animation/Blueprint/ABP_Enemy.ABP_Enemy_C'")};
-    DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
-  }
-
-  {
-    static constexpr const TCHAR* const MontagePath{TEXT(
-      "/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_HitReact.AM_HitReact'")};
-    DELTA_SET_ANIMATION_MONTAGE(HitReactMontage, MontagePath);
+    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Vehicle, ECollisionResponse::ECR_Ignore);
   }
 
   {
     CapsuleComponent = GetCapsuleComponent();
 
-    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera,
-                                                    ECollisionResponse::ECR_Ignore);
-    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
-                                                    ECollisionResponse::ECR_Ignore);
+    CapsuleComponent->SetCollisionProfileName(TEXT("Custom"));
+    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+    CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+  }
+
+  {
+    static constexpr const TCHAR* const AnimBlueprintPath{
+      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Enemy/Animation/Blueprint/ABP_Enemy.ABP_Enemy_C'")};
+    DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
+  }
+
+  {
+    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_HitReact.AM_HitReact'")};
+    DELTA_SET_ANIMATION_MONTAGE(HitReactMontage, MontagePath);
   }
 }
 
@@ -95,26 +96,11 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint) {
   }
 
 #if DELTA_DEBUG_HIT_RENDER
-  UKismetSystemLibrary::DrawDebugArrow(this,
-                                       GetActorLocation(),
-                                       GetActorLocation() + Forward * 60.f,
-                                       5.f,
-                                       FColor::Red,
-                                       5.f);
+  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f, FColor::Red, 5.f);
 
-  UKismetSystemLibrary::DrawDebugArrow(this,
-                                       GetActorLocation(),
-                                       GetActorLocation() + ToHit * 60.f,
-                                       5.f,
-                                       FColor::Green,
-                                       5.f);
+  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60.f, 5.f, FColor::Green, 5.f);
 
-  UKismetSystemLibrary::DrawDebugArrow(this,
-                                       GetActorLocation(),
-                                       GetActorLocation() + CrossProduct * 100.f,
-                                       5.f,
-                                       FColor::Blue,
-                                       5.f);
+  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 5.f, FColor::Blue, 5.f);
 #endif
 
   FName Section("FromBack");

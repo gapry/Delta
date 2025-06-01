@@ -5,8 +5,11 @@
 #include "Weapon.h"
 #include "Sound/SoundBase.h"
 #include "Components/BoxComponent.h"
+#include "Field/FieldSystemComponent.h"
+#include "Field/FieldSystemObjects.h"
 #include "../Player/EchoCharacter.h"
 #include "../Common/LogUtil.h"
+#include "../Common/DebugShape.h"
 
 AWeapon::AWeapon() {
   {
@@ -20,6 +23,24 @@ AWeapon::AWeapon() {
 
     BoxTraceEnd = CreateDefaultSubobject<USceneComponent>(TEXT("Box Trace End"));
     BoxTraceEnd->SetupAttachment(GetRootComponent());
+  }
+
+  {
+    FieldSystemComponent = CreateDefaultSubobject<UFieldSystemComponent>(TEXT("FieldSystemComponent"));
+    check(FieldSystemComponent);
+
+    RadialFalloffComponent = CreateDefaultSubobject<URadialFalloff>(TEXT("RadialFalloffComponent"));
+    check(RadialFalloffComponent);
+
+    RadialVectorComponent = CreateDefaultSubobject<URadialVector>(TEXT("RadialVectorComponent"));
+    check(RadialVectorComponent);
+
+    FieldSystemMetaDataFilterComponent = CreateDefaultSubobject<UFieldSystemMetaDataFilter>(TEXT("FieldSystemMetaDataFilterComponent"));
+    check(FieldSystemMetaDataFilterComponent);
+
+    FieldSystemMetaDataFilterComponent->FilterType   = EFieldFilterType::Field_Filter_Dynamic;
+    FieldSystemMetaDataFilterComponent->ObjectType   = EFieldObjectType::Field_Object_Destruction;
+    FieldSystemMetaDataFilterComponent->PositionType = EFieldPositionType::Field_Position_CenterOfMass;
   }
 }
 
@@ -97,4 +118,37 @@ void AWeapon::DebugOverlap(AActor* OtherActor) {
 
 UBoxComponent* AWeapon::GetWeaponBox() const {
   return WeaponBox;
+}
+
+void AWeapon::ApplyRadialFalloffField(float                 Magnitude,
+                                      float                 MinRange,
+                                      float                 MaxRange,
+                                      float                 Default,
+                                      float                 Radius,
+                                      const FVector&        Position,
+                                      EFieldFalloffType     FalloffType,
+                                      bool                  bEnabled,
+                                      EFieldPhysicsType     PhysicsType,
+                                      UFieldSystemMetaData* MetaData) {
+  auto* const FieldNode = RadialFalloffComponent->SetRadialFalloff(Magnitude, //
+                                                                   MinRange,
+                                                                   MaxRange,
+                                                                   Default,
+                                                                   Radius,
+                                                                   Position,
+                                                                   FalloffType);
+
+  FieldSystemComponent->ApplyPhysicsField(bEnabled, PhysicsType, MetaData, FieldNode);
+}
+
+void AWeapon::ApplyRadialVectorField(float                 Magnitude,
+                                     const FVector&        Position,
+                                     bool                  bEnabled,
+                                     EFieldPhysicsType     PhysicsType,
+                                     UFieldSystemMetaData* MetaData) {
+  auto* const FieldNode = RadialVectorComponent->SetRadialVector(Magnitude, Position);
+  FieldSystemComponent->ApplyPhysicsField(bEnabled, PhysicsType, MetaData, FieldNode);
+}
+
+void AWeapon::CreateAttackFields(const FVector& ImpactPoint) {
 }

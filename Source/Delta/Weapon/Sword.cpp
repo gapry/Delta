@@ -31,11 +31,11 @@ ASword::ASword() {
     StaticMeshComponent->SetGenerateOverlapEvents(false);
 
     StaticMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-    StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    StaticMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
     StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
     StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Ignore);
     StaticMeshComponent->UpdateCollisionProfile();
   }
 
@@ -117,5 +117,38 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
       HitInterface->GetHit(BoxHit.ImpactPoint);
     }
     IgnoreActors.AddUnique(BoxHit.GetActor());
+    CreateAttackFields(BoxHit.ImpactPoint);
   }
+}
+
+void ASword::CreateAttackFields(const FVector& FieldLocation) {
+#if DELTA_ENABLE_BLUEPRINT_ATTACK_FIELDS
+  CreateBP_AttackFields(FieldLocation);
+#else
+  CreateNative_AttackFields(FieldLocation);
+#endif
+}
+
+void ASword::CreateNative_AttackFields(const FVector& ImpactPoint) {
+  ApplyRadialFalloffField(1000000.0f,
+                          0.8f,
+                          1.0f,
+                          0.0f,
+                          200.0f,
+                          ImpactPoint,
+                          EFieldFalloffType::Field_FallOff_None,
+                          true,
+                          EFieldPhysicsType::Field_ExternalClusterStrain,
+                          nullptr);
+
+  ApplyRadialVectorField(150000.0f, //
+                         ImpactPoint,
+                         true,
+                         EFieldPhysicsType::Field_LinearForce,
+                         FieldSystemMetaDataFilterComponent);
+
+#if DELTA_DEBUG_HIT_FIELD
+  DELTA_LOG("{}", DeltaFormat("[{}] Applied radial vector field at impact point: {}", DELTA_FUNCSIG, ImpactPoint.ToString()));
+  DELTA_DEBUG_SPHERE(ImpactPoint);
+#endif
 }
