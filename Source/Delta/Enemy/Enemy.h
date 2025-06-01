@@ -10,6 +10,8 @@
 #include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
 
+#define DELTA_ENEMY_ENABLE_DEBUG_HIT 0
+
 class UAnimMontage;
 
 UCLASS()

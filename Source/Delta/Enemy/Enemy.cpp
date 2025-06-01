@@ -75,7 +75,7 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 }
 
 void AEnemy::GetHit(const FVector& ImpactPoint) {
-#if DELTA_DEBUG_HIT_RENDER
+#if DELTA_ENEMY_ENABLE_DEBUG_HIT
   DELTA_DEBUG_SPHERE_COLOR(ImpactPoint, FColor::Orange);
 #endif
   DirectionalHitReact(ImpactPoint);
@@ -95,11 +95,9 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint) {
     Theta *= -1.f;
   }
 
-#if DELTA_DEBUG_HIT_RENDER
+#if DELTA_ENEMY_ENABLE_DEBUG_HIT
   UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f, FColor::Red, 5.f);
-
   UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60.f, 5.f, FColor::Green, 5.f);
-
   UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 5.f, FColor::Blue, 5.f);
 #endif
 

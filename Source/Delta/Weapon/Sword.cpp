@@ -95,7 +95,7 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
   FHitResult BoxHit;
 
   EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::None;
-#if DELTA_DEBUG_HIT_RENDER
+#if DELTA_SWORD_ENABLE_DEBUG_HIT
   DrawDebugType = EDrawDebugTrace::ForDuration;
 #endif
 
@@ -122,7 +122,7 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 }
 
 void ASword::CreateAttackFields(const FVector& FieldLocation) {
-#if DELTA_ENABLE_BLUEPRINT_ATTACK_FIELDS
+#if DELTA_SWORD_ENABLE_BLUEPRINT_ATTACK_FIELDS
   CreateBP_AttackFields(FieldLocation);
 #else
   CreateNative_AttackFields(FieldLocation);
@@ -147,7 +147,7 @@ void ASword::CreateNative_AttackFields(const FVector& ImpactPoint) {
                          EFieldPhysicsType::Field_LinearForce,
                          FieldSystemMetaDataFilterComponent);
 
-#if DELTA_DEBUG_HIT_FIELD
+#if DELTA_SWORD_ENABLE_DEBUG_HIT
   DELTA_LOG("{}", DeltaFormat("[{}] Applied radial vector field at impact point: {}", DELTA_FUNCSIG, ImpactPoint.ToString()));
   DELTA_DEBUG_SPHERE(ImpactPoint);
 #endif
