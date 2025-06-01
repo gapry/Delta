@@ -35,10 +35,6 @@ void ABaseBreakable::BeginPlay() {
   GeometryCollectionComponent->OnChaosBreakEvent.AddDynamic(this, &ABaseBreakable::OnBreakEvent);
 }
 
-void ABaseBreakable::Tick(float DeltaTime) {
-  Super::Tick(DeltaTime);
-}
-
 void ABaseBreakable::GetHit(const FVector& ImpactPoint) {
 #if DELTA_BREAKABLE_ENABLE_DEBUG_HIT
   DELTA_LOG("[{}] Impact point: {}", DELTA_FUNCSIG, ImpactPoint.ToString());
@@ -47,5 +43,5 @@ void ABaseBreakable::GetHit(const FVector& ImpactPoint) {
 }
 
 void ABaseBreakable::OnBreakEvent(const FChaosBreakEvent& BreakEvent) {
-  SetLifeSpan(3.5f);
+  SetLifeSpan(LifeSpan);
 }

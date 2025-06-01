@@ -22,8 +22,6 @@ class DELTA_API ABaseBreakable : public AActor, public IHitInterface {
 public:
   ABaseBreakable();
 
-  virtual void Tick(float DeltaTime) override;
-
   virtual void GetHit(const FVector& ImpactPoint) override;
 
   UFUNCTION()
@@ -37,4 +35,6 @@ protected:
 
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
   TObjectPtr<USoundBase> BreakSound{nullptr};
+
+  float LifeSpan{3.5f};
 };
