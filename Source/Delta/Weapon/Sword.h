@@ -8,9 +8,8 @@
 #include "Weapon.h"
 #include "Sword.generated.h"
 
-#define DELTA_DEBUG_HIT_RENDER               1
-#define DELTA_DEBUG_HIT_FIELD                1
-#define DELTA_ENABLE_BLUEPRINT_ATTACK_FIELDS 0
+#define DELTA_SWORD_ENABLE_DEBUG_HIT               1
+#define DELTA_SWORD_ENABLE_BLUEPRINT_ATTACK_FIELDS 0
 
 UCLASS()
 class DELTA_API ASword : public AWeapon {

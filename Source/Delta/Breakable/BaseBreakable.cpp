@@ -4,6 +4,7 @@
 
 #include "BaseBreakable.h"
 #include "GeometryCollection/GeometryCollectionComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Misc/AssertionMacros.h"
 #include "../Common/LogUtil.h"
 
@@ -16,11 +17,13 @@ ABaseBreakable::ABaseBreakable() {
   GeometryCollectionComponent->bUseSizeSpecificDamageThreshold = false;
   GeometryCollectionComponent->SetGenerateOverlapEvents(true);
   GeometryCollectionComponent->SetNotifyRigidBodyCollision(false);
+  GeometryCollectionComponent->SetNotifyBreaks(true);
 
   GeometryCollectionComponent->SetCollisionProfileName(TEXT("Custom"));
   GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
   GeometryCollectionComponent->SetCollisionObjectType(ECollisionChannel::ECC_Destructible);
   GeometryCollectionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+  GeometryCollectionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
   GeometryCollectionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
   GeometryCollectionComponent->UpdateCollisionProfile();
 
@@ -29,8 +32,20 @@ ABaseBreakable::ABaseBreakable() {
 
 void ABaseBreakable::BeginPlay() {
   Super::BeginPlay();
+  GeometryCollectionComponent->OnChaosBreakEvent.AddDynamic(this, &ABaseBreakable::OnBreakEvent);
 }
 
 void ABaseBreakable::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
+}
+
+void ABaseBreakable::GetHit(const FVector& ImpactPoint) {
+#if DELTA_BREAKABLE_ENABLE_DEBUG_HIT
+  DELTA_LOG("[{}] Impact point: {}", DELTA_FUNCSIG, ImpactPoint.ToString());
+#endif
+  UGameplayStatics::PlaySoundAtLocation(GetWorld(), BreakSound, ImpactPoint);
+}
+
+void ABaseBreakable::OnBreakEvent(const FChaosBreakEvent& BreakEvent) {
+  SetLifeSpan(3.5f);
 }
