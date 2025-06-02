@@ -17,3 +17,4 @@
 - [Wild Grass](https://fab.com/s/448a9958e501)
 - [Rock](https://fab.com/s/9ccc46755e7b)
 - [DZ Sample Trees](https://fab.com/s/0934c888522c)
+- [Ancient Treasures](https://fab.com/s/014bb41fe8ac)
