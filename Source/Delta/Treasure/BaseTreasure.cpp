@@ -9,16 +9,9 @@
 #include "../Common/Finder.h"
 
 ABaseTreasure::ABaseTreasure() {
-  {
-    static const TCHAR* const Path = TEXT(" /Script/Engine.StaticMesh'/Game/AncientTreasures/Meshes/SM_Chalice_01a.SM_Chalice_01a'");
-    DELTA_SET_STATIC_MESH(StaticMeshComponent, Path);
-  }
-
-  {
-    // Sound effect by Eric Matyas - www.soundimage.org
-    static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_Treasure.sfx_Treasure'");
-    DELTA_SET_SOUNDBASE(PickupSound, Path);
-  }
+  // Sound effect by Eric Matyas - www.soundimage.org
+  static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_Treasure.sfx_Treasure'");
+  DELTA_SET_SOUNDBASE(PickupSound, Path);
 }
 
 void ABaseTreasure::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
