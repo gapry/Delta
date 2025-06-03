@@ -48,4 +48,5 @@ protected:
   TObjectPtr<UCapsuleComponent> Capsule{nullptr};
 
   float LifeSpan{5.5f};
+  float TreasureSpawnZOffset{50.0f};
 };

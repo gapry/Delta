@@ -59,7 +59,7 @@ void ABaseBreakable::GetHit(const FVector& ImpactPoint) {
 
   if (UWorld* const World = GetWorld(); World != nullptr && TreasureClasses.Num() > 0) {
     FVector Location = GetActorLocation();
-    Location.Z += 55.f;
+    Location.Z += TreasureSpawnZOffset;
 
     const int32 Selection = FMath::RandRange(0, TreasureClasses.Num() - 1);
     World->SpawnActor<ABaseTreasure>(TreasureClasses[Selection], Location, GetActorRotation());
@@ -76,7 +76,9 @@ void ABaseBreakable::OnBreakEvent(const FChaosBreakEvent& BreakEvent) {
 }
 
 void ABaseBreakable::AddTreasureClass(TSubclassOf<ABaseTreasure> InsertedTreasureClass) {
-  if (InsertedTreasureClass) {
-    TreasureClasses.Add(InsertedTreasureClass);
+  if (InsertedTreasureClass == nullptr) {
+    DELTA_LOG("{}", DeltaFormat("[{}] Inserted treasure class is null!", DELTA_FUNCSIG));
+    return;
   }
+  TreasureClasses.Add(InsertedTreasureClass);
 }
