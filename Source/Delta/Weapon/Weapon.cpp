@@ -7,7 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Field/FieldSystemComponent.h"
 #include "Field/FieldSystemObjects.h"
-#include "../Player/EchoCharacter.h"
+#include "../Player/Echo/EchoCharacter.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
 

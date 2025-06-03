@@ -4,8 +4,7 @@
 
 #include "BirdGameMode.h"
 #include "GameFramework/PlayerController.h"
-
-#include "../Pawn/Bird.h"
+#include "../Player/Bird/Bird.h"
 #include "../Common/LogUtil.h"
 
 ABirdGameMode::ABirdGameMode() {
@@ -17,9 +16,7 @@ ABirdGameMode::ABirdGameMode() {
   PlayerControllerClass = APlayerController::StaticClass();
 }
 
-void ABirdGameMode::InitGame(const FString& MapName,
-                             const FString& Options,
-                             FString&       ErrorMessage) {
+void ABirdGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
   Super::InitGame(MapName, Options, ErrorMessage);
 }
 

@@ -7,9 +7,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "../Character/State/CharacterState.h"
-#include "../Character/State/ActionState.h"
-#include "../Character/BaseCharacter.h"
+#include "../../Character/State/CharacterState.h"
+#include "../../Character/State/ActionState.h"
+#include "../../Character/BaseCharacter.h"
 #include "EchoCharacter.generated.h"
 
 class USkeletalMeshComponent;
