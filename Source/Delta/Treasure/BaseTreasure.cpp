@@ -5,7 +5,7 @@
 #include "BaseTreasure.h"
 #include "Sound/SoundBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "../Player/EchoCharacter.h"
+#include "../Player/Echo/EchoCharacter.h"
 #include "../Common/Finder.h"
 
 ABaseTreasure::ABaseTreasure() {

@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/GameStateBase.h"
-#include "../Player/EchoCharacter.h"
+#include "../Player/Echo/EchoCharacter.h"
 
 AEchoGameMode::AEchoGameMode() {
   PlayerStateClass      = APlayerState::StaticClass();

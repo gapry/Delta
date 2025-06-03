@@ -16,10 +16,10 @@
 #include "GroomComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Components/BoxComponent.h"
-#include "../Common/Finder.h"
-#include "../Common/LogUtil.h"
-#include "../Weapon/Weapon.h"
-#include "../Weapon/Sword.h"
+#include "../../Common/Finder.h"
+#include "../../Common/LogUtil.h"
+#include "../../Weapon/Weapon.h"
+#include "../../Weapon/Sword.h"
 
 AEchoCharacter::AEchoCharacter() {
   {

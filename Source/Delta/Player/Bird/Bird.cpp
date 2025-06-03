@@ -3,9 +3,6 @@
 // See LICENSE file in the project root for full license information.
 
 #include "Bird.h"
-#include "../Common/Finder.h"
-#include "../Common/LogUtil.h"
-
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
@@ -15,6 +12,8 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "../../Common/Finder.h"
+#include "../../Common/LogUtil.h"
 
 ABird::ABird() {
   {
@@ -27,48 +26,43 @@ ABird::ABird() {
 
   {
     static constexpr const TCHAR* const ComponentName = TEXT("SkeletalMeshComponent");
-    SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
+    SkeletalMeshComponent                             = CreateDefaultSubobject<USkeletalMeshComponent>(ComponentName);
 
-    static const TCHAR* const MeshPath =
-      TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
+    static const TCHAR* const MeshPath = TEXT("SkeletalMesh'/Game/AnimalVarietyPack/Crow/Meshes/SK_Crow.SK_Crow'");
     DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent, MeshPath);
 
-    static constexpr const TCHAR* const AnimSequencePath =
-      TEXT("AnimSequence'/Game/AnimalVarietyPack/Crow/Animations/ANIM_Crow_Fly.ANIM_Crow_Fly'");
+    static constexpr const TCHAR* const AnimSequencePath = TEXT("AnimSequence'/Game/AnimalVarietyPack/Crow/Animations/ANIM_Crow_Fly.ANIM_Crow_Fly'");
     DELTA_SET_ANIMATION(SkeletalMeshComponent, AnimSequencePath);
   }
 
   {
     static constexpr const TCHAR* const ComponentName = TEXT("CapsuleComponent");
-    CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(ComponentName);
+    CapsuleComponent                                  = CreateDefaultSubobject<UCapsuleComponent>(ComponentName);
   }
 
   {
-    static constexpr const TCHAR* const IMC_Path =
-      TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Delta/Pawn/Input/IMC_Bird.IMC_Bird'");
+    static constexpr const TCHAR* const IMC_Path = TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Delta/Pawn/Input/IMC_Bird.IMC_Bird'");
     DELTA_SET_InputMappingContext(InputMappingContext, IMC_Path);
 
-    static constexpr const TCHAR* const IA_Move_Path =
-      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Move.IA_Bird_Move'");
+    static constexpr const TCHAR* const IA_Move_Path = TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Move.IA_Bird_Move'");
     DELTA_SET_InputAction(MoveAction, IA_Move_Path);
 
-    static constexpr const TCHAR* const IA_Rotate_Path = TEXT(
-      "/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Rotate.IA_Bird_Rotate'");
+    static constexpr const TCHAR* const IA_Rotate_Path =
+      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Rotate.IA_Bird_Rotate'");
     DELTA_SET_InputAction(RotateAction, IA_Rotate_Path);
 
-    static constexpr const TCHAR* const IA_Look_Path =
-      TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Look.IA_Bird_Look'");
+    static constexpr const TCHAR* const IA_Look_Path = TEXT("/Script/EnhancedInput.InputAction'/Game/Delta/Pawn/Input/IA_Bird_Look.IA_Bird_Look'");
     DELTA_SET_InputAction(LookAction, IA_Look_Path);
   }
 
   {
     static constexpr const TCHAR* const ComponentName = TEXT("FloatingPawnMovement");
-    FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(ComponentName);
+    FloatingPawnMovement                              = CreateDefaultSubobject<UFloatingPawnMovement>(ComponentName);
   }
 
   {
     static constexpr const TCHAR* const ComponentName = TEXT("SpringArm");
-    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(ComponentName);
+    SpringArmComponent                                = CreateDefaultSubobject<USpringArmComponent>(ComponentName);
   }
 
   {
@@ -80,7 +74,7 @@ ABird::ABird() {
 
   {
     static constexpr const TCHAR* const ComponentName = TEXT("RootComponent");
-    RootComponent = CreateDefaultSubobject<USceneComponent>(ComponentName);
+    RootComponent                                     = CreateDefaultSubobject<USceneComponent>(ComponentName);
   }
 
   {
@@ -88,8 +82,7 @@ ABird::ABird() {
       RootComponent = CapsuleComponent;
 
       if (SkeletalMeshComponent) {
-        SkeletalMeshComponent->AttachToComponent(RootComponent,
-                                                 FAttachmentTransformRules::KeepRelativeTransform);
+        SkeletalMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
       } else {
         DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null"));
       }
@@ -116,8 +109,7 @@ void ABird::BeginPlay() {
 
   const auto* const PlayerController = CastChecked<APlayerController>(Controller);
 
-  auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-    PlayerController->GetLocalPlayer());
+  auto* const Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
   if (!Subsystem) {
     DELTA_LOG("{}", DeltaFormat("Subsystem is null"));
     return;
@@ -253,8 +245,7 @@ void ABird::Move(const FInputActionValue& Value) {
 }
 
 void ABird::Rotate(const FInputActionValue& Value) {
-  if (const auto& RotationValue = Value.Get<float>();
-      Controller != nullptr && RotationValue != 0.f) {
+  if (const auto& RotationValue = Value.Get<float>(); Controller != nullptr && RotationValue != 0.f) {
     DELTA_LOG("{}", DeltaFormat("Rotate: {}", Value.ToString()));
 
     AddControllerYawInput(RotationValue);
@@ -262,8 +253,7 @@ void ABird::Rotate(const FInputActionValue& Value) {
 }
 
 void ABird::Look(const FInputActionValue& Value) {
-  if (const auto& LookValue = Value.Get<FVector2D>();
-      Controller != nullptr && LookValue != FVector2D::ZeroVector) {
+  if (const auto& LookValue = Value.Get<FVector2D>(); Controller != nullptr && LookValue != FVector2D::ZeroVector) {
     DELTA_LOG("{}", DeltaFormat("Look: {}", Value.ToString()));
 
     AddControllerYawInput(LookValue.X);
