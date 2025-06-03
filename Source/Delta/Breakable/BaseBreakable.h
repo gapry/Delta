@@ -7,10 +7,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Physics/Experimental/ChaosEventType.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Components/CapsuleComponent.h"
+#include "../Treasure/BaseTreasure.h"
 #include "../Interface/HitInterface.h"
 #include "BaseBreakable.generated.h"
 
-#define DELTA_BREAKABLE_ENABLE_DEBUG_HIT 1
+#define DELTA_BREAKABLE_ENABLE_DEBUG_HIT 0
 
 class UGeometryCollectionComponent;
 class USoundBase;
@@ -27,6 +30,8 @@ public:
   UFUNCTION()
   void OnBreakEvent(const FChaosBreakEvent& BreakEvent);
 
+  void AddTreasureClass(TSubclassOf<ABaseTreasure> InsertedTreasureClass);
+
 protected:
   virtual void BeginPlay() override;
 
@@ -36,5 +41,12 @@ protected:
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
   TObjectPtr<USoundBase> BreakSound{nullptr};
 
-  float LifeSpan{3.5f};
+  UPROPERTY(EditAnywhere, Category = "Breakable Properties")
+  TArray<TSubclassOf<class ABaseTreasure>> TreasureClasses;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TObjectPtr<UCapsuleComponent> Capsule{nullptr};
+
+  float LifeSpan{5.5f};
+  float TreasureSpawnZOffset{50.0f};
 };

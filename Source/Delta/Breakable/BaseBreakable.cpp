@@ -6,7 +6,9 @@
 #include "GeometryCollection/GeometryCollectionComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/AssertionMacros.h"
+#include "../Treasure/BaseTreasure.h"
 #include "../Common/LogUtil.h"
+#include "../Common/Finder.h"
 
 ABaseBreakable::ABaseBreakable() {
   PrimaryActorTick.bCanEverTick = true;
@@ -24,10 +26,24 @@ ABaseBreakable::ABaseBreakable() {
   GeometryCollectionComponent->SetCollisionObjectType(ECollisionChannel::ECC_Destructible);
   GeometryCollectionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
   GeometryCollectionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+  GeometryCollectionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
   GeometryCollectionComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
   GeometryCollectionComponent->UpdateCollisionProfile();
 
   RootComponent = GeometryCollectionComponent;
+
+  Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+  Capsule->SetupAttachment(GetRootComponent());
+
+  Capsule->SetCollisionProfileName(TEXT("Custom"));
+  Capsule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+  Capsule->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+  Capsule->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+  Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+  Capsule->UpdateCollisionProfile();
+
+  static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_PotBreak.sfx_PotBreak'");
+  DELTA_SET_SOUNDBASE(BreakSound, Path);
 }
 
 void ABaseBreakable::BeginPlay() {
@@ -40,8 +56,29 @@ void ABaseBreakable::GetHit(const FVector& ImpactPoint) {
   DELTA_LOG("[{}] Impact point: {}", DELTA_FUNCSIG, ImpactPoint.ToString());
 #endif
   UGameplayStatics::PlaySoundAtLocation(GetWorld(), BreakSound, ImpactPoint);
+
+  if (UWorld* const World = GetWorld(); World != nullptr && TreasureClasses.Num() > 0) {
+    FVector Location = GetActorLocation();
+    Location.Z += TreasureSpawnZOffset;
+
+    const int32 Selection = FMath::RandRange(0, TreasureClasses.Num() - 1);
+    World->SpawnActor<ABaseTreasure>(TreasureClasses[Selection], Location, GetActorRotation());
+
+    if (Capsule) {
+      Capsule->DestroyComponent();
+      Capsule = nullptr;
+    }
+  }
 }
 
 void ABaseBreakable::OnBreakEvent(const FChaosBreakEvent& BreakEvent) {
   SetLifeSpan(LifeSpan);
+}
+
+void ABaseBreakable::AddTreasureClass(TSubclassOf<ABaseTreasure> InsertedTreasureClass) {
+  if (InsertedTreasureClass == nullptr) {
+    DELTA_LOG("{}", DeltaFormat("[{}] Inserted treasure class is null!", DELTA_FUNCSIG));
+    return;
+  }
+  TreasureClasses.Add(InsertedTreasureClass);
 }

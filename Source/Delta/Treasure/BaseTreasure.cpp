@@ -12,6 +12,9 @@ ABaseTreasure::ABaseTreasure() {
   // Sound effect by Eric Matyas - www.soundimage.org
   static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_Treasure.sfx_Treasure'");
   DELTA_SET_SOUNDBASE(PickupSound, Path);
+
+  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+  StaticMeshComponent->UpdateCollisionProfile();
 }
 
 void ABaseTreasure::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
