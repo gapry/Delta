@@ -8,7 +8,7 @@
 #include "Weapon.h"
 #include "Sword.generated.h"
 
-#define DELTA_SWORD_ENABLE_DEBUG_HIT               1
+#define DELTA_SWORD_ENABLE_DEBUG_HIT               0
 #define DELTA_SWORD_ENABLE_BLUEPRINT_ATTACK_FIELDS 0
 
 UCLASS()
