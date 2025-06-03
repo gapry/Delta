@@ -7,16 +7,23 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Physics/Experimental/ChaosEventType.h"
+#include "GeometryCollection/GeometryCollectionComponent.h"
+#include "Sound/SoundBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/CapsuleComponent.h"
 #include "../Treasure/BaseTreasure.h"
 #include "../Interface/HitInterface.h"
+#include "../Common/Finder.h"
+#include "../Treasure/BangleTreasure.h"
+#include "../Treasure/ChaliceTreasure.h"
+#include "../Treasure/Gems01aTreasure.h"
+#include "../Treasure/Gems01bTreasure.h"
+#include "../Treasure/Gems01cTreasure.h"
+#include "../Treasure/GoldBarTreasure.h"
+#include "../Treasure/StatueTreasure.h"
 #include "BaseBreakable.generated.h"
 
 #define DELTA_BREAKABLE_ENABLE_DEBUG_HIT 0
-
-class UGeometryCollectionComponent;
-class USoundBase;
 
 UCLASS()
 class DELTA_API ABaseBreakable : public AActor, public IHitInterface {

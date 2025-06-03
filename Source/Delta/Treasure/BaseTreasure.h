@@ -5,6 +5,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SphereComponent.h"
 #include "../Item/Item.h"
 #include "BaseTreasure.generated.h"
 
@@ -17,6 +18,8 @@ class DELTA_API ABaseTreasure : public AItem {
 public:
   ABaseTreasure();
 
+  virtual void Tick(float DeltaTime) override;
+
 protected:
   virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                     AActor*              OtherActor,
@@ -27,4 +30,7 @@ protected:
 
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
   TObjectPtr<USoundBase> PickupSound{nullptr};
+
+  UPROPERTY(EditAnywhere, Category = "Treasure Properties")
+  float Gold{0.0f};
 };
