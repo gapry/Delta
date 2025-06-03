@@ -13,7 +13,7 @@ AItem::AItem() {
 
   {
     static const TCHAR* const ComponentName = TEXT("StaticMeshComponent");
-    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(ComponentName);
+    StaticMeshComponent                     = CreateDefaultSubobject<UStaticMeshComponent>(ComponentName);
   }
 
   {
@@ -98,8 +98,5 @@ void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                  const FHitResult&    SweepResult) {
 }
 
-void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
-                               AActor*              OtherActor,
-                               UPrimitiveComponent* OtherComp,
-                               int32                OtherBodyIndex) {
+void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
 }

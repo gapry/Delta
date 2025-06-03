@@ -3,7 +3,6 @@
 // See LICENSE file in the project root for full license information.
 
 #include "BaseBreakable.h"
-#include "GeometryCollection/GeometryCollectionComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/AssertionMacros.h"
 #include "../Treasure/BaseTreasure.h"
@@ -44,6 +43,14 @@ ABaseBreakable::ABaseBreakable() {
 
   static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_PotBreak.sfx_PotBreak'");
   DELTA_SET_SOUNDBASE(BreakSound, Path);
+
+  AddTreasureClass(ABangleTreasure::StaticClass());
+  AddTreasureClass(AChaliceTreasure::StaticClass());
+  AddTreasureClass(AGems01aTreasure::StaticClass());
+  AddTreasureClass(AGems01bTreasure::StaticClass());
+  AddTreasureClass(AGems01cTreasure::StaticClass());
+  AddTreasureClass(AGoldBarTreasure::StaticClass());
+  AddTreasureClass(AStatueTreasure::StaticClass());
 }
 
 void ABaseBreakable::BeginPlay() {

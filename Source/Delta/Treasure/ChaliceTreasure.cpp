@@ -8,4 +8,9 @@
 AChaliceTreasure::AChaliceTreasure() {
   static const TCHAR* const Path = TEXT("/Script/Engine.StaticMesh'/Game/AncientTreasures/Meshes/SM_Chalice_01a.SM_Chalice_01a'");
   DELTA_SET_STATIC_MESH(StaticMeshComponent, Path);
+
+  SphereComponent->SetRelativeLocation(FVector(0, 0, 13.0));
+  SphereComponent->SetSphereRadius(18.0f);
+
+  Gold = 5.0f;
 }

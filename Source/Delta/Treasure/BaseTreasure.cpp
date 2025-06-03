@@ -31,3 +31,11 @@ void ABaseTreasure::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponen
     Destroy();
   }
 }
+
+void ABaseTreasure::Tick(float DeltaTime) {
+  Super::Tick(DeltaTime);
+
+  FRotator Rotation = GetActorRotation();
+  Rotation.Yaw += 60.f * DeltaTime;
+  SetActorRotation(Rotation);
+}
