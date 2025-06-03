@@ -20,8 +20,7 @@ METASOUND_PARAM(OutputValue, "Sum of A and B", "The sum of A and B.");
 
 } // namespace DeltaMetaSoundFloatAdditionNodeNames
 
-class FDeltaMetaSoundFloatAdditionOperator
-  : public TExecutableOperator<FDeltaMetaSoundFloatAdditionOperator> {
+class FDeltaMetaSoundFloatAdditionOperator : public TExecutableOperator<FDeltaMetaSoundFloatAdditionOperator> {
 public:
   FDeltaMetaSoundFloatAdditionOperator(const FFloatReadRef& InAValue, const FFloatReadRef& InBValue)
     : InputA(InAValue)
@@ -32,13 +31,12 @@ public:
   static const FVertexInterface& DeclareVertexInterface() {
     using namespace DeltaMetaSoundFloatAdditionNodeNames;
 
+    // 'Metasound::TInputDataVertexModel': TInputDataVertexModel<DataType> is deprecated. Replace with TInputDataVertex<DataType>
     static const FVertexInterface Interface(
-      FInputVertexInterface(
-        TInputDataVertexModel<float>(METASOUND_GET_PARAM_NAME_AND_METADATA(InputAValue)),
-        TInputDataVertexModel<float>(METASOUND_GET_PARAM_NAME_AND_METADATA(InputBValue))),
+      FInputVertexInterface(TInputDataVertexModel<float>(METASOUND_GET_PARAM_NAME_AND_METADATA(InputAValue)),
+                            TInputDataVertexModel<float>(METASOUND_GET_PARAM_NAME_AND_METADATA(InputBValue))),
 
-      FOutputVertexInterface(
-        TOutputDataVertexModel<float>(METASOUND_GET_PARAM_NAME_AND_METADATA(OutputValue))));
+      FOutputVertexInterface(TOutputDataVertexModel<float>(METASOUND_GET_PARAM_NAME_AND_METADATA(OutputValue))));
 
     return Interface;
   }
@@ -47,20 +45,17 @@ public:
     auto CreateNodeClassMetadata = []() -> FNodeClassMetadata {
       FVertexInterface NodeInterface = DeclareVertexInterface();
 
-      FNodeClassMetadata Metadata{
-        FNodeClassName{FName(TEXT("UE5")),
-                       TEXT("DeltaMetaSoundFloatAdditionNode"),
-                       FName(TEXT("Audio"))},
-        1,
-        0,
-        METASOUND_LOCTEXT("DeltaMetaSoundFloatAdditionNodeDisplayName", "FloatAdditionNode"),
-        METASOUND_LOCTEXT("DeltaMetaSoundFloatAdditionNodeDesc", "Add two float number"),
-        PluginAuthor,
-        PluginNodeMissingPrompt,
-        NodeInterface,
-        {},
-        {},
-        FNodeDisplayStyle{}};
+      FNodeClassMetadata Metadata{FNodeClassName{FName(TEXT("UE5")), TEXT("DeltaMetaSoundFloatAdditionNode"), FName(TEXT("Audio"))},
+                                  1,
+                                  0,
+                                  METASOUND_LOCTEXT("DeltaMetaSoundFloatAdditionNodeDisplayName", "FloatAdditionNode"),
+                                  METASOUND_LOCTEXT("DeltaMetaSoundFloatAdditionNodeDesc", "Add two float number"),
+                                  PluginAuthor,
+                                  PluginNodeMissingPrompt,
+                                  NodeInterface,
+                                  {},
+                                  {},
+                                  FNodeDisplayStyle{}};
 
       return Metadata;
     };
@@ -90,25 +85,24 @@ public:
     return OutputDataReferences;
   }
 
-  static TUniquePtr<IOperator> CreateOperator(const FCreateOperatorParams& InParams,
-                                              FBuildErrorArray&            OutErrors) {
+  // 'Metasound::FCreateOperatorParams': Update APIs to use FBuildOperatorParams. Operator creation routines should have the following signature
+  // "TUniquePtr<IOperator> CreateOperator(const FBuildOperatorParams&, FBuildResults&)"
+
+  // 'Metasound::FCreateOperatorParams::InputDataReferences': Update APIs to use FBuildOperatorParams. Operator creation routines should have the
+  // following signature "TUniquePtr<IOperator> CreateOperator(const FBuildOperatorParams&, FBuildResults&)"
+  static TUniquePtr<IOperator> CreateOperator(const FCreateOperatorParams& InParams, FBuildErrorArray& OutErrors) {
     using namespace DeltaMetaSoundFloatAdditionNodeNames;
 
     const Metasound::FDataReferenceCollection& InputCollection = InParams.InputDataReferences;
-    const Metasound::FInputVertexInterface&    InputInterface =
-      DeclareVertexInterface().GetInputInterface();
+    const Metasound::FInputVertexInterface&    InputInterface  = DeclareVertexInterface().GetInputInterface();
 
-    TDataReadReference<float> InputA =
-      InputCollection.GetDataReadReferenceOrConstructWithVertexDefault<float>(
-        InputInterface,
-        METASOUND_GET_PARAM_NAME(InputAValue),
-        InParams.OperatorSettings);
+    TDataReadReference<float> InputA = InputCollection.GetDataReadReferenceOrConstructWithVertexDefault<float>(InputInterface,
+                                                                                                               METASOUND_GET_PARAM_NAME(InputAValue),
+                                                                                                               InParams.OperatorSettings);
 
-    TDataReadReference<float> InputB =
-      InputCollection.GetDataReadReferenceOrConstructWithVertexDefault<float>(
-        InputInterface,
-        METASOUND_GET_PARAM_NAME(InputBValue),
-        InParams.OperatorSettings);
+    TDataReadReference<float> InputB = InputCollection.GetDataReadReferenceOrConstructWithVertexDefault<float>(InputInterface,
+                                                                                                               METASOUND_GET_PARAM_NAME(InputBValue),
+                                                                                                               InParams.OperatorSettings);
 
     return MakeUnique<FDeltaMetaSoundFloatAdditionOperator>(InputA, InputB);
   }
@@ -126,9 +120,7 @@ private:
 class FDeltaMetaSoundFloatAdditionNode : public FNodeFacade {
 public:
   FDeltaMetaSoundFloatAdditionNode(const FNodeInitData& InitData)
-    : FNodeFacade(InitData.InstanceName,
-                  InitData.InstanceID,
-                  TFacadeOperatorClass<FDeltaMetaSoundFloatAdditionOperator>()) {
+    : FNodeFacade(InitData.InstanceName, InitData.InstanceID, TFacadeOperatorClass<FDeltaMetaSoundFloatAdditionOperator>()) {
   }
 };
 
