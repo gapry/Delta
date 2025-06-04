@@ -6,12 +6,12 @@
 
 #include "CoreMinimal.h"
 #include "BaseBreakable.h"
-#include "Pot_A_Complete.generated.h"
+#include "ClayPot01Breakable.generated.h"
 
 UCLASS()
-class DELTA_API APot_A_Complete : public ABaseBreakable {
+class DELTA_API AClayPot01Breakable : public ABaseBreakable {
   GENERATED_BODY()
 
 public:
-  APot_A_Complete();
+  AClayPot01Breakable();
 };

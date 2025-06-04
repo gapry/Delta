@@ -2,14 +2,14 @@
 // Licensed under the MIT License.
 // See LICENSE file in the project root for full license information.
 
-#include "Pot_A_Complete.h"
+#include "PotCCompleteBreakable.h"
 
-APot_A_Complete::APot_A_Complete() {
+APotCCompleteBreakable::APotCCompleteBreakable() {
   static const TCHAR* const Path = TEXT("/Script/GeometryCollectionEngine.GeometryCollection'/Game/Delta/Destructible/"
-                                        "GC_SM_Pot_A_Complete1.GC_SM_Pot_A_Complete1'");
+                                        "GC_SM_Pot_C_Complete.GC_SM_Pot_C_Complete'");
   DELTA_SET_GEOMETRY_COLLECTION(GeometryCollectionComponent, Path);
 
-  Capsule->SetRelativeLocation(FVector(0, 0, 81.0));
-  Capsule->SetCapsuleHalfHeight(90.0);
-  Capsule->SetCapsuleRadius(90.0);
+  Capsule->SetRelativeLocation(FVector(0, 0, 16.0));
+  Capsule->SetCapsuleHalfHeight(25.0);
+  Capsule->SetCapsuleRadius(15.0);
 }
