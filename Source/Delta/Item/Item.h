@@ -62,7 +62,7 @@ protected:
   UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item", meta = (AllowPrivateAccess = "true"))
   float RotationRate{45.f};
 
-  UPROPERTY(EditAnywhere)
+  UPROPERTY(EditAnywhere, Category = "Visual Effects")
   TObjectPtr<UNiagaraComponent> EmbersEffect{nullptr};
 
   EItemState ItemState = EItemState::EIS_Hovering;
