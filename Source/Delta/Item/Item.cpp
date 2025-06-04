@@ -4,7 +4,9 @@
 
 #include "Item.h"
 #include "Components/SphereComponent.h"
+#include "NiagaraComponent.h"
 #include "../Common/LogUtil.h"
+#include "../Common/Finder.h"
 
 AItem::AItem() {
   {
@@ -25,6 +27,11 @@ AItem::AItem() {
   {
     SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
     SphereComponent->SetupAttachment(GetRootComponent());
+  }
+
+  {
+    EmbersEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Embers"));
+    EmbersEffect->SetupAttachment(GetRootComponent());
   }
 }
 
