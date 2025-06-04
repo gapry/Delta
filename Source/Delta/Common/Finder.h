@@ -36,37 +36,34 @@
   } while (false)
 // ----
 
-#define DELTA_SET_ANIMATION(MeshComponent, AnimSequencePath)                                  \
-  do {                                                                                        \
-    if (!(MeshComponent) || !(AnimSequencePath)) {                                            \
-      DELTA_LOG("{}", DeltaFormat("MeshComponent is null or AnimSequencePath is null"));      \
-      break;                                                                                  \
-    }                                                                                         \
-    static ConstructorHelpers::FObjectFinder<UAnimationAsset> AnimSequence(AnimSequencePath); \
-    if (!AnimSequence.Succeeded()) {                                                          \
-      DELTA_LOG(                                                                              \
-        "{}",                                                                                 \
-        DeltaFormat("Failed to load animation asset: {}", TCHAR_TO_UTF8(AnimSequencePath)));  \
-      break;                                                                                  \
-    }                                                                                         \
-    (MeshComponent)->SetAnimation(AnimSequence.Object);                                       \
-    (MeshComponent)->AnimationData.AnimToPlay = AnimSequence.Object;                          \
+#define DELTA_SET_ANIMATION(MeshComponent, AnimSequencePath)                                               \
+  do {                                                                                                     \
+    if (!(MeshComponent) || !(AnimSequencePath)) {                                                         \
+      DELTA_LOG("{}", DeltaFormat("MeshComponent is null or AnimSequencePath is null"));                   \
+      break;                                                                                               \
+    }                                                                                                      \
+    static ConstructorHelpers::FObjectFinder<UAnimationAsset> AnimSequence(AnimSequencePath);              \
+    if (!AnimSequence.Succeeded()) {                                                                       \
+      DELTA_LOG("{}", DeltaFormat("Failed to load animation asset: {}", TCHAR_TO_UTF8(AnimSequencePath))); \
+      break;                                                                                               \
+    }                                                                                                      \
+    (MeshComponent)->SetAnimation(AnimSequence.Object);                                                    \
+    (MeshComponent)->AnimationData.AnimToPlay = AnimSequence.Object;                                       \
   } while (false)
 // ----
 
-#define DELTA_SET_InputMappingContext(InputMappingContext, PATH)                               \
-  do {                                                                                         \
-    if (!(PATH)) {                                                                             \
-      DELTA_LOG("{}", DeltaFormat("InputMappingContext is null or PATH is null"));             \
-      break;                                                                                   \
-    }                                                                                          \
-    static ConstructorHelpers::FObjectFinder<UInputMappingContext> Finder(PATH);               \
-    if (!Finder.Succeeded()) {                                                                 \
-      DELTA_LOG("{}",                                                                          \
-                DeltaFormat("Failed to load input mapping context: {}", TCHAR_TO_UTF8(PATH))); \
-      break;                                                                                   \
-    }                                                                                          \
-    (InputMappingContext) = Finder.Object;                                                     \
+#define DELTA_SET_InputMappingContext(InputMappingContext, PATH)                                     \
+  do {                                                                                               \
+    if (!(PATH)) {                                                                                   \
+      DELTA_LOG("{}", DeltaFormat("InputMappingContext is null or PATH is null"));                   \
+      break;                                                                                         \
+    }                                                                                                \
+    static ConstructorHelpers::FObjectFinder<UInputMappingContext> Finder(PATH);                     \
+    if (!Finder.Succeeded()) {                                                                       \
+      DELTA_LOG("{}", DeltaFormat("Failed to load input mapping context: {}", TCHAR_TO_UTF8(PATH))); \
+      break;                                                                                         \
+    }                                                                                                \
+    (InputMappingContext) = Finder.Object;                                                           \
   } while (false)
 
 #define DELTA_SET_InputAction(InputAction, PATH)                                            \
@@ -110,38 +107,34 @@
   } while (false)
 // ----
 
-#define DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent, AnimBlueprintPath)                    \
-  do {                                                                                             \
-    if (!(SkeletalMeshComponent) || !(AnimBlueprintPath)) {                                        \
-      DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null or AnimBlueprintPath is null"));  \
-      break;                                                                                       \
-    }                                                                                              \
-    static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBlueprintFinder(AnimBlueprintPath); \
-    if (!AnimBlueprintFinder.Succeeded()) {                                                        \
-      DELTA_LOG(                                                                                   \
-        "{}",                                                                                      \
-        DeltaFormat("Failed to load AnimBlueprint: {}", TCHAR_TO_UTF8(AnimBlueprintPath)));        \
-      break;                                                                                       \
-    }                                                                                              \
-    SkeletalMeshComponent->SetAnimationMode(EAnimationMode::AnimationBlueprint);                   \
-    SkeletalMeshComponent->SetAnimInstanceClass(AnimBlueprintFinder.Class);                        \
+#define DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent, AnimBlueprintPath)                           \
+  do {                                                                                                    \
+    if (!(SkeletalMeshComponent) || !(AnimBlueprintPath)) {                                               \
+      DELTA_LOG("{}", DeltaFormat("SkeletalMeshComponent is null or AnimBlueprintPath is null"));         \
+      break;                                                                                              \
+    }                                                                                                     \
+    static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBlueprintFinder(AnimBlueprintPath);        \
+    if (!AnimBlueprintFinder.Succeeded()) {                                                               \
+      DELTA_LOG("{}", DeltaFormat("Failed to load AnimBlueprint: {}", TCHAR_TO_UTF8(AnimBlueprintPath))); \
+      break;                                                                                              \
+    }                                                                                                     \
+    SkeletalMeshComponent->SetAnimationMode(EAnimationMode::AnimationBlueprint);                          \
+    SkeletalMeshComponent->SetAnimInstanceClass(AnimBlueprintFinder.Class);                               \
   } while (false)
 // ----
 
-#define DELTA_SET_ANIMATION_MONTAGE(AnimationMontage, AnimationMontagePath)                        \
-  do {                                                                                             \
-    if (!(AnimationMontagePath)) {                                                                 \
-      DELTA_LOG("{}", DeltaFormat("AnimationMontagePath is null"));                                \
-      break;                                                                                       \
-    }                                                                                              \
-    static ConstructorHelpers::FObjectFinder<UAnimMontage> Finder(AnimationMontagePath);           \
-    if (!Finder.Succeeded()) {                                                                     \
-      DELTA_LOG(                                                                                   \
-        "{}",                                                                                      \
-        DeltaFormat("Failed to load animation montage: {}", TCHAR_TO_UTF8(AnimationMontagePath))); \
-      break;                                                                                       \
-    }                                                                                              \
-    AnimationMontage = Finder.Object;                                                              \
+#define DELTA_SET_ANIMATION_MONTAGE(AnimationMontage, AnimationMontagePath)                                      \
+  do {                                                                                                           \
+    if (!(AnimationMontagePath)) {                                                                               \
+      DELTA_LOG("{}", DeltaFormat("AnimationMontagePath is null"));                                              \
+      break;                                                                                                     \
+    }                                                                                                            \
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> Finder(AnimationMontagePath);                         \
+    if (!Finder.Succeeded()) {                                                                                   \
+      DELTA_LOG("{}", DeltaFormat("Failed to load animation montage: {}", TCHAR_TO_UTF8(AnimationMontagePath))); \
+      break;                                                                                                     \
+    }                                                                                                            \
+    AnimationMontage = Finder.Object;                                                                            \
   } while (false)
 // ----
 
@@ -160,21 +153,32 @@
   } while (false)
 // ----
 
-#define DELTA_SET_GEOMETRY_COLLECTION(GeometryCollectionComponent, GeometryCollectionPath)        \
-  do {                                                                                            \
-    if (!(GeometryCollectionComponent) || !(GeometryCollectionPath)) {                            \
-      DELTA_LOG(                                                                                  \
-        "{}",                                                                                     \
-        DeltaFormat("GeometryCollectionComponent is null or GeometryCollectionPath is null"));    \
-      break;                                                                                      \
-    }                                                                                             \
-    static ConstructorHelpers::FObjectFinder<UGeometryCollection> Finder(GeometryCollectionPath); \
-    if (!Finder.Succeeded()) {                                                                    \
-      DELTA_LOG("{}",                                                                             \
-                DeltaFormat("Failed to load geometry collection: {}",                             \
-                            TCHAR_TO_UTF8(GeometryCollectionPath)));                              \
-      break;                                                                                      \
-    }                                                                                             \
-    GeometryCollectionComponent->SetRestCollection(Finder.Object);                                \
+#define DELTA_SET_GEOMETRY_COLLECTION(GeometryCollectionComponent, GeometryCollectionPath)                           \
+  do {                                                                                                               \
+    if (!(GeometryCollectionComponent) || !(GeometryCollectionPath)) {                                               \
+      DELTA_LOG("{}", DeltaFormat("GeometryCollectionComponent is null or GeometryCollectionPath is null"));         \
+      break;                                                                                                         \
+    }                                                                                                                \
+    static ConstructorHelpers::FObjectFinder<UGeometryCollection> Finder(GeometryCollectionPath);                    \
+    if (!Finder.Succeeded()) {                                                                                       \
+      DELTA_LOG("{}", DeltaFormat("Failed to load geometry collection: {}", TCHAR_TO_UTF8(GeometryCollectionPath))); \
+      break;                                                                                                         \
+    }                                                                                                                \
+    GeometryCollectionComponent->SetRestCollection(Finder.Object);                                                   \
   } while (false)
-// ---
+// ----
+
+#define DELTA_SET_NIAGARA_SYSTEM(NiagaraSystem, NiagaraSystemPath)                                         \
+  do {                                                                                                     \
+    if (!(NiagaraSystemPath)) {                                                                            \
+      DELTA_LOG("{}", DeltaFormat("NiagaraSystemPath is null"));                                           \
+      break;                                                                                               \
+    }                                                                                                      \
+    static ConstructorHelpers::FObjectFinder<UNiagaraSystem> Finder(NiagaraSystemPath);                    \
+    if (!Finder.Succeeded()) {                                                                             \
+      DELTA_LOG("{}", DeltaFormat("Failed to load Niagara system: {}", TCHAR_TO_UTF8(NiagaraSystemPath))); \
+      break;                                                                                               \
+    }                                                                                                      \
+    NiagaraSystem->SetAsset(Finder.Object);                                                                \
+  } while (false)
+// ----

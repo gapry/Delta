@@ -6,6 +6,8 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 #include "../Interface/HitInterface.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
@@ -57,6 +59,11 @@ ASword::ASword() {
     BoxTraceStart->SetRelativeLocation(FVector(0.483424, -0.391544, 50.757500));
     BoxTraceEnd->SetRelativeLocation(FVector(0.000000, 0.468142, -27.463856));
   }
+
+  {
+    static const TCHAR* const Path = TEXT("/Script/Niagara.NiagaraSystem'/Game/Delta/Niagara/NS_Embers.NS_Embers'");
+    DELTA_SET_NIAGARA_SYSTEM(EmbersEffect, Path);
+  }
 }
 
 void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
@@ -74,6 +81,10 @@ void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
 
   SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
   UGameplayStatics::PlaySoundAtLocation(this, EquipSound, GetActorLocation());
+
+  if (EmbersEffect) {
+    EmbersEffect->Deactivate();
+  }
 }
 
 void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,

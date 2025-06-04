@@ -9,6 +9,7 @@
 #include "Item.generated.h"
 
 class USphereComponent;
+class UNiagaraComponent;
 
 UCLASS()
 class DELTA_API AItem : public AActor {
@@ -41,10 +42,7 @@ protected:
                                     const FHitResult&    SweepResult);
 
   UFUNCTION()
-  virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
-                                  AActor*              OtherActor,
-                                  UPrimitiveComponent* OtherComp,
-                                  int32                OtherBodyIndex);
+  virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
   UFUNCTION(BlueprintCallable, Category = "Item")
   float GetSineOscillationOffset() const;
@@ -58,17 +56,14 @@ protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item")
   TObjectPtr<USphereComponent> SphereComponent{nullptr};
 
-  UPROPERTY(BlueprintReadWrite,
-            EditAnywhere,
-            Category = "Item",
-            meta     = (AllowPrivateAccess = "true"))
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item", meta = (AllowPrivateAccess = "true"))
   float MovementRate{50.f};
 
-  UPROPERTY(BlueprintReadWrite,
-            EditAnywhere,
-            Category = "Item",
-            meta     = (AllowPrivateAccess = "true"))
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item", meta = (AllowPrivateAccess = "true"))
   float RotationRate{45.f};
+
+  UPROPERTY(EditAnywhere, Category = "Visual Effects")
+  TObjectPtr<UNiagaraComponent> EmbersEffect{nullptr};
 
   EItemState ItemState = EItemState::EIS_Hovering;
 
@@ -76,21 +71,12 @@ private:
   UPROPERTY(VisibleAnywhere, Category = "Item")
   FVector ForwardDirection{FVector::ForwardVector};
 
-  UPROPERTY(BlueprintReadWrite,
-            EditAnywhere,
-            Category = "Item",
-            meta     = (AllowPrivateAccess = "true"))
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item", meta = (AllowPrivateAccess = "true"))
   float Amplitude{0.5f};
 
-  UPROPERTY(BlueprintReadWrite,
-            EditAnywhere,
-            Category = "Item",
-            meta     = (AllowPrivateAccess = "true"))
+  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item", meta = (AllowPrivateAccess = "true"))
   float Frequency{0.5f};
 
-  UPROPERTY(VisibleInstanceOnly,
-            BlueprintReadOnly,
-            Category = "Item",
-            meta     = (AllowPrivateAccess = "true"))
+  UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Item", meta = (AllowPrivateAccess = "true"))
   float RunningTime{0.f};
 };

@@ -5,16 +5,27 @@
 #include "BaseTreasure.h"
 #include "Sound/SoundBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 #include "../Player/Echo/EchoCharacter.h"
 #include "../Common/Finder.h"
 
 ABaseTreasure::ABaseTreasure() {
-  // Sound effect by Eric Matyas - www.soundimage.org
-  static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_Treasure.sfx_Treasure'");
-  DELTA_SET_SOUNDBASE(PickupSound, Path);
+  {
+    // Sound effect by Eric Matyas - www.soundimage.org
+    static const TCHAR* const Path = TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/Delta/MetaSound/sfx_Treasure.sfx_Treasure'");
+    DELTA_SET_SOUNDBASE(PickupSound, Path);
+  }
 
-  StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-  StaticMeshComponent->UpdateCollisionProfile();
+  {
+    static const TCHAR* const Path = TEXT("/Script/Niagara.NiagaraSystem'/Game/Delta/Niagara/NS_Embers.NS_Embers'");
+    DELTA_SET_NIAGARA_SYSTEM(EmbersEffect, Path);
+  }
+
+  {
+    StaticMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    StaticMeshComponent->UpdateCollisionProfile();
+  }
 }
 
 void ABaseTreasure::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -28,6 +39,11 @@ void ABaseTreasure::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponen
     if (PickupSound) {
       UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
     }
+
+    if (EmbersEffect) {
+      EmbersEffect->Deactivate();
+    }
+
     Destroy();
   }
 }
