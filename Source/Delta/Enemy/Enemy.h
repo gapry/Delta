@@ -38,6 +38,6 @@ protected:
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> HitReactMontage;
 
-  UPROPERTY(VisibleAnywhere, Category = "Components")
+  UPROPERTY(VisibleAnywhere, Category = "Attributes")
   TObjectPtr<UAttributeComponent> Attributes;
 };
