@@ -11,7 +11,8 @@
       "AdditionalDependencies": [
         "Engine",
         "ControlRig",
-        "FieldSystemEngine"
+        "FieldSystemEngine",
+        "UMG"
       ]
     }
   ],
