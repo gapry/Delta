@@ -73,6 +73,9 @@ AEnemy::AEnemy() {
     HealthBarWidget->SetupAttachment(GetRootComponent());
     HealthBarWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
     HealthBarWidget->SetWidgetSpace(EWidgetSpace::Screen);
+
+    static constexpr const TCHAR* const Path{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Delta/HUD/WBP_HealthBar.WBP_HealthBar_C'")};
+    DELTA_SET_USER_WIDGET(HealthBarWidget, Path);
   }
 }
 
