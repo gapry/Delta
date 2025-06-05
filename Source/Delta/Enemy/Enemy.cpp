@@ -9,10 +9,12 @@
 #include "Camera/CameraComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Components/WidgetComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
 #include "../Component/AttributeComponent.h"
+#include "../HUD/HealthBarComponent.h"
 
 AEnemy::AEnemy() {
   {
@@ -64,6 +66,13 @@ AEnemy::AEnemy() {
 
   {
     Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+  }
+
+  {
+    HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+    HealthBarWidget->SetupAttachment(GetRootComponent());
+    HealthBarWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+    HealthBarWidget->SetWidgetSpace(EWidgetSpace::Screen);
   }
 }
 
