@@ -12,6 +12,7 @@
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
+#include "../Component/AttributeComponent.h"
 
 AEnemy::AEnemy() {
   {
@@ -59,6 +60,10 @@ AEnemy::AEnemy() {
   {
     static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_HitReact.AM_HitReact'")};
     DELTA_SET_ANIMATION_MONTAGE(HitReactMontage, MontagePath);
+  }
+
+  {
+    Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
   }
 }
 
