@@ -20,12 +20,12 @@ void UHealthBar::NativePreConstruct() {
   if (HealthBar) {
     HealthBar->SetPercent(0.5f);
     HealthBar->SetBarFillType(EProgressBarFillType::Type::LeftToRight);
-  }
 
-  CanvasSlot = Cast<UCanvasPanelSlot>(HealthBar->Slot);
-  if (CanvasSlot) {
-    CanvasSlot->SetSize(FVector2D(180.0f, 13.0f));
-    CanvasSlot->SetAnchors(FAnchors(0.5f, 0.5f, 0.5f, 0.5f));
-    CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+    CanvasSlot = Cast<UCanvasPanelSlot>(HealthBar->Slot);
+    if (CanvasSlot) {
+      CanvasSlot->SetSize(FVector2D(180.0f, 13.0f));
+      CanvasSlot->SetAnchors(FAnchors(0.5f, 0.5f, 0.5f, 0.5f));
+      CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+    }
   }
 }
