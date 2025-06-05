@@ -182,3 +182,18 @@
     NiagaraSystem->SetAsset(Finder.Object);                                                                \
   } while (false)
 // ----
+
+#define DELTA_SET_USER_WIDGET(WidgetComponent, WidgetClassPath)                                             \
+  do {                                                                                                      \
+    if (!(WidgetComponent) || !(WidgetClassPath)) {                                                         \
+      DELTA_LOG("{}", DeltaFormat("WidgetComponent is null or WidgetClassPath is null"));                   \
+      break;                                                                                                \
+    }                                                                                                       \
+    static ConstructorHelpers::FClassFinder<UUserWidget> Finder(WidgetClassPath);                           \
+    if (!Finder.Succeeded()) {                                                                              \
+      DELTA_LOG("{}", DeltaFormat("Failed to load user widget class: {}", TCHAR_TO_UTF8(WidgetClassPath))); \
+      break;                                                                                                \
+    }                                                                                                       \
+    WidgetComponent->SetWidgetClass(Finder.Class);                                                          \
+  } while (false)
+// ----
