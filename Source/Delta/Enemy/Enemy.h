@@ -13,6 +13,7 @@
 #define DELTA_ENEMY_ENABLE_DEBUG_HIT 0
 
 class UAnimMontage;
+class UAttributeComponent;
 
 UCLASS()
 class DELTA_API AEnemy : public ABaseCharacter, public IHitInterface {
@@ -36,4 +37,7 @@ protected:
 
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> HitReactMontage;
+
+  UPROPERTY(VisibleAnywhere, Category = "Components")
+  TObjectPtr<UAttributeComponent> Attributes;
 };
