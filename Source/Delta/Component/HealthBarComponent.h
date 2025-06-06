@@ -8,9 +8,16 @@
 #include "Components/WidgetComponent.h"
 #include "HealthBarComponent.generated.h"
 
+class UHealthBar;
+
 UCLASS()
 class DELTA_API UHealthBarComponent : public UWidgetComponent {
   GENERATED_BODY()
 
 public:
+  void SetHealthPercent(const float Percent);
+
+private:
+  UPROPERTY();
+  TObjectPtr<UHealthBar> HealthBarWidget;
 };

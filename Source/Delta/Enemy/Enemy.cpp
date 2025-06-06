@@ -14,7 +14,7 @@
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
 #include "../Component/AttributeComponent.h"
-#include "../HUD/HealthBarComponent.h"
+#include "../Component/HealthBarComponent.h"
 
 AEnemy::AEnemy() {
   {
@@ -65,22 +65,26 @@ AEnemy::AEnemy() {
   }
 
   {
-    Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+    AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
   }
 
   {
-    HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
-    HealthBarWidget->SetupAttachment(GetRootComponent());
-    HealthBarWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
-    HealthBarWidget->SetWidgetSpace(EWidgetSpace::Screen);
+    HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
+    HealthBarComponent->SetupAttachment(GetRootComponent());
+    HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+    HealthBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
     static constexpr const TCHAR* const Path{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Delta/HUD/WBP_HealthBar.WBP_HealthBar_C'")};
-    DELTA_SET_USER_WIDGET(HealthBarWidget, Path);
+    DELTA_SET_USER_WIDGET(HealthBarComponent, Path);
   }
 }
 
 void AEnemy::BeginPlay() {
   Super::BeginPlay();
+
+  if (HealthBarComponent) {
+    HealthBarComponent->SetHealthPercent(0.7f);
+  }
 }
 
 void AEnemy::Tick(float DeltaTime) {

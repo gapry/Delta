@@ -14,7 +14,7 @@
 
 class UAnimMontage;
 class UAttributeComponent;
-class UWidgetComponent;
+class UHealthBarComponent;
 
 UCLASS()
 class DELTA_API AEnemy : public ABaseCharacter, public IHitInterface {
@@ -40,8 +40,8 @@ protected:
   TObjectPtr<UAnimMontage> HitReactMontage;
 
   UPROPERTY(VisibleAnywhere, Category = "Attributes")
-  TObjectPtr<UAttributeComponent> Attributes;
+  TObjectPtr<UAttributeComponent> AttributeComponent;
 
   UPROPERTY(EditAnywhere, Category = "Widgets")
-  TObjectPtr<UWidgetComponent> HealthBarWidget;
+  TObjectPtr<UHealthBarComponent> HealthBarComponent;
 };
