@@ -128,7 +128,7 @@ void AEnemy::Die() {
 
     HideHealthBar();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    SetLifeSpan(10.f);
+    SetLifeSpan(DeathLifeSpanSeconds);
   }
 }
 

@@ -67,4 +67,7 @@ protected:
 
   UPROPERTY(EditAnywhere)
   double CombatRadius{500.f};
+
+  UPROPERTY();
+  float DeathLifeSpanSeconds{10.f};
 };
