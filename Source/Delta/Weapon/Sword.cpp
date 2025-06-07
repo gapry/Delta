@@ -66,8 +66,8 @@ ASword::ASword() {
   }
 }
 
-void ASword::Equip(USceneComponent* InParent, FName InSocketName) {
-  Super::Equip(InParent, InSocketName);
+void ASword::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator) {
+  Super::Equip(InParent, InSocketName, NewOwner, NewInstigator);
 
   if (EquipSound == nullptr) {
     DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "EquipSound is null"));
@@ -122,13 +122,14 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                        BoxHit,                                //
                                        true);                                 // bIgnoreSelf
 
-  if (BoxHit.GetActor()) {
-    IHitInterface* const HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
-    if (HitInterface) {
+  if (auto* const BoxHitActor = BoxHit.GetActor(); BoxHitActor != nullptr) {
+    IHitInterface* const HitInterface = Cast<IHitInterface>(BoxHitActor);
+    if (HitInterface != nullptr) {
       HitInterface->GetHit(BoxHit.ImpactPoint);
     }
-    IgnoreActors.AddUnique(BoxHit.GetActor());
+    IgnoreActors.AddUnique(BoxHitActor);
     CreateAttackFields(BoxHit.ImpactPoint);
+    UGameplayStatics::ApplyDamage(BoxHitActor, Damage, GetInstigator()->GetController(), this, UDamageType::StaticClass());
   }
 }
 

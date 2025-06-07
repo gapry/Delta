@@ -97,10 +97,13 @@ void AWeapon::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                       const FHitResult&    SweepResult) {
 }
 
-void AWeapon::Equip(USceneComponent* InParent, FName InSocketName) {
+void AWeapon::Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator) {
   FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
   StaticMeshComponent->AttachToComponent(InParent, TransformRules, InSocketName);
   ItemState = EItemState::EIS_Equipped;
+
+  SetOwner(NewOwner);
+  SetInstigator(NewInstigator);
 }
 
 void AWeapon::AttackMeshToSocket(USceneComponent* const InParent, const FName InSocketName) const {
