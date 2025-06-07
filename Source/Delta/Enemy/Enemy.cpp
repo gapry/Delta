@@ -65,6 +65,11 @@ AEnemy::AEnemy() {
   }
 
   {
+    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_Death.AM_Death'")};
+    DELTA_SET_ANIMATION_MONTAGE(DeathMontage, MontagePath);
+  }
+
+  {
     AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
   }
 
@@ -81,10 +86,62 @@ AEnemy::AEnemy() {
 
 void AEnemy::BeginPlay() {
   Super::BeginPlay();
+  HideHealthBar();
+}
+
+void AEnemy::Die() {
+  UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+  if (AnimInstance && DeathMontage) {
+    AnimInstance->Montage_Play(DeathMontage);
+
+    const int32 Selection   = FMath::RandRange(0, 5);
+    FName       SectionName = FName();
+    switch (Selection) {
+      case 0: {
+        SectionName = FName("FallingBack");
+        DeathPose   = EDeathPose::EDP_Death_FallingBack;
+      } break;
+      case 1: {
+        SectionName = FName("FallingForward");
+        DeathPose   = EDeathPose::EDP_Death_FallingForward;
+      } break;
+      case 2: {
+        SectionName = FName("FlyingBack");
+        DeathPose   = EDeathPose::EDP_Death_FlyingBack;
+      } break;
+      case 3: {
+        SectionName = FName("ToRight");
+        DeathPose   = EDeathPose::EDP_Death_ToRight;
+      } break;
+      case 4: {
+        SectionName = FName("ToFront");
+        DeathPose   = EDeathPose::EDP_Death_ToFront;
+      } break;
+      case 5: {
+        SectionName = FName("ToBack");
+        DeathPose   = EDeathPose::EDP_Death_ToBack;
+      } break;
+      default: break;
+    }
+    AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
+
+    HideHealthBar();
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    SetLifeSpan(10.f);
+  }
 }
 
 void AEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
+
+  if (CombatTarget) {
+    const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
+    if (DistanceToTarget > CombatRadius) {
+      CombatTarget = nullptr;
+      HideHealthBar();
+    }
+  }
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -95,17 +152,23 @@ void AEnemy::GetHit(const FVector& ImpactPoint) {
 #if DELTA_ENEMY_ENABLE_DEBUG_HIT
   DELTA_DEBUG_SPHERE_COLOR(ImpactPoint, FColor::Orange);
 #endif
-  DirectionalHitReact(ImpactPoint);
+  ShowHealthBar();
+
+  if (AttributeComponent != nullptr && AttributeComponent->GetHealth() > 0.0f) {
+    DirectionalHitReact(ImpactPoint);
+    return;
+  }
+  Die();
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
   if (AttributeComponent) {
     AttributeComponent->ReceiveDamage(DamageAmount);
-
     if (HealthBarComponent) {
       HealthBarComponent->SetHealthPercent(AttributeComponent->GetHealthPercent());
     }
   }
+  CombatTarget = EventInstigator->GetPawn();
   return DamageAmount;
 }
 
@@ -145,5 +208,17 @@ void AEnemy::PlayHitReactMontage(const FName& SectionName) {
   if (AnimInstance && HitReactMontage) {
     AnimInstance->Montage_Play(HitReactMontage);
     AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+  }
+}
+
+void AEnemy::HideHealthBar() {
+  if (HealthBarComponent != nullptr) {
+    HealthBarComponent->SetVisibility(false);
+  }
+}
+
+void AEnemy::ShowHealthBar() {
+  if (HealthBarComponent != nullptr) {
+    HealthBarComponent->SetVisibility(true);
   }
 }

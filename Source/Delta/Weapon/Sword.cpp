@@ -123,13 +123,13 @@ void ASword::OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                        true);                                 // bIgnoreSelf
 
   if (auto* const BoxHitActor = BoxHit.GetActor(); BoxHitActor != nullptr) {
+    UGameplayStatics::ApplyDamage(BoxHitActor, Damage, GetInstigator()->GetController(), this, UDamageType::StaticClass());
     IHitInterface* const HitInterface = Cast<IHitInterface>(BoxHitActor);
     if (HitInterface != nullptr) {
       HitInterface->GetHit(BoxHit.ImpactPoint);
     }
     IgnoreActors.AddUnique(BoxHitActor);
     CreateAttackFields(BoxHit.ImpactPoint);
-    UGameplayStatics::ApplyDamage(BoxHitActor, Damage, GetInstigator()->GetController(), this, UDamageType::StaticClass());
   }
 }
 

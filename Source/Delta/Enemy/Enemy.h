@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "EnemyState.h"
 #include "../Character/BaseCharacter.h"
 #include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
@@ -38,15 +39,32 @@ public:
 
   void DirectionalHitReact(const FVector& ImpactPoint);
 
+  void HideHealthBar();
+  void ShowHealthBar();
+
 protected:
   virtual void BeginPlay() override;
 
+  void Die();
+
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> HitReactMontage;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montages")
+  TObjectPtr<UAnimMontage> DeathMontage;
 
   UPROPERTY(VisibleAnywhere, Category = "Attributes")
   TObjectPtr<UAttributeComponent> AttributeComponent;
 
   UPROPERTY(EditAnywhere, Category = "Widgets")
   TObjectPtr<UHealthBarComponent> HealthBarComponent;
+
+  UPROPERTY(BlueprintReadOnly)
+  EDeathPose DeathPose = EDeathPose::EDP_Alive;
+
+  UPROPERTY()
+  TObjectPtr<AActor> CombatTarget;
+
+  UPROPERTY(EditAnywhere)
+  double CombatRadius{500.f};
 };
