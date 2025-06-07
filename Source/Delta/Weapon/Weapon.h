@@ -42,7 +42,7 @@ public:
                                        bool                 bFromSweep,
                                        const FHitResult&    SweepResult);
 
-  virtual void Equip(USceneComponent* InParent, FName InSocketName);
+  virtual void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator);
 
   void AttackMeshToSocket(USceneComponent* const InParent, const FName InSocketName) const;
 
@@ -93,4 +93,7 @@ protected:
 
   UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
   TObjectPtr<UFieldSystemMetaDataFilter> FieldSystemMetaDataFilterComponent{nullptr};
+
+  UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+  float Damage{20.0f};
 };

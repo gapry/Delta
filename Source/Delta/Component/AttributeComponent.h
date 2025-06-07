@@ -17,12 +17,20 @@ public:
 
   virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+  void ReceiveDamage(const float DamageAmount);
+
+  void SetHealth(const float NewHealth);
+
+  float GetHealth() const;
+
+  float GetHealthPercent() const;
+
 protected:
   virtual void BeginPlay() override;
 
   UPROPERTY(EditAnywhere, Category = "Actor Attributes")
-  float CurrentHealth{0.0f};
+  float MaximumHealth{100.0f};
 
   UPROPERTY(EditAnywhere, Category = "Actor Attributes")
-  float MaximumHealth{100.0f};
+  float CurrentHealth{MaximumHealth};
 };

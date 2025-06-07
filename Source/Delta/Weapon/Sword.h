@@ -18,7 +18,7 @@ class DELTA_API ASword : public AWeapon {
 public:
   ASword();
 
-  virtual void Equip(USceneComponent* InParent, FName InSocketName) override;
+  virtual void Equip(USceneComponent* InParent, FName InSocketName, AActor* NewOwner, APawn* NewInstigator) override;
 
   virtual void OnWeaponBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
                                        AActor*              OtherActor,

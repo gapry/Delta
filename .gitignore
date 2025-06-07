@@ -1,8 +1,13 @@
-# IDE
-.vs/
+# IntelliJ IDEA
 .idea/
 
+# Visual Studio
+.vs/
+.vsconfig
+*.sln
+
 # vscode
+*.code-workspace
 .vscode/compileCommands_Default/*
 .vscode/compileCommands_Delta/*
 .vscode/compileCommands_Default.json

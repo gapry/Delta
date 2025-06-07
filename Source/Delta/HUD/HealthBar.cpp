@@ -19,6 +19,7 @@ void UHealthBar::NativePreConstruct() {
 
   if (HealthBar) {
     HealthBar->SetBarFillType(EProgressBarFillType::Type::LeftToRight);
+    HealthBar->SetPercent(1.0f);
 
     CanvasSlot = Cast<UCanvasPanelSlot>(HealthBar->Slot);
     if (CanvasSlot) {

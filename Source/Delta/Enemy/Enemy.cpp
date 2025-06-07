@@ -81,10 +81,6 @@ AEnemy::AEnemy() {
 
 void AEnemy::BeginPlay() {
   Super::BeginPlay();
-
-  if (HealthBarComponent) {
-    HealthBarComponent->SetHealthPercent(0.7f);
-  }
 }
 
 void AEnemy::Tick(float DeltaTime) {
@@ -100,6 +96,17 @@ void AEnemy::GetHit(const FVector& ImpactPoint) {
   DELTA_DEBUG_SPHERE_COLOR(ImpactPoint, FColor::Orange);
 #endif
   DirectionalHitReact(ImpactPoint);
+}
+
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
+  if (AttributeComponent) {
+    AttributeComponent->ReceiveDamage(DamageAmount);
+
+    if (HealthBarComponent) {
+      HealthBarComponent->SetHealthPercent(AttributeComponent->GetHealthPercent());
+    }
+  }
+  return DamageAmount;
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint) {
