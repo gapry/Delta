@@ -29,6 +29,7 @@ public class Delta : ModuleRules
       "MetasoundGraphCore",
       "GeometryCollectionEngine",
       "UMG",
+      "SlateCore",
     });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });

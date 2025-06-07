@@ -10,6 +10,7 @@
 
 class UProgressBar;
 class UCanvasPanelSlot;
+class UImage;
 
 UCLASS()
 class DELTA_API UHealthBar : public UUserWidget {
@@ -18,8 +19,11 @@ class DELTA_API UHealthBar : public UUserWidget {
 public:
   UHealthBar(const FObjectInitializer& ObjectInitializer);
 
-  UPROPERTY(meta = (BindWidget))
+  UPROPERTY(meta = (BindWidget), EditAnywhere)
   TObjectPtr<UProgressBar> HealthBar;
+
+  UPROPERTY(meta = (BindWidget), EditAnywhere)
+  TObjectPtr<UImage> BorderImage;
 
   UPROPERTY()
   TObjectPtr<UCanvasPanelSlot> CanvasSlot;
@@ -27,4 +31,10 @@ public:
 protected:
   virtual void NativeConstruct() override;
   virtual void NativePreConstruct() override;
+
+  UPROPERTY()
+  TObjectPtr<UTexture2D> FillImage;
+
+  UPROPERTY()
+  TObjectPtr<UTexture2D> BackgroundImage;
 };
