@@ -75,7 +75,37 @@
       - Skin: Without Skin
       - FPS: 30
       - Keyframe Reduction: none 
-
+    - Sword And Shield Death
+      - Format: *.fbx
+      - Skin: With Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Sword And Shield Death (other)
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Falling Back Death
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Falling Forward Death
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Flying Back Death
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Standing Death Right 01
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+      
 ## Effects
 - https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Effects
 

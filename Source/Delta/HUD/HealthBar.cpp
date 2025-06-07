@@ -32,7 +32,6 @@ void UHealthBar::NativePreConstruct() {
     }
 
     HealthBar->SetBarFillType(EProgressBarFillType::Type::LeftToRight);
-    HealthBar->SetPercent(1.0f);
     HealthBar->SetFillColorAndOpacity(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
 
     CanvasSlot = Cast<UCanvasPanelSlot>(HealthBar->Slot);
