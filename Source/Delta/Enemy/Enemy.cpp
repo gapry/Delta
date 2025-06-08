@@ -100,7 +100,7 @@ void AEnemy::BeginPlay() {
   Super::BeginPlay();
 
   HideHealthBar();
-  VerifyAISetTheCombatTarget();
+  VerifyAISetToMoveTargetPlayer();
 }
 
 void AEnemy::Die() {
@@ -149,8 +149,9 @@ void AEnemy::Die() {
 void AEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
+  VerifyAIMoveToMoveTargetPlayer();
+
   if (CombatTarget) {
-    VerifyAIMoveToCombatTarget();
     const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
     if (DistanceToTarget > CombatRadius) {
       CombatTarget = nullptr;
@@ -270,16 +271,16 @@ void AEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
 void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
   for (TActorIterator<AActor> It(GetWorld()); It; ++It) {
     if (It->ActorHasTag(TargetTag)) {
-      MoveTarget = *It;
+      MoveTargetPoint = *It;
       break;
     }
   }
 
-  if (MoveTarget) {
+  if (MoveTargetPoint) {
     auto* AIController = Cast<AAIController>(GetController());
     if (AIController) {
       FAIMoveRequest MoveRequest;
-      MoveRequest.SetGoalActor(MoveTarget);
+      MoveRequest.SetGoalActor(MoveTargetPoint);
       MoveRequest.SetAcceptanceRadius(5.0f);
       MoveRequest.SetUsePathfinding(true);
       MoveRequest.SetAllowPartialPath(true);
@@ -290,25 +291,32 @@ void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
   }
 }
 
-void AEnemy::VerifyAISetTheCombatTarget() {
+void AEnemy::VerifyAISetToMoveTargetPlayer() {
   for (TActorIterator<AEchoCharacter> It(GetWorld()); It; ++It) {
-    CombatTarget = *It;
-    UE_LOG(LogTemp, Warning, TEXT("%s assigned CombatTarget: %s"), *GetName(), *CombatTarget->GetName());
+    MoveTargetPlayer = *It;
+    UE_LOG(LogTemp, Warning, TEXT("%s assigned CombatTarget: %s"), *GetName(), *MoveTargetPlayer->GetName());
     break;
   }
 }
 
-void AEnemy::VerifyAIMoveToCombatTarget() {
-  auto* AIController = Cast<AAIController>(GetController());
-  if (AIController) {
-    FAIMoveRequest MoveRequest;
-    MoveRequest.SetGoalActor(CombatTarget);
-    MoveRequest.SetAcceptanceRadius(50.0f);
-    MoveRequest.SetUsePathfinding(true);
-    MoveRequest.SetAllowPartialPath(true);
-
-    FNavPathSharedPtr                 NavPath;
-    EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
-    UE_LOG(LogTemp, Warning, TEXT("%s MoveTo result: %d"), *GetName(), (int32)MoveResult);
+void AEnemy::VerifyAIMoveToMoveTargetPlayer() {
+  if (!MoveTargetPlayer) {
+    return;
   }
+
+  auto* AIController = Cast<AAIController>(GetController());
+  if (!AIController) {
+    return;
+  }
+
+  const float AcceptanceRadius = 5.0f;
+
+  FAIMoveRequest MoveRequest;
+  MoveRequest.SetGoalActor(MoveTargetPlayer);
+  MoveRequest.SetAcceptanceRadius(AcceptanceRadius);
+  MoveRequest.SetUsePathfinding(true);
+  MoveRequest.SetAllowPartialPath(true);
+
+  FNavPathSharedPtr                 NavPath;
+  EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
 }

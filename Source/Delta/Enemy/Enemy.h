@@ -66,7 +66,10 @@ protected:
   TObjectPtr<AActor> CombatTarget;
 
   UPROPERTY()
-  TObjectPtr<AActor> MoveTarget;
+  TObjectPtr<AActor> MoveTargetPoint;
+
+  UPROPERTY()
+  TObjectPtr<AActor> MoveTargetPlayer;
 
   UPROPERTY(EditAnywhere)
   double CombatRadius{500.f};
@@ -78,6 +81,8 @@ private:
   void VerifyAIMoveToLocation(const FVector& Location);
   void VerifyAIMoveToTargetPointByTag(const FName& TargetTag);
 
-  void VerifyAISetTheCombatTarget();
-  void VerifyAIMoveToCombatTarget();
+  void VerifyAISetToMoveTargetPlayer();
+  void VerifyAIMoveToMoveTargetPlayer();
+
+  FVector LastTargetLocation;
 };
