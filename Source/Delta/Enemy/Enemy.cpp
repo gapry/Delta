@@ -17,6 +17,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/TargetPoint.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
@@ -113,7 +114,7 @@ void AEnemy::BeginPlay() {
   Super::BeginPlay();
 
   HideHealthBar();
-  VerifyAISetToMoveTargetPlayer();
+  VerifyAIMoveNavigationPath();
 }
 
 void AEnemy::Die() {
@@ -161,8 +162,6 @@ void AEnemy::Die() {
 
 void AEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
-
-  VerifyAIMoveToMoveTargetPlayer();
 
   if (CombatTarget) {
     const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
@@ -332,4 +331,37 @@ void AEnemy::VerifyAIMoveToMoveTargetPlayer() {
 
   FNavPathSharedPtr                 NavPath;
   EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
+}
+
+void AEnemy::VerifyAIMoveNavigationPath() {
+  EnemyController = Cast<AAIController>(GetController());
+
+  if (EnemyController == nullptr) {
+    DELTA_LOG("{}", DeltaFormat("EnemyController is null for {}", TCHAR_TO_UTF8(*GetName())));
+    return;
+  }
+
+  const FName     TargetTag = FName(TEXT("TargetNode"));
+  TArray<AActor*> FoundActors;
+  UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), ATargetPoint::StaticClass(), TargetTag, FoundActors);
+  if (FoundActors.Num() > 0) {
+    PatrolTarget = Cast<ATargetPoint>(FoundActors[0]);
+  }
+
+  if (EnemyController != nullptr && PatrolTarget != nullptr) {
+    FAIMoveRequest MoveRequest;
+    MoveRequest.SetGoalActor(PatrolTarget);
+    MoveRequest.SetAcceptanceRadius(100.f);
+
+    FNavPathSharedPtr NavPath;
+    EnemyController->MoveTo(MoveRequest, &NavPath);
+
+    if (NavPath.IsValid()) {
+      TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+      for (auto& Point : PathPoints) {
+        const FVector& Location = Point.Location;
+        DrawDebugSphere(GetWorld(), Location, 20.f, 32, FColor::Red, true);
+      }
+    }
+  }
 }
