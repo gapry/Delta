@@ -18,6 +18,8 @@
 #include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/TargetPoint.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
@@ -34,7 +36,7 @@ AEnemy::AEnemy() {
     if (UCharacterMovementComponent* const MoveComponent = GetCharacterMovement()) {
       MoveComponent->bUseRVOAvoidance          = true;
       MoveComponent->bOrientRotationToMovement = true;
-      MoveComponent->MaxWalkSpeed              = 300.0f;
+      MoveComponent->MaxWalkSpeed              = NormalSpeed;
 
       bUseControllerRotationPitch = false;
       bUseControllerRotationYaw   = false;
@@ -108,6 +110,22 @@ AEnemy::AEnemy() {
     AutoPossessPlayer = EAutoReceiveInput::Disabled;
     AutoPossessAI     = EAutoPossessAI::PlacedInWorldOrSpawned;
   }
+
+  {
+    AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
+    SightConfig           = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
+
+    SightConfig->SightRadius                  = 4000.f;
+    SightConfig->LoseSightRadius              = 4200.f;
+    SightConfig->PeripheralVisionAngleDegrees = 45.f;
+    SightConfig->SetMaxAge(5.f);
+    SightConfig->DetectionByAffiliation.bDetectEnemies    = true;
+    SightConfig->DetectionByAffiliation.bDetectNeutrals   = true;
+    SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+
+    AIPerceptionComponent->ConfigureSense(*SightConfig);
+    AIPerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
+  }
 }
 
 void AEnemy::PatrolTimerFinished() {
@@ -120,6 +138,8 @@ void AEnemy::BeginPlay() {
   HideHealthBar();
   SetPatrolTargets(FName(TEXT("TargetNode")));
   MoveToTarget(PatrolTarget);
+
+  AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemy::PawnSeen);
 }
 
 void AEnemy::PostInitializeComponents() {
@@ -141,8 +161,11 @@ void AEnemy::SetPatrolTargets(const FName& TargetTag) {
 void AEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
-  CheckCombatTarget();
-  CheckPatrolTarget();
+  if (EnemyState != EEnemyState::EES_Patrolling) {
+    CheckCombatTarget();
+  } else {
+    CheckPatrolTarget();
+  }
 }
 
 void AEnemy::CheckPatrolTarget() {
@@ -156,8 +179,12 @@ void AEnemy::CheckPatrolTarget() {
 
 void AEnemy::CheckCombatTarget() {
   if (!InTargetRange(CombatTarget, CombatRadius)) {
-    CombatTarget = nullptr;
+    CombatTarget                         = nullptr;
+    EnemyState                           = EEnemyState::EES_Patrolling;
+    GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+
     HideHealthBar();
+    MoveToTarget(PatrolTarget);
   }
 }
 
@@ -186,15 +213,19 @@ void AEnemy::MoveToTarget(AActor* Target, const float AcceptedRadius) {
   MoveRequest.SetGoalActor(Target);
   MoveRequest.SetAcceptanceRadius(AcceptedRadius);
 
-  FNavPathSharedPtr NavPath;
-  EnemyController->MoveTo(MoveRequest, &NavPath);
-
 #if DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION
-  TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
-  for (auto& Point : PathPoints) {
-    const FVector& Location = Point.Location;
-    DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
+  FNavPathSharedPtr NavPath;
+  if (NavPath.IsValid()) {
+    EnemyController->MoveTo(MoveRequest, &NavPath);
+
+    TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+    for (auto& Point : PathPoints) {
+      const FVector& Location = Point.Location;
+      DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
+    }
   }
+#else
+  EnemyController->MoveTo(MoveRequest);
 #endif
 }
 
@@ -211,6 +242,20 @@ AActor* AEnemy::ChoosePatrolTarget() {
     return ValidTargets[TargetSelection];
   }
   return nullptr;
+}
+
+void AEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
+  if (EnemyState == EEnemyState::EES_Chasing) {
+    return;
+  }
+
+  if (Stimulus.WasSuccessfullySensed() && ActorSeen->ActorHasTag(FName("EchoCharacter"))) {
+    EnemyState = EEnemyState::EES_Chasing;
+    GetWorldTimerManager().ClearTimer(PatrolTimer);
+    GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
+    CombatTarget                         = ActorSeen;
+    MoveToTarget(CombatTarget);
+  }
 }
 
 void AEnemy::Die() {
@@ -263,7 +308,10 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
       HealthBarComponent->SetHealthPercent(AttributeComponent->GetHealthPercent());
     }
   }
-  CombatTarget = EventInstigator->GetPawn();
+  CombatTarget                         = EventInstigator->GetPawn();
+  EnemyState                           = EEnemyState::EES_Chasing;
+  GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
+  MoveToTarget(CombatTarget);
   return DamageAmount;
 }
 
