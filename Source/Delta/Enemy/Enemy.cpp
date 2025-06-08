@@ -34,7 +34,7 @@ AEnemy::AEnemy() {
     if (UCharacterMovementComponent* const MoveComponent = GetCharacterMovement()) {
       MoveComponent->bUseRVOAvoidance          = true;
       MoveComponent->bOrientRotationToMovement = true;
-      MoveComponent->MaxWalkSpeed              = 125.0f;
+      MoveComponent->MaxWalkSpeed              = 300.0f;
 
       bUseControllerRotationPitch = false;
       bUseControllerRotationYaw   = false;
@@ -114,7 +114,84 @@ void AEnemy::BeginPlay() {
   Super::BeginPlay();
 
   HideHealthBar();
-  VerifyAIMoveNavigationPath();
+
+  {
+    const FName     TargetTag = FName(TEXT("TargetNode"));
+    TArray<AActor*> FoundActors;
+    UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), ATargetPoint::StaticClass(), TargetTag, FoundActors);
+    PatrolTargets = FoundActors;
+
+    const int32 NumPatrolTargets = PatrolTargets.Num();
+    const int32 TargetSelection  = FMath::RandRange(0, NumPatrolTargets - 1);
+    PatrolTarget                 = PatrolTargets[TargetSelection];
+  }
+
+  {
+    EnemyController = Cast<AAIController>(GetController());
+    if (EnemyController && PatrolTarget) {
+      FAIMoveRequest MoveRequest;
+      MoveRequest.SetGoalActor(PatrolTarget);
+      MoveRequest.SetAcceptanceRadius(15.f);
+
+      FNavPathSharedPtr NavPath;
+      EnemyController->MoveTo(MoveRequest, &NavPath);
+
+#if DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION
+      TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+      for (auto& Point : PathPoints) {
+        const FVector& Location = Point.Location;
+        DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
+      }
+#endif
+    }
+  }
+}
+
+void AEnemy::Tick(float DeltaTime) {
+  Super::Tick(DeltaTime);
+
+  if (CombatTarget) {
+    if (!InTargetRange(CombatTarget, CombatRadius)) {
+      CombatTarget = nullptr;
+      HideHealthBar();
+    }
+  }
+
+  if (PatrolTarget && EnemyController) {
+    if (InTargetRange(PatrolTarget, PatrolRadius)) {
+      TArray<AActor*> ValidTargets;
+      for (AActor* Target : PatrolTargets) {
+        if (Target != PatrolTarget) {
+          ValidTargets.AddUnique(Target);
+        }
+      }
+
+      const int32 NumPatrolTargets = ValidTargets.Num();
+
+      if (NumPatrolTargets > 0) {
+        const int32 TargetSelection = FMath::RandRange(0, NumPatrolTargets - 1);
+        AActor*     Target          = ValidTargets[TargetSelection];
+
+        PatrolTarget = Target;
+
+        FAIMoveRequest MoveRequest;
+        MoveRequest.SetGoalActor(PatrolTarget);
+        MoveRequest.SetAcceptanceRadius(15.f);
+        EnemyController->MoveTo(MoveRequest);
+      }
+    }
+  }
+}
+
+bool AEnemy::InTargetRange(AActor* Target, double Radius) {
+  const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
+
+#if DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE
+  DELTA_DEBUG_SPHERE_ONE_FRAME(GetActorLocation());
+  DELTA_DEBUG_SPHERE_ONE_FRAME(Target->GetActorLocation());
+#endif
+
+  return DistanceToTarget <= Radius;
 }
 
 void AEnemy::Die() {
@@ -160,20 +237,15 @@ void AEnemy::Die() {
   }
 }
 
-void AEnemy::Tick(float DeltaTime) {
-  Super::Tick(DeltaTime);
-
-  if (CombatTarget) {
-    const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
-    if (DistanceToTarget > CombatRadius) {
-      CombatTarget = nullptr;
-      HideHealthBar();
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
+  if (AttributeComponent) {
+    AttributeComponent->ReceiveDamage(DamageAmount);
+    if (HealthBarComponent) {
+      HealthBarComponent->SetHealthPercent(AttributeComponent->GetHealthPercent());
     }
   }
-}
-
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
-  Super::SetupPlayerInputComponent(PlayerInputComponent);
+  CombatTarget = EventInstigator->GetPawn();
+  return DamageAmount;
 }
 
 void AEnemy::GetHit(const FVector& ImpactPoint) {
@@ -187,17 +259,6 @@ void AEnemy::GetHit(const FVector& ImpactPoint) {
     return;
   }
   Die();
-}
-
-float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
-  if (AttributeComponent) {
-    AttributeComponent->ReceiveDamage(DamageAmount);
-    if (HealthBarComponent) {
-      HealthBarComponent->SetHealthPercent(AttributeComponent->GetHealthPercent());
-    }
-  }
-  CombatTarget = EventInstigator->GetPawn();
-  return DamageAmount;
 }
 
 void AEnemy::DirectionalHitReact(const FVector& ImpactPoint) {
@@ -364,4 +425,8 @@ void AEnemy::VerifyAIMoveNavigationPath() {
       }
     }
   }
+}
+
+void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+  Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
