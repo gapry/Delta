@@ -16,6 +16,7 @@
 #include "NavigationSystemTypes.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
@@ -298,10 +299,10 @@ void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
 }
 
 void AEnemy::VerifyAISetToMoveTargetPlayer() {
-  for (TActorIterator<AEchoCharacter> It(GetWorld()); It; ++It) {
-    MoveTargetPlayer = *It;
-    UE_LOG(LogTemp, Warning, TEXT("%s assigned MoveTargetPlayer: %s"), *GetName(), *MoveTargetPlayer->GetName());
-    break;
+  auto* const PlayerCharacter = Cast<AEchoCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+  if (PlayerCharacter) {
+    MoveTargetPlayer = PlayerCharacter;
+    UE_LOG(LogTemp, Warning, TEXT("%s assigned CombatTarget: %s"), *GetName(), *MoveTargetPlayer->GetName());
   }
 }
 
