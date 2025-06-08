@@ -119,6 +119,9 @@ protected:
   UPROPERTY(EditAnywhere, Category = "AI Navigation")
   double PatrolRadius{100.f};
 
+  UPROPERTY(EditAnywhere, Category = "AI Navigation")
+  double AttackRadius{180.f};
+
   UPROPERTY(EditAnywhere, Category = "AI Navigation");
   float DeathLifeSpanSeconds{10.f};
 
