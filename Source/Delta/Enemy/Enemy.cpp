@@ -336,12 +336,16 @@ void AEnemy::VerifyAIMoveToMoveTargetPlayer() {
 void AEnemy::VerifyAIMoveNavigationPath() {
   EnemyController = Cast<AAIController>(GetController());
 
-  const FName TargetTag = FName(TEXT("TargetNode"));
-  for (TActorIterator<ATargetPoint> It(GetWorld()); It; ++It) {
-    if (It->ActorHasTag(TargetTag)) {
-      PatrolTarget = *It;
-      break;
-    }
+  if (EnemyController == nullptr) {
+    DELTA_LOG("{}", DeltaFormat("EnemyController is null for {}", TCHAR_TO_UTF8(*GetName())));
+    return;
+  }
+
+  const FName     TargetTag = FName(TEXT("TargetNode"));
+  TArray<AActor*> FoundActors;
+  UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), ATargetPoint::StaticClass(), TargetTag, FoundActors);
+  if (FoundActors.Num() > 0) {
+    PatrolTarget = Cast<ATargetPoint>(FoundActors[0]);
   }
 
   if (EnemyController != nullptr && PatrolTarget != nullptr) {
@@ -352,10 +356,12 @@ void AEnemy::VerifyAIMoveNavigationPath() {
     FNavPathSharedPtr NavPath;
     EnemyController->MoveTo(MoveRequest, &NavPath);
 
-    TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
-    for (auto& Point : PathPoints) {
-      const FVector& Location = Point.Location;
-      DrawDebugSphere(GetWorld(), Location, 20.f, 32, FColor::Red, true);
+    if (NavPath.IsValid()) {
+      TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+      for (auto& Point : PathPoints) {
+        const FVector& Location = Point.Location;
+        DrawDebugSphere(GetWorld(), Location, 20.f, 32, FColor::Red, true);
+      }
     }
   }
 }
