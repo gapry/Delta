@@ -11,7 +11,9 @@
 #include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
 
-#define DELTA_ENEMY_ENABLE_DEBUG_HIT 0
+#define DELTA_ENEMY_ENABLE_DEBUG_HIT              0
+#define DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE  0
+#define DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION 0
 
 class UAnimMontage;
 class UAttributeComponent;
@@ -47,6 +49,7 @@ protected:
   virtual void BeginPlay() override;
 
   void Die();
+  bool InTargetRange(AActor* Target, double Radius);
 
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> HitReactMontage;
@@ -83,6 +86,9 @@ protected:
 
   UPROPERTY(EditAnywhere)
   double CombatRadius{500.f};
+
+  UPROPERTY(EditAnywhere)
+  double PatrolRadius{100.f};
 
   UPROPERTY();
   float DeathLifeSpanSeconds{10.f};
