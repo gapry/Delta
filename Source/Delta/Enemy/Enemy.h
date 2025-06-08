@@ -70,4 +70,7 @@ protected:
 
   UPROPERTY();
   float DeathLifeSpanSeconds{10.f};
+
+private:
+  void VerifyMoveToTarget(const FVector& TargetLocation);
 };

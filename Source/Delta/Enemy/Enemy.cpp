@@ -10,6 +10,11 @@
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/WidgetComponent.h"
+#include "AIController.h"
+#include "AITypes.h"
+#include "Navigation/PathFollowingComponent.h"
+#include "NavigationSystemTypes.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
@@ -82,11 +87,18 @@ AEnemy::AEnemy() {
     static constexpr const TCHAR* const Path{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Delta/HUD/WBP_HealthBar.WBP_HealthBar_C'")};
     DELTA_SET_USER_WIDGET(HealthBarComponent, Path);
   }
+
+  {
+    AutoPossessPlayer = EAutoReceiveInput::Disabled;
+    AutoPossessAI     = EAutoPossessAI::PlacedInWorldOrSpawned;
+  }
 }
 
 void AEnemy::BeginPlay() {
   Super::BeginPlay();
   HideHealthBar();
+
+  VerifyMoveToTarget(FVector(0.f, 0.f, 0.f));
 }
 
 void AEnemy::Die() {
@@ -129,6 +141,33 @@ void AEnemy::Die() {
     HideHealthBar();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     SetLifeSpan(DeathLifeSpanSeconds);
+  }
+}
+
+void AEnemy::VerifyMoveToTarget(const FVector& TargetLocation) {
+  auto* const AIController = Cast<AAIController>(GetController());
+  if (AIController) {
+    FAIMoveRequest MoveRequest;
+    MoveRequest.SetGoalLocation(TargetLocation);
+    MoveRequest.SetAcceptanceRadius(5.0f);
+    MoveRequest.SetUsePathfinding(true);
+    MoveRequest.SetAllowPartialPath(true);
+    if (AIController->GetPathFollowingComponent()) {
+      ACharacter*                  Character         = AIController->GetCharacter();
+      UCharacterMovementComponent* MovementComponent = nullptr;
+      if (Character) {
+        MovementComponent = Character->GetCharacterMovement();
+      }
+      AIController->GetPathFollowingComponent()->SetMovementComponent(MovementComponent);
+
+      if (Character && MovementComponent) {
+        if (AIController->GetCharacter() && AIController->GetCharacter()->GetCharacterMovement()) {
+          AIController->GetCharacter()->GetCharacterMovement()->MaxWalkSpeed = 100.f;
+        }
+      }
+      FNavPathSharedPtr NavPath;
+      AIController->MoveTo(MoveRequest, &NavPath);
+    }
   }
 }
 

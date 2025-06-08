@@ -30,6 +30,8 @@ public class Delta : ModuleRules
       "GeometryCollectionEngine",
       "UMG",
       "SlateCore",
+      "AIModule",
+      "NavigationSystem",
     });
 
     PrivateDependencyModuleNames.AddRange(new string[] { });
