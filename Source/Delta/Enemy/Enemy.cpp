@@ -10,15 +10,29 @@
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/WidgetComponent.h"
+#include "AIController.h"
+#include "AITypes.h"
+#include "Navigation/PathFollowingComponent.h"
+#include "NavigationSystemTypes.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
 #include "../Component/AttributeComponent.h"
 #include "../Component/HealthBarComponent.h"
+#include "../Player/Echo/EchoCharacter.h"
 
 AEnemy::AEnemy() {
   {
     PrimaryActorTick.bCanEverTick = true;
+  }
+
+  {
+    if (UCharacterMovementComponent* MoveComp = GetCharacterMovement()) {
+      MoveComp->bUseRVOAvoidance = true;
+    }
   }
 
   {
@@ -38,7 +52,7 @@ AEnemy::AEnemy() {
     SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
     SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
     SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Vehicle, ECollisionResponse::ECR_Ignore);
   }
 
@@ -82,11 +96,18 @@ AEnemy::AEnemy() {
     static constexpr const TCHAR* const Path{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Delta/HUD/WBP_HealthBar.WBP_HealthBar_C'")};
     DELTA_SET_USER_WIDGET(HealthBarComponent, Path);
   }
+
+  {
+    AutoPossessPlayer = EAutoReceiveInput::Disabled;
+    AutoPossessAI     = EAutoPossessAI::PlacedInWorldOrSpawned;
+  }
 }
 
 void AEnemy::BeginPlay() {
   Super::BeginPlay();
+
   HideHealthBar();
+  VerifyAISetToMoveTargetPlayer();
 }
 
 void AEnemy::Die() {
@@ -134,6 +155,8 @@ void AEnemy::Die() {
 
 void AEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
+
+  VerifyAIMoveToMoveTargetPlayer();
 
   if (CombatTarget) {
     const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
@@ -221,4 +244,86 @@ void AEnemy::ShowHealthBar() {
   if (HealthBarComponent != nullptr) {
     HealthBarComponent->SetVisibility(true);
   }
+}
+
+void AEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
+  auto* const AIController = Cast<AAIController>(GetController());
+  if (AIController) {
+    FAIMoveRequest MoveRequest;
+    MoveRequest.SetGoalLocation(TargetLocation);
+    MoveRequest.SetAcceptanceRadius(5.0f);
+    MoveRequest.SetUsePathfinding(true);
+    MoveRequest.SetAllowPartialPath(true);
+
+    if (AIController->GetPathFollowingComponent()) {
+      ACharacter*                  Character         = AIController->GetCharacter();
+      UCharacterMovementComponent* MovementComponent = nullptr;
+      if (Character) {
+        MovementComponent = Character->GetCharacterMovement();
+      }
+      AIController->GetPathFollowingComponent()->SetMovementComponent(MovementComponent);
+
+      if (Character && MovementComponent) {
+        if (AIController->GetCharacter() && AIController->GetCharacter()->GetCharacterMovement()) {
+          AIController->GetCharacter()->GetCharacterMovement()->MaxWalkSpeed = 100.f;
+        }
+      }
+      FNavPathSharedPtr                 NavPath;
+      EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
+      DELTA_LOG("MoveResult = {}", DeltaFormat("{}", static_cast<int32>(MoveResult)));
+    }
+  }
+}
+
+void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
+  for (TActorIterator<AActor> It(GetWorld()); It; ++It) {
+    if (It->ActorHasTag(TargetTag)) {
+      MoveTargetPoint = *It;
+      break;
+    }
+  }
+
+  if (MoveTargetPoint) {
+    auto* AIController = Cast<AAIController>(GetController());
+    if (AIController) {
+      FAIMoveRequest MoveRequest;
+      MoveRequest.SetGoalActor(MoveTargetPoint);
+      MoveRequest.SetAcceptanceRadius(5.0f);
+      MoveRequest.SetUsePathfinding(true);
+      MoveRequest.SetAllowPartialPath(true);
+
+      FNavPathSharedPtr NavPath;
+      AIController->MoveTo(MoveRequest, &NavPath);
+    }
+  }
+}
+
+void AEnemy::VerifyAISetToMoveTargetPlayer() {
+  auto* const PlayerCharacter = Cast<AEchoCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+  if (PlayerCharacter) {
+    MoveTargetPlayer = PlayerCharacter;
+    UE_LOG(LogTemp, Warning, TEXT("%s assigned CombatTarget: %s"), *GetName(), *MoveTargetPlayer->GetName());
+  }
+}
+
+void AEnemy::VerifyAIMoveToMoveTargetPlayer() {
+  if (!MoveTargetPlayer) {
+    return;
+  }
+
+  auto* AIController = Cast<AAIController>(GetController());
+  if (!AIController) {
+    return;
+  }
+
+  const float AcceptanceRadius = 5.0f;
+
+  FAIMoveRequest MoveRequest;
+  MoveRequest.SetGoalActor(MoveTargetPlayer);
+  MoveRequest.SetAcceptanceRadius(AcceptanceRadius);
+  MoveRequest.SetUsePathfinding(true);
+  MoveRequest.SetAllowPartialPath(true);
+
+  FNavPathSharedPtr                 NavPath;
+  EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
 }
