@@ -7,13 +7,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "EnemyState.h"
+#include "Engine/TimerHandle.h"
 #include "../Character/BaseCharacter.h"
 #include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
 
 #define DELTA_ENEMY_ENABLE_DEBUG_HIT              0
-#define DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE  0
-#define DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION 0
+#define DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE  1
+#define DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION 1
 
 class UAnimMontage;
 class UAttributeComponent;
@@ -42,14 +43,30 @@ public:
 
   void DirectionalHitReact(const FVector& ImpactPoint);
 
+  void SetPatrolTargets(const FName& TargetTag);
+
   void HideHealthBar();
+
   void ShowHealthBar();
+
+  void PatrolTimerFinished();
+
+  void CheckPatrolTarget();
+
+  void CheckCombatTarget();
 
 protected:
   virtual void BeginPlay() override;
 
+  virtual void PostInitializeComponents() override;
+
   void Die();
+
   bool InTargetRange(AActor* Target, double Radius);
+
+  void MoveToTarget(AActor* Target, const float AcceptedRadius = 15.0f);
+
+  AActor* ChoosePatrolTarget();
 
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> HitReactMontage;
@@ -84,14 +101,23 @@ protected:
   UPROPERTY()
   TObjectPtr<AActor> MoveTargetPlayer;
 
-  UPROPERTY(EditAnywhere)
+  UPROPERTY(EditAnywhere, Category = "AI Navigation")
   double CombatRadius{500.f};
 
-  UPROPERTY(EditAnywhere)
+  UPROPERTY(EditAnywhere, Category = "AI Navigation")
   double PatrolRadius{100.f};
 
-  UPROPERTY();
+  UPROPERTY(EditAnywhere, Category = "AI Navigation");
   float DeathLifeSpanSeconds{10.f};
+
+  UPROPERTY(EditAnywhere, Category = "AI Navigation")
+  float WaitMin{5.f};
+
+  UPROPERTY(EditAnywhere, Category = "AI Navigation")
+  float WaitMax{10.f};
+
+  UPROPERTY();
+  FTimerHandle PatrolTimer;
 
 private:
   void VerifyAIMoveToLocation(const FVector& Location);
