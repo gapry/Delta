@@ -77,4 +77,7 @@ protected:
 private:
   void VerifyAIMoveToLocation(const FVector& Location);
   void VerifyAIMoveToTargetPointByTag(const FName& TargetTag);
+
+  void VerifyAISetTheCombatTarget();
+  void VerifyAIMoveToCombatTarget();
 };

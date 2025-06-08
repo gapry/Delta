@@ -21,6 +21,7 @@
 #include "../Common/DebugShape.h"
 #include "../Component/AttributeComponent.h"
 #include "../Component/HealthBarComponent.h"
+#include "../Player/Echo/EchoCharacter.h"
 
 AEnemy::AEnemy() {
   {
@@ -99,8 +100,7 @@ void AEnemy::BeginPlay() {
   Super::BeginPlay();
 
   HideHealthBar();
-
-  VerifyAIMoveToTargetPointByTag("TargetPoint");
+  VerifyAISetTheCombatTarget();
 }
 
 void AEnemy::Die() {
@@ -150,6 +150,7 @@ void AEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
   if (CombatTarget) {
+    VerifyAIMoveToCombatTarget();
     const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
     if (DistanceToTarget > CombatRadius) {
       CombatTarget = nullptr;
@@ -286,5 +287,28 @@ void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
       FNavPathSharedPtr NavPath;
       AIController->MoveTo(MoveRequest, &NavPath);
     }
+  }
+}
+
+void AEnemy::VerifyAISetTheCombatTarget() {
+  for (TActorIterator<AEchoCharacter> It(GetWorld()); It; ++It) {
+    CombatTarget = *It;
+    UE_LOG(LogTemp, Warning, TEXT("%s assigned CombatTarget: %s"), *GetName(), *CombatTarget->GetName());
+    break;
+  }
+}
+
+void AEnemy::VerifyAIMoveToCombatTarget() {
+  auto* AIController = Cast<AAIController>(GetController());
+  if (AIController) {
+    FAIMoveRequest MoveRequest;
+    MoveRequest.SetGoalActor(CombatTarget);
+    MoveRequest.SetAcceptanceRadius(50.0f);
+    MoveRequest.SetUsePathfinding(true);
+    MoveRequest.SetAllowPartialPath(true);
+
+    FNavPathSharedPtr                 NavPath;
+    EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
+    UE_LOG(LogTemp, Warning, TEXT("%s MoveTo result: %d"), *GetName(), (int32)MoveResult);
   }
 }
