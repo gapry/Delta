@@ -65,6 +65,9 @@ protected:
   UPROPERTY()
   TObjectPtr<AActor> CombatTarget;
 
+  UPROPERTY()
+  TObjectPtr<AActor> MoveTarget;
+
   UPROPERTY(EditAnywhere)
   double CombatRadius{500.f};
 
@@ -72,5 +75,6 @@ protected:
   float DeathLifeSpanSeconds{10.f};
 
 private:
-  void VerifyMoveToTarget(const FVector& TargetLocation);
+  void VerifyAIMoveToLocation(const FVector& Location);
+  void VerifyAIMoveToTargetPointByTag(const FName& TargetTag);
 };

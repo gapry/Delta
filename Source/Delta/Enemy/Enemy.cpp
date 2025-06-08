@@ -15,6 +15,7 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "NavigationSystemTypes.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "EngineUtils.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Common/DebugShape.h"
@@ -96,9 +97,10 @@ AEnemy::AEnemy() {
 
 void AEnemy::BeginPlay() {
   Super::BeginPlay();
+
   HideHealthBar();
 
-  VerifyMoveToTarget(FVector(0.f, 0.f, 0.f));
+  VerifyAIMoveToTargetPointByTag("TargetPoint");
 }
 
 void AEnemy::Die() {
@@ -141,33 +143,6 @@ void AEnemy::Die() {
     HideHealthBar();
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     SetLifeSpan(DeathLifeSpanSeconds);
-  }
-}
-
-void AEnemy::VerifyMoveToTarget(const FVector& TargetLocation) {
-  auto* const AIController = Cast<AAIController>(GetController());
-  if (AIController) {
-    FAIMoveRequest MoveRequest;
-    MoveRequest.SetGoalLocation(TargetLocation);
-    MoveRequest.SetAcceptanceRadius(5.0f);
-    MoveRequest.SetUsePathfinding(true);
-    MoveRequest.SetAllowPartialPath(true);
-    if (AIController->GetPathFollowingComponent()) {
-      ACharacter*                  Character         = AIController->GetCharacter();
-      UCharacterMovementComponent* MovementComponent = nullptr;
-      if (Character) {
-        MovementComponent = Character->GetCharacterMovement();
-      }
-      AIController->GetPathFollowingComponent()->SetMovementComponent(MovementComponent);
-
-      if (Character && MovementComponent) {
-        if (AIController->GetCharacter() && AIController->GetCharacter()->GetCharacterMovement()) {
-          AIController->GetCharacter()->GetCharacterMovement()->MaxWalkSpeed = 100.f;
-        }
-      }
-      FNavPathSharedPtr NavPath;
-      AIController->MoveTo(MoveRequest, &NavPath);
-    }
   }
 }
 
@@ -259,5 +234,57 @@ void AEnemy::HideHealthBar() {
 void AEnemy::ShowHealthBar() {
   if (HealthBarComponent != nullptr) {
     HealthBarComponent->SetVisibility(true);
+  }
+}
+
+void AEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
+  auto* const AIController = Cast<AAIController>(GetController());
+  if (AIController) {
+    FAIMoveRequest MoveRequest;
+    MoveRequest.SetGoalLocation(TargetLocation);
+    MoveRequest.SetAcceptanceRadius(5.0f);
+    MoveRequest.SetUsePathfinding(true);
+    MoveRequest.SetAllowPartialPath(true);
+
+    if (AIController->GetPathFollowingComponent()) {
+      ACharacter*                  Character         = AIController->GetCharacter();
+      UCharacterMovementComponent* MovementComponent = nullptr;
+      if (Character) {
+        MovementComponent = Character->GetCharacterMovement();
+      }
+      AIController->GetPathFollowingComponent()->SetMovementComponent(MovementComponent);
+
+      if (Character && MovementComponent) {
+        if (AIController->GetCharacter() && AIController->GetCharacter()->GetCharacterMovement()) {
+          AIController->GetCharacter()->GetCharacterMovement()->MaxWalkSpeed = 100.f;
+        }
+      }
+      FNavPathSharedPtr                 NavPath;
+      EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
+      DELTA_LOG("MoveResult = {}", DeltaFormat("{}", static_cast<int32>(MoveResult)));
+    }
+  }
+}
+
+void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
+  for (TActorIterator<AActor> It(GetWorld()); It; ++It) {
+    if (It->ActorHasTag(TargetTag)) {
+      MoveTarget = *It;
+      break;
+    }
+  }
+
+  if (MoveTarget) {
+    auto* AIController = Cast<AAIController>(GetController());
+    if (AIController) {
+      FAIMoveRequest MoveRequest;
+      MoveRequest.SetGoalActor(MoveTarget);
+      MoveRequest.SetAcceptanceRadius(5.0f);
+      MoveRequest.SetUsePathfinding(true);
+      MoveRequest.SetAllowPartialPath(true);
+
+      FNavPathSharedPtr NavPath;
+      AIController->MoveTo(MoveRequest, &NavPath);
+    }
   }
 }
