@@ -300,7 +300,7 @@ void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
 void AEnemy::VerifyAISetToMoveTargetPlayer() {
   for (TActorIterator<AEchoCharacter> It(GetWorld()); It; ++It) {
     MoveTargetPlayer = *It;
-    UE_LOG(LogTemp, Warning, TEXT("%s assigned CombatTarget: %s"), *GetName(), *MoveTargetPlayer->GetName());
+    UE_LOG(LogTemp, Warning, TEXT("%s assigned MoveTargetPlayer: %s"), *GetName(), *MoveTargetPlayer->GetName());
     break;
   }
 }
