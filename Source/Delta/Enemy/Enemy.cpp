@@ -110,80 +110,62 @@ AEnemy::AEnemy() {
   }
 }
 
+void AEnemy::PatrolTimerFinished() {
+  MoveToTarget(PatrolTarget);
+}
+
 void AEnemy::BeginPlay() {
   Super::BeginPlay();
 
   HideHealthBar();
+  SetPatrolTargets(FName(TEXT("TargetNode")));
+  MoveToTarget(PatrolTarget);
+}
 
-  {
-    const FName     TargetTag = FName(TEXT("TargetNode"));
-    TArray<AActor*> FoundActors;
-    UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), ATargetPoint::StaticClass(), TargetTag, FoundActors);
-    PatrolTargets = FoundActors;
+void AEnemy::PostInitializeComponents() {
+  Super::PostInitializeComponents();
 
-    const int32 NumPatrolTargets = PatrolTargets.Num();
-    const int32 TargetSelection  = FMath::RandRange(0, NumPatrolTargets - 1);
-    PatrolTarget                 = PatrolTargets[TargetSelection];
-  }
+  EnemyController = Cast<AAIController>(GetController());
+}
 
-  {
-    EnemyController = Cast<AAIController>(GetController());
-    if (EnemyController && PatrolTarget) {
-      FAIMoveRequest MoveRequest;
-      MoveRequest.SetGoalActor(PatrolTarget);
-      MoveRequest.SetAcceptanceRadius(15.f);
+void AEnemy::SetPatrolTargets(const FName& TargetTag) {
+  TArray<AActor*> FoundActors;
+  UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), ATargetPoint::StaticClass(), TargetTag, FoundActors);
+  PatrolTargets = FoundActors;
 
-      FNavPathSharedPtr NavPath;
-      EnemyController->MoveTo(MoveRequest, &NavPath);
-
-#if DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION
-      TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
-      for (auto& Point : PathPoints) {
-        const FVector& Location = Point.Location;
-        DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
-      }
-#endif
-    }
-  }
+  const int32 NumPatrolTargets = PatrolTargets.Num();
+  const int32 TargetSelection  = FMath::RandRange(0, NumPatrolTargets - 1);
+  PatrolTarget                 = PatrolTargets[TargetSelection];
 }
 
 void AEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
-  if (CombatTarget) {
-    if (!InTargetRange(CombatTarget, CombatRadius)) {
-      CombatTarget = nullptr;
-      HideHealthBar();
-    }
+  CheckCombatTarget();
+  CheckPatrolTarget();
+}
+
+void AEnemy::CheckPatrolTarget() {
+  if (InTargetRange(PatrolTarget, PatrolRadius)) {
+    PatrolTarget = ChoosePatrolTarget();
+
+    const float WaitTime = FMath::RandRange(WaitMin, WaitMax);
+    GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
   }
+}
 
-  if (PatrolTarget && EnemyController) {
-    if (InTargetRange(PatrolTarget, PatrolRadius)) {
-      TArray<AActor*> ValidTargets;
-      for (AActor* Target : PatrolTargets) {
-        if (Target != PatrolTarget) {
-          ValidTargets.AddUnique(Target);
-        }
-      }
-
-      const int32 NumPatrolTargets = ValidTargets.Num();
-
-      if (NumPatrolTargets > 0) {
-        const int32 TargetSelection = FMath::RandRange(0, NumPatrolTargets - 1);
-        AActor*     Target          = ValidTargets[TargetSelection];
-
-        PatrolTarget = Target;
-
-        FAIMoveRequest MoveRequest;
-        MoveRequest.SetGoalActor(PatrolTarget);
-        MoveRequest.SetAcceptanceRadius(15.f);
-        EnemyController->MoveTo(MoveRequest);
-      }
-    }
+void AEnemy::CheckCombatTarget() {
+  if (!InTargetRange(CombatTarget, CombatRadius)) {
+    CombatTarget = nullptr;
+    HideHealthBar();
   }
 }
 
 bool AEnemy::InTargetRange(AActor* Target, double Radius) {
+  if (Target == nullptr) {
+    return false;
+  }
+
   const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
 
 #if DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE
@@ -192,6 +174,43 @@ bool AEnemy::InTargetRange(AActor* Target, double Radius) {
 #endif
 
   return DistanceToTarget <= Radius;
+}
+
+void AEnemy::MoveToTarget(AActor* Target, const float AcceptedRadius) {
+  if (EnemyController == nullptr || Target == nullptr) {
+    DELTA_LOG("EnemyController or Target is null for {}", TCHAR_TO_UTF8(*GetName()));
+    return;
+  }
+
+  FAIMoveRequest MoveRequest;
+  MoveRequest.SetGoalActor(Target);
+  MoveRequest.SetAcceptanceRadius(AcceptedRadius);
+
+  FNavPathSharedPtr NavPath;
+  EnemyController->MoveTo(MoveRequest, &NavPath);
+
+#if DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION
+  TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+  for (auto& Point : PathPoints) {
+    const FVector& Location = Point.Location;
+    DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
+  }
+#endif
+}
+
+AActor* AEnemy::ChoosePatrolTarget() {
+  TArray<AActor*> ValidTargets;
+  for (AActor* Target : PatrolTargets) {
+    if (Target != PatrolTarget) {
+      ValidTargets.AddUnique(Target);
+    }
+  }
+
+  if (const int32 NumPatrolTargets = ValidTargets.Num(); NumPatrolTargets > 0) {
+    const int32 TargetSelection = FMath::RandRange(0, NumPatrolTargets - 1);
+    return ValidTargets[TargetSelection];
+  }
+  return nullptr;
 }
 
 void AEnemy::Die() {
