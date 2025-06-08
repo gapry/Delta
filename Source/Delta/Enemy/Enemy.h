@@ -16,6 +16,7 @@
 class UAnimMontage;
 class UAttributeComponent;
 class UHealthBarComponent;
+class AAIController;
 
 UCLASS()
 class DELTA_API AEnemy : public ABaseCharacter, public IHitInterface {
@@ -66,6 +67,15 @@ protected:
   TObjectPtr<AActor> CombatTarget;
 
   UPROPERTY()
+  TObjectPtr<AAIController> EnemyController;
+
+  UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+  TObjectPtr<AActor> PatrolTarget;
+
+  UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+  TArray<TObjectPtr<AActor>> PatrolTargets;
+
+  UPROPERTY()
   TObjectPtr<AActor> MoveTargetPoint;
 
   UPROPERTY()
@@ -83,6 +93,7 @@ private:
 
   void VerifyAISetToMoveTargetPlayer();
   void VerifyAIMoveToMoveTargetPlayer();
+  void VerifyAIMoveNavigationPath();
 
   FVector LastTargetLocation;
 };
