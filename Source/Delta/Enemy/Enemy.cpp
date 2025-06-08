@@ -185,6 +185,13 @@ void AEnemy::CheckCombatTarget() {
 
     HideHealthBar();
     MoveToTarget(PatrolTarget);
+  } else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing) {
+    EnemyState                           = EEnemyState::EES_Chasing;
+    GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
+    MoveToTarget(CombatTarget);
+  } else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking) {
+    EnemyState = EEnemyState::EES_Attacking;
+    DELTA_LOG("Enemy {} is attacking target {}", TCHAR_TO_UTF8(*GetName()), TCHAR_TO_UTF8(*CombatTarget->GetName()));
   }
 }
 
@@ -250,11 +257,14 @@ void AEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
   }
 
   if (Stimulus.WasSuccessfullySensed() && ActorSeen->ActorHasTag(FName("EchoCharacter"))) {
-    EnemyState = EEnemyState::EES_Chasing;
     GetWorldTimerManager().ClearTimer(PatrolTimer);
     GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
     CombatTarget                         = ActorSeen;
-    MoveToTarget(CombatTarget);
+
+    if (EnemyState != EEnemyState::EES_Attacking) {
+      EnemyState = EEnemyState::EES_Chasing;
+      MoveToTarget(CombatTarget);
+    }
   }
 }
 
