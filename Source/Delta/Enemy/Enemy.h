@@ -8,18 +8,21 @@
 #include "GameFramework/Character.h"
 #include "EnemyState.h"
 #include "Engine/TimerHandle.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "../Character/BaseCharacter.h"
 #include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
 
 #define DELTA_ENEMY_ENABLE_DEBUG_HIT              0
-#define DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE  1
-#define DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION 1
+#define DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE  0
+#define DELTA_ENEMY_ENABLE_DEBUG_BEGIN_NAVIGATION 0
 
 class UAnimMontage;
 class UAttributeComponent;
 class UHealthBarComponent;
 class AAIController;
+class UAIPerceptionComponent;
+class UAISenseConfig_Sight;
 
 UCLASS()
 class DELTA_API AEnemy : public ABaseCharacter, public IHitInterface {
@@ -68,6 +71,9 @@ protected:
 
   AActor* ChoosePatrolTarget();
 
+  UFUNCTION()
+  void PawnSeen(AActor* Actor, FAIStimulus Stimulus);
+
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> HitReactMontage;
 
@@ -89,10 +95,10 @@ protected:
   UPROPERTY()
   TObjectPtr<AAIController> EnemyController;
 
-  UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+  UPROPERTY(EditInstanceOnly, Category = "AI Navigation", BlueprintReadWrite)
   TObjectPtr<AActor> PatrolTarget;
 
-  UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+  UPROPERTY(EditInstanceOnly, Category = "AI Navigation", BlueprintReadWrite)
   TArray<TObjectPtr<AActor>> PatrolTargets;
 
   UPROPERTY()
@@ -101,8 +107,14 @@ protected:
   UPROPERTY()
   TObjectPtr<AActor> MoveTargetPlayer;
 
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI Navigation")
+  TObjectPtr<UAIPerceptionComponent> AIPerceptionComponent;
+
   UPROPERTY(EditAnywhere, Category = "AI Navigation")
-  double CombatRadius{500.f};
+  TObjectPtr<UAISenseConfig_Sight> SightConfig;
+
+  UPROPERTY(EditAnywhere, Category = "AI Navigation")
+  double CombatRadius{800.f};
 
   UPROPERTY(EditAnywhere, Category = "AI Navigation")
   double PatrolRadius{100.f};
@@ -116,8 +128,16 @@ protected:
   UPROPERTY(EditAnywhere, Category = "AI Navigation")
   float WaitMax{10.f};
 
+  UPROPERTY(EditAnywhere)
+  float NormalSpeed{85.f};
+
+  UPROPERTY(EditAnywhere)
+  float UpperBoundSpeed{300.f};
+
   UPROPERTY();
   FTimerHandle PatrolTimer;
+
+  EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
   void VerifyAIMoveToLocation(const FVector& Location);

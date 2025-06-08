@@ -150,6 +150,10 @@ AEchoCharacter::AEchoCharacter() {
                                                          "AM_EquipUnequip.AM_EquipUnequip'")};
     DELTA_SET_ANIMATION_MONTAGE(EquipUnequipMontage, MontagePath);
   }
+
+  {
+    Tags.Add(FName("EchoCharacter"));
+  }
 }
 
 void AEchoCharacter::PostInitializeComponents() {
