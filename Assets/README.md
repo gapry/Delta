@@ -105,7 +105,39 @@
       - Skin: Withouth Skin
       - FPS: 30
       - Keyframe Reduction: none 
-      
+    - Sword And Shield Walk
+      - In Place: checked
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Sword And Shield Run
+      - In Place: checked
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Standing Torch Melee Attack 01  
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Standing Torch Melee Attack 02  
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Standing Torch Melee Attack 03  
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+    - Standing Torch Melee Attack Stab
+      - Format: *.fbx
+      - Skin: Withouth Skin
+      - FPS: 30
+      - Keyframe Reduction: none 
+              
 ## Effects
 - https://github.com/DruidMech/UE5_TheUltimateDeveloperCourse/tree/main/Downloads/Effects
 

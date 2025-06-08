@@ -30,8 +30,14 @@ AEnemy::AEnemy() {
   }
 
   {
-    if (UCharacterMovementComponent* MoveComp = GetCharacterMovement()) {
-      MoveComp->bUseRVOAvoidance = true;
+    if (UCharacterMovementComponent* const MoveComponent = GetCharacterMovement()) {
+      MoveComponent->bUseRVOAvoidance          = true;
+      MoveComponent->bOrientRotationToMovement = true;
+      MoveComponent->MaxWalkSpeed              = 125.0f;
+
+      bUseControllerRotationPitch = false;
+      bUseControllerRotationYaw   = false;
+      bUseControllerRotationRoll  = false;
     }
   }
 
