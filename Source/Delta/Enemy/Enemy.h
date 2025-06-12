@@ -40,8 +40,6 @@ public:
                            class AController*         EventInstigator, //
                            AActor*                    DamageCauser) override;
 
-  void DirectionalHitReact(const FVector& ImpactPoint);
-
   void SetPatrolTargets(const FName& TargetTag);
 
   void HideHealthBar();

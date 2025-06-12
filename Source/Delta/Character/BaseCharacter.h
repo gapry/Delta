@@ -8,6 +8,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+#define DELTA_BASE_CHARACTER_ENABLE_DEBUG_HIT 0
+
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class USpringArmComponent;
@@ -41,6 +43,8 @@ protected:
   virtual void PlayAttackMontage();
 
   void PlayHitReactMontage(const FName& SectionName);
+
+  void DirectionalHitReact(const FVector& ImpactPoint);
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;

@@ -336,37 +336,6 @@ void AEnemy::GetHit(const FVector& ImpactPoint) {
   Die();
 }
 
-void AEnemy::DirectionalHitReact(const FVector& ImpactPoint) {
-  const FVector Forward = GetActorForwardVector();
-
-  const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
-  const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
-
-  const double CosTheta = FVector::DotProduct(Forward, ToHit);
-  double       Theta    = FMath::RadiansToDegrees(FMath::Acos(CosTheta));
-
-  const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
-  if (CrossProduct.Z < 0) {
-    Theta *= -1.f;
-  }
-
-#if DELTA_ENEMY_ENABLE_DEBUG_HIT
-  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f, FColor::Red, 5.f);
-  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60.f, 5.f, FColor::Green, 5.f);
-  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 5.f, FColor::Blue, 5.f);
-#endif
-
-  FName Section("FromBack");
-  if (Theta >= -45.f && Theta < 45.f) {
-    Section = FName("FromFront");
-  } else if (Theta >= -135.f && Theta < -45.f) {
-    Section = FName("FromLeft");
-  } else if (Theta >= 45.f && Theta < 135.f) {
-    Section = FName("FromRight");
-  }
-  PlayHitReactMontage(Section);
-}
-
 void AEnemy::HideHealthBar() {
   if (HealthBarComponent != nullptr) {
     HealthBarComponent->SetVisibility(false);
