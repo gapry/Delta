@@ -101,3 +101,7 @@ void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint) {
   }
   PlayHitReactMontage(Section);
 }
+
+bool ABaseCharacter::CanAttack() {
+  return false;
+}

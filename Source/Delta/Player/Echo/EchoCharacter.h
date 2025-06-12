@@ -88,8 +88,5 @@ private:
   TObjectPtr<AItem> OverlappingItem;
 
   UPROPERTY(EditDefaultsOnly, Category = "Montage")
-  TObjectPtr<UAnimMontage> AttackMontage{nullptr};
-
-  UPROPERTY(EditDefaultsOnly, Category = "Montage")
   TObjectPtr<UAnimMontage> EquipUnequipMontage{nullptr};
 };

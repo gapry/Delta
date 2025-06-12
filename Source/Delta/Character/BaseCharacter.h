@@ -46,6 +46,8 @@ protected:
 
   void DirectionalHitReact(const FVector& ImpactPoint);
 
+  virtual bool CanAttack();
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
@@ -54,6 +56,12 @@ protected:
   UPROPERTY(VisibleAnywhere, Category = "Weapon")
   TObjectPtr<AWeapon> EquippedWeapon;
 
+  UPROPERTY(EditDefaultsOnly, Category = "Montage")
+  TObjectPtr<UAnimMontage> AttackMontage;
+
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> HitReactMontage;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montages")
+  TObjectPtr<UAnimMontage> DeathMontage;
 };

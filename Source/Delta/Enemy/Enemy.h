@@ -72,9 +72,6 @@ protected:
   UFUNCTION()
   void PawnSeen(AActor* Actor, FAIStimulus Stimulus);
 
-  UPROPERTY(EditDefaultsOnly, Category = "Montages")
-  TObjectPtr<UAnimMontage> DeathMontage;
-
   UPROPERTY(VisibleAnywhere, Category = "Attributes")
   TObjectPtr<UAttributeComponent> AttributeComponent;
 
