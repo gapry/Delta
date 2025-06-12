@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class UCapsuleComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class UInputComponent;
 class AWeapon;
 
 UCLASS()
@@ -23,12 +24,16 @@ public:
 
   virtual void Tick(float DeltaTime) override;
 
-  virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+  virtual void NotifyControllerChanged() override;
 
-  void         SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+  virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+  void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
 
 protected:
   virtual void BeginPlay() override;
+
+  virtual void PostInitializeComponents() override;
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;

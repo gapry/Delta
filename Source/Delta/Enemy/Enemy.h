@@ -33,8 +33,6 @@ public:
 
   virtual void Tick(float DeltaTime) override;
 
-  virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
   virtual void GetHit(const FVector& ImpactPoint) override;
 
   virtual float TakeDamage(float                      DamageAmount,    //

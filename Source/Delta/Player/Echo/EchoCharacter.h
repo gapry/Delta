@@ -30,9 +30,6 @@ class DELTA_API AEchoCharacter : public ABaseCharacter {
 public:
   AEchoCharacter();
 
-  virtual void NotifyControllerChanged() override;
-  virtual void Tick(float DeltaTime) override;
-
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
   virtual void Jump() override;
@@ -63,13 +60,6 @@ public:
 
 protected:
   virtual void BeginPlay() override;
-  virtual void PostInitializeComponents() override;
-
-  void PostInitializeSkeletalMeshComponent();
-  void PostInitializeCapsuleComponent();
-  void PostInitializeSpringArmComponent();
-  void PostInitializeCameraComponent();
-  void PostInitializeCharacterMovementComponent();
 
 private:
   APlayerController*                  GetPlayerController() const;

@@ -495,7 +495,3 @@ void AEnemy::VerifyAIMoveNavigationPath() {
     }
   }
 }
-
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
-  Super::SetupPlayerInputComponent(PlayerInputComponent);
-}

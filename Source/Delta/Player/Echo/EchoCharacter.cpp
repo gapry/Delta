@@ -47,6 +47,7 @@ AEchoCharacter::AEchoCharacter() {
   {
     CapsuleComponent = GetCapsuleComponent();
 
+    CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
     CapsuleComponent->SetGenerateOverlapEvents(true);
 
     CapsuleComponent->SetCollisionProfileName(TEXT("Custom"));
@@ -62,12 +63,35 @@ AEchoCharacter::AEchoCharacter() {
     static constexpr const TCHAR* const ComponentName{TEXT("SpringArm")};
     SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(ComponentName);
     SpringArmComponent->SetupAttachment(GetRootComponent());
+
+    SpringArmComponent->bUsePawnControlRotation = true;
+    SpringArmComponent->TargetArmLength         = 300.f;
   }
 
   {
     static constexpr const TCHAR* const ComponentName{TEXT("Camera")};
     CameraComponent = CreateDefaultSubobject<UCameraComponent>(ComponentName);
     CameraComponent->SetupAttachment(SpringArmComponent.Get(), USpringArmComponent::SocketName);
+    CameraComponent->bUsePawnControlRotation = false;
+    CameraComponent->SetRelativeTransform(FTransform(FRotator(-15.f, 0.f, 0.f), //
+                                                     FVector(0.f, 0.f, 60.f),   //
+                                                     FVector(1.f, 1.f, 1.f)));  //
+  }
+
+  {
+    auto* const Movement = GetCharacterMovement();
+    if (!Movement) {
+      DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CharacterMovement is null"));
+    }
+
+    Movement->bOrientRotationToMovement  = true;
+    Movement->RotationRate               = FRotator(0.0f, 500.0f, 0.0f);
+    Movement->JumpZVelocity              = 700.f;
+    Movement->AirControl                 = 0.35f;
+    Movement->MaxWalkSpeed               = 500.f;
+    Movement->MinAnalogWalkSpeed         = 20.f;
+    Movement->BrakingDecelerationWalking = 2000.f;
+    Movement->BrakingDecelerationFalling = 1500.0f;
   }
 
   {
@@ -147,65 +171,6 @@ AEchoCharacter::AEchoCharacter() {
   }
 }
 
-void AEchoCharacter::PostInitializeComponents() {
-  Super::PostInitializeComponents();
-
-  PostInitializeSkeletalMeshComponent();
-  PostInitializeCapsuleComponent();
-  PostInitializeSpringArmComponent();
-  PostInitializeCameraComponent();
-  PostInitializeCharacterMovementComponent();
-}
-
-void AEchoCharacter::PostInitializeSkeletalMeshComponent() {
-  if (!SkeletalMeshComponent.IsValid()) {
-    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "SkeletalMeshComponent is not valid"));
-  }
-}
-
-void AEchoCharacter::PostInitializeCapsuleComponent() {
-  if (!CapsuleComponent.IsValid()) {
-    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CapsuleComponent is not valid"));
-  }
-  CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
-}
-
-void AEchoCharacter::PostInitializeSpringArmComponent() {
-  if (!SpringArmComponent.IsValid()) {
-    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "SpringArmComponent is not valid"));
-  }
-
-  SpringArmComponent->bUsePawnControlRotation = true;
-  SpringArmComponent->TargetArmLength         = 300.f;
-}
-
-void AEchoCharacter::PostInitializeCameraComponent() {
-  if (!CameraComponent.IsValid()) {
-    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CameraComponent is not valid"));
-  }
-
-  CameraComponent->bUsePawnControlRotation = false;
-  CameraComponent->SetRelativeTransform(FTransform(FRotator(-15.f, 0.f, 0.f), //
-                                                   FVector(0.f, 0.f, 60.f),   //
-                                                   FVector(1.f, 1.f, 1.f)));  //
-}
-
-void AEchoCharacter::PostInitializeCharacterMovementComponent() {
-  auto* const Movement = GetCharacterMovement();
-  if (!Movement) {
-    DELTA_LOG("{}", DeltaFormat("[{}] {}", DELTA_FUNCSIG, "CharacterMovement is null"));
-  }
-
-  Movement->bOrientRotationToMovement  = true;
-  Movement->RotationRate               = FRotator(0.0f, 500.0f, 0.0f);
-  Movement->JumpZVelocity              = 700.f;
-  Movement->AirControl                 = 0.35f;
-  Movement->MaxWalkSpeed               = 500.f;
-  Movement->MinAnalogWalkSpeed         = 20.f;
-  Movement->BrakingDecelerationWalking = 2000.f;
-  Movement->BrakingDecelerationFalling = 1500.0f;
-}
-
 void AEchoCharacter::BeginPlay() {
   Super::BeginPlay();
 
@@ -214,14 +179,6 @@ void AEchoCharacter::BeginPlay() {
       Subsystem->AddMappingContext(InputMappingContext, 0);
     }
   }
-}
-
-void AEchoCharacter::Tick(float DeltaTime) {
-  Super::Tick(DeltaTime);
-}
-
-void AEchoCharacter::NotifyControllerChanged() {
-  Super::NotifyControllerChanged();
 }
 
 void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {

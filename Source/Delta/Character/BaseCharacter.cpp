@@ -14,25 +14,27 @@
 #include "../Weapon/Sword.h"
 
 ABaseCharacter::ABaseCharacter() {
-  {
-    PrimaryActorTick.bCanEverTick = true;
+  PrimaryActorTick.bCanEverTick = true;
 
-    bUseControllerRotationPitch = false;
-    bUseControllerRotationYaw   = false;
-    bUseControllerRotationRoll  = false;
-  }
- 
-  {
-
-  }
+  bUseControllerRotationPitch = false;
+  bUseControllerRotationYaw   = false;
+  bUseControllerRotationRoll  = false;
 }
 
 void ABaseCharacter::BeginPlay() {
   Super::BeginPlay();
 }
 
+void ABaseCharacter::PostInitializeComponents() {
+  Super::PostInitializeComponents();
+}
+
 void ABaseCharacter::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
+}
+
+void ABaseCharacter::NotifyControllerChanged() {
+  Super::NotifyControllerChanged();
 }
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
