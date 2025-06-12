@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class UCapsuleComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class AWeapon;
 
 UCLASS()
 class DELTA_API ABaseCharacter : public ACharacter {
@@ -24,6 +25,8 @@ public:
 
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+  void         SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+
 protected:
   virtual void BeginPlay() override;
 
@@ -31,4 +34,7 @@ protected:
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
   TWeakObjectPtr<UCameraComponent>       CameraComponent;
+
+  UPROPERTY(VisibleAnywhere, Category = "Weapon")
+  TObjectPtr<AWeapon> EquippedWeapon;
 };

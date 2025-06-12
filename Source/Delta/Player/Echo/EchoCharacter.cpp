@@ -15,21 +15,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
 #include "Animation/AnimMontage.h"
-#include "Components/BoxComponent.h"
 #include "../../Common/Finder.h"
 #include "../../Common/LogUtil.h"
 #include "../../Weapon/Weapon.h"
 #include "../../Weapon/Sword.h"
 
 AEchoCharacter::AEchoCharacter() {
-  {
-    PrimaryActorTick.bCanEverTick = true;
-
-    bUseControllerRotationPitch = false;
-    bUseControllerRotationYaw   = false;
-    bUseControllerRotationRoll  = false;
-  }
-
   {
     SkeletalMeshComponent = GetMesh();
 
@@ -483,17 +474,4 @@ void AEchoCharacter::Disarm() {
 
 void AEchoCharacter::FinishEquipping() {
   ActionState = EActionState::EAS_Unoccupied;
-}
-
-void AEchoCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled) {
-  if (EquippedWeapon == nullptr) {
-    return;
-  }
-  EquippedWeapon->IgnoreActors.Empty();
-
-  auto* const WeaponBox = EquippedWeapon->GetWeaponBox();
-  if (WeaponBox == nullptr) {
-    return;
-  }
-  WeaponBox->SetCollisionEnabled(CollisionEnabled);
 }

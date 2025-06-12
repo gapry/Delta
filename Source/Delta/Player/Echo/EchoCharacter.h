@@ -22,7 +22,6 @@ class UEnhancedInputLocalPlayerSubsystem;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
-class AWeapon;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ABaseCharacter {
@@ -62,8 +61,6 @@ public:
 
   bool CanAttack() const;
 
-  void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
-
 protected:
   virtual void BeginPlay() override;
   virtual void PostInitializeComponents() override;
@@ -96,9 +93,6 @@ private:
 
   UPROPERTY(VisibleInstanceOnly, Category = "Item")
   TObjectPtr<AItem> OverlappingItem;
-
-  UPROPERTY(VisibleAnywhere, Category = "Weapon")
-  TObjectPtr<AWeapon> EquippedWeapon;
 
   UPROPERTY(EditDefaultsOnly, Category = "Montage")
   TObjectPtr<UAnimMontage> AttackMontage{nullptr};

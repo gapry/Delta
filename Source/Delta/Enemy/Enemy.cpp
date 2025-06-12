@@ -29,18 +29,10 @@
 
 AEnemy::AEnemy() {
   {
-    PrimaryActorTick.bCanEverTick = true;
-  }
-
-  {
     if (UCharacterMovementComponent* const MoveComponent = GetCharacterMovement()) {
       MoveComponent->bUseRVOAvoidance          = true;
       MoveComponent->bOrientRotationToMovement = true;
       MoveComponent->MaxWalkSpeed              = NormalSpeed;
-
-      bUseControllerRotationPitch = false;
-      bUseControllerRotationYaw   = false;
-      bUseControllerRotationRoll  = false;
     }
   }
 
