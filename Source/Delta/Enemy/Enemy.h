@@ -40,8 +40,6 @@ public:
                            class AController*         EventInstigator, //
                            AActor*                    DamageCauser) override;
 
-  void PlayHitReactMontage(const FName& SectionName);
-
   void DirectionalHitReact(const FVector& ImpactPoint);
 
   void SetPatrolTargets(const FName& TargetTag);
@@ -75,9 +73,6 @@ protected:
 
   UFUNCTION()
   void PawnSeen(AActor* Actor, FAIStimulus Stimulus);
-
-  UPROPERTY(EditDefaultsOnly, Category = "Montages")
-  TObjectPtr<UAnimMontage> HitReactMontage;
 
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> DeathMontage;

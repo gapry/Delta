@@ -13,6 +13,7 @@ class UCapsuleComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputComponent;
+class UAnimMontage;
 class AWeapon;
 
 UCLASS()
@@ -39,6 +40,8 @@ protected:
 
   virtual void PlayAttackMontage();
 
+  void PlayHitReactMontage(const FName& SectionName);
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
@@ -46,4 +49,7 @@ protected:
 
   UPROPERTY(VisibleAnywhere, Category = "Weapon")
   TObjectPtr<AWeapon> EquippedWeapon;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montages")
+  TObjectPtr<UAnimMontage> HitReactMontage;
 };

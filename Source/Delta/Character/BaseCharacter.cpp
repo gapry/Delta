@@ -8,6 +8,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Weapon/Weapon.h"
@@ -58,4 +60,12 @@ void ABaseCharacter::Die() {
 }
 
 void ABaseCharacter::PlayAttackMontage() {
+}
+
+void ABaseCharacter::PlayHitReactMontage(const FName& SectionName) {
+  UAnimInstance* const AnimInstance = GetMesh()->GetAnimInstance();
+  if (AnimInstance && HitReactMontage) {
+    AnimInstance->Montage_Play(HitReactMontage);
+    AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+  }
 }
