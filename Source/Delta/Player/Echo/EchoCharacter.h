@@ -44,7 +44,6 @@ public:
   ECharacterState GetCharacterState() const;
   void            SetCharacterState(ECharacterState NewState);
 
-  void PlayAttackMontage() const;
   void PlayEquipUnequipMontage(const FName SectionName) const;
 
   void AttackAnimNotify();
@@ -60,6 +59,10 @@ public:
 
 protected:
   virtual void BeginPlay() override;
+
+  virtual void Die() override;
+
+  virtual void PlayAttackMontage() override;
 
 private:
   APlayerController*                  GetPlayerController() const;

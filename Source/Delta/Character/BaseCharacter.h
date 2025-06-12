@@ -35,6 +35,10 @@ protected:
 
   virtual void PostInitializeComponents() override;
 
+  virtual void Die();
+
+  virtual void PlayAttackMontage();
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;

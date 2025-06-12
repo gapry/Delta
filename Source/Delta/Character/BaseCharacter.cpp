@@ -53,3 +53,9 @@ void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type Collision
   }
   WeaponBox->SetCollisionEnabled(CollisionEnabled);
 }
+
+void ABaseCharacter::Die() {
+}
+
+void ABaseCharacter::PlayAttackMontage() {
+}

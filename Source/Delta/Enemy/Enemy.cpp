@@ -140,6 +140,9 @@ void AEnemy::PostInitializeComponents() {
   EnemyController = Cast<AAIController>(GetController());
 }
 
+void AEnemy::Attack() {
+}
+
 void AEnemy::SetPatrolTargets(const FName& TargetTag) {
   TArray<AActor*> FoundActors;
   UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), ATargetPoint::StaticClass(), TargetTag, FoundActors);
@@ -301,6 +304,9 @@ void AEnemy::Die() {
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     SetLifeSpan(DeathLifeSpanSeconds);
   }
+}
+
+void AEnemy::PlayAttackMontage() {
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {

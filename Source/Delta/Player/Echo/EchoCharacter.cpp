@@ -350,7 +350,7 @@ void AEchoCharacter::SetCharacterState(ECharacterState NewState) {
   CharacterState = NewState;
 }
 
-void AEchoCharacter::PlayAttackMontage() const {
+void AEchoCharacter::PlayAttackMontage() {
   UAnimInstance* const AnimInstance = SkeletalMeshComponent->GetAnimInstance();
 
   if (!AnimInstance) {
@@ -411,6 +411,9 @@ bool AEchoCharacter::CanDisarm() const {
 
 bool AEchoCharacter::CanAttack() const {
   return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+void AEchoCharacter::Die() {
 }
 
 void AEchoCharacter::Arm() {

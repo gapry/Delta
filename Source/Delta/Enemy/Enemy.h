@@ -61,7 +61,11 @@ protected:
 
   virtual void PostInitializeComponents() override;
 
-  void Die();
+  void Attack();
+
+  virtual void Die() override;
+
+  virtual void PlayAttackMontage() override;
 
   bool InTargetRange(AActor* Target, double Radius);
 
