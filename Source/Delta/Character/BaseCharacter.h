@@ -6,15 +6,24 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../Interface/HitInterface.h"
 #include "BaseCharacter.generated.h"
+
+#define DELTA_BASE_CHARACTER_ENABLE_DEBUG_HIT 0
 
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class UInputComponent;
+class UAnimMontage;
+class AWeapon;
+class UAttributeComponent;
+class USoundBase;
+class UParticleSystem;
 
 UCLASS()
-class DELTA_API ABaseCharacter : public ACharacter {
+class DELTA_API ABaseCharacter : public ACharacter, public IHitInterface {
   GENERATED_BODY()
 
 public:
@@ -22,13 +31,52 @@ public:
 
   virtual void Tick(float DeltaTime) override;
 
-  virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+  virtual void NotifyControllerChanged() override;
+
+  virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+  void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+
+  virtual void GetHit(const FVector& ImpactPoint) override;
 
 protected:
   virtual void BeginPlay() override;
+
+  virtual void PostInitializeComponents() override;
+
+  virtual void Die();
+
+  virtual void PlayAttackMontage();
+
+  void PlayHitReactMontage(const FName& SectionName);
+
+  void DirectionalHitReact(const FVector& ImpactPoint);
+
+  virtual bool CanAttack();
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;
   TWeakObjectPtr<UCameraComponent>       CameraComponent;
+
+  UPROPERTY(VisibleAnywhere, Category = "Weapon")
+  TObjectPtr<AWeapon> EquippedWeapon;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montage")
+  TObjectPtr<UAnimMontage> AttackMontage;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montages")
+  TObjectPtr<UAnimMontage> HitReactMontage;
+
+  UPROPERTY(EditDefaultsOnly, Category = "Montages")
+  TObjectPtr<UAnimMontage> DeathMontage;
+
+  UPROPERTY(VisibleAnywhere, Category = "Attributes")
+  TObjectPtr<UAttributeComponent> AttributeComponent;
+
+  UPROPERTY(EditAnywhere, Category = "Sounds")
+  TObjectPtr<USoundBase> HitSound;
+
+  UPROPERTY(EditAnywhere, Category = "VisualEffects")
+  TObjectPtr<UParticleSystem> HitParticles;
 };

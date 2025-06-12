@@ -29,18 +29,10 @@
 
 AEnemy::AEnemy() {
   {
-    PrimaryActorTick.bCanEverTick = true;
-  }
-
-  {
     if (UCharacterMovementComponent* const MoveComponent = GetCharacterMovement()) {
       MoveComponent->bUseRVOAvoidance          = true;
       MoveComponent->bOrientRotationToMovement = true;
       MoveComponent->MaxWalkSpeed              = NormalSpeed;
-
-      bUseControllerRotationPitch = false;
-      bUseControllerRotationYaw   = false;
-      bUseControllerRotationRoll  = false;
     }
   }
 
@@ -93,10 +85,6 @@ AEnemy::AEnemy() {
   }
 
   {
-    AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
-  }
-
-  {
     HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
     HealthBarComponent->SetupAttachment(GetRootComponent());
     HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
@@ -146,6 +134,9 @@ void AEnemy::PostInitializeComponents() {
   Super::PostInitializeComponents();
 
   EnemyController = Cast<AAIController>(GetController());
+}
+
+void AEnemy::Attack() {
 }
 
 void AEnemy::SetPatrolTargets(const FName& TargetTag) {
@@ -311,6 +302,9 @@ void AEnemy::Die() {
   }
 }
 
+void AEnemy::PlayAttackMontage() {
+}
+
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
   if (AttributeComponent) {
     AttributeComponent->ReceiveDamage(DamageAmount);
@@ -336,45 +330,6 @@ void AEnemy::GetHit(const FVector& ImpactPoint) {
     return;
   }
   Die();
-}
-
-void AEnemy::DirectionalHitReact(const FVector& ImpactPoint) {
-  const FVector Forward = GetActorForwardVector();
-
-  const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
-  const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
-
-  const double CosTheta = FVector::DotProduct(Forward, ToHit);
-  double       Theta    = FMath::RadiansToDegrees(FMath::Acos(CosTheta));
-
-  const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
-  if (CrossProduct.Z < 0) {
-    Theta *= -1.f;
-  }
-
-#if DELTA_ENEMY_ENABLE_DEBUG_HIT
-  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f, FColor::Red, 5.f);
-  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + ToHit * 60.f, 5.f, FColor::Green, 5.f);
-  UKismetSystemLibrary::DrawDebugArrow(this, GetActorLocation(), GetActorLocation() + CrossProduct * 100.f, 5.f, FColor::Blue, 5.f);
-#endif
-
-  FName Section("FromBack");
-  if (Theta >= -45.f && Theta < 45.f) {
-    Section = FName("FromFront");
-  } else if (Theta >= -135.f && Theta < -45.f) {
-    Section = FName("FromLeft");
-  } else if (Theta >= 45.f && Theta < 135.f) {
-    Section = FName("FromRight");
-  }
-  PlayHitReactMontage(Section);
-}
-
-void AEnemy::PlayHitReactMontage(const FName& SectionName) {
-  UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-  if (AnimInstance && HitReactMontage) {
-    AnimInstance->Montage_Play(HitReactMontage);
-    AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
-  }
 }
 
 void AEnemy::HideHealthBar() {
@@ -404,6 +359,9 @@ void AEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
       if (Character) {
         MovementComponent = Character->GetCharacterMovement();
       }
+      // warning C4996: 'UPathFollowingComponent::SetMovementComponent':
+      // SetMovementComponent(UNavMovementComponent* MoveComp) is deprecated, please use SetNavMoveInterface(INavMoveInterface* NavMoveInterface)
+      // instead. Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
       AIController->GetPathFollowingComponent()->SetMovementComponent(MovementComponent);
 
       if (Character && MovementComponent) {
@@ -502,8 +460,4 @@ void AEnemy::VerifyAIMoveNavigationPath() {
       }
     }
   }
-}
-
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
-  Super::SetupPlayerInputComponent(PlayerInputComponent);
 }

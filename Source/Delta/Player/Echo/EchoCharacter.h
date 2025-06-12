@@ -22,7 +22,6 @@ class UEnhancedInputLocalPlayerSubsystem;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
-class AWeapon;
 
 UCLASS()
 class DELTA_API AEchoCharacter : public ABaseCharacter {
@@ -30,9 +29,6 @@ class DELTA_API AEchoCharacter : public ABaseCharacter {
 
 public:
   AEchoCharacter();
-
-  virtual void NotifyControllerChanged() override;
-  virtual void Tick(float DeltaTime) override;
 
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -48,7 +44,6 @@ public:
   ECharacterState GetCharacterState() const;
   void            SetCharacterState(ECharacterState NewState);
 
-  void PlayAttackMontage() const;
   void PlayEquipUnequipMontage(const FName SectionName) const;
 
   void AttackAnimNotify();
@@ -60,19 +55,16 @@ public:
   bool CanArm() const;
   bool CanDisarm() const;
 
-  bool CanAttack() const;
+  virtual bool CanAttack() override;
 
-  void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+  virtual void GetHit(const FVector& ImpactPoint) override;
 
 protected:
   virtual void BeginPlay() override;
-  virtual void PostInitializeComponents() override;
 
-  void PostInitializeSkeletalMeshComponent();
-  void PostInitializeCapsuleComponent();
-  void PostInitializeSpringArmComponent();
-  void PostInitializeCameraComponent();
-  void PostInitializeCharacterMovementComponent();
+  virtual void Die() override;
+
+  virtual void PlayAttackMontage() override;
 
 private:
   APlayerController*                  GetPlayerController() const;
@@ -96,12 +88,6 @@ private:
 
   UPROPERTY(VisibleInstanceOnly, Category = "Item")
   TObjectPtr<AItem> OverlappingItem;
-
-  UPROPERTY(VisibleAnywhere, Category = "Weapon")
-  TObjectPtr<AWeapon> EquippedWeapon;
-
-  UPROPERTY(EditDefaultsOnly, Category = "Montage")
-  TObjectPtr<UAnimMontage> AttackMontage{nullptr};
 
   UPROPERTY(EditDefaultsOnly, Category = "Montage")
   TObjectPtr<UAnimMontage> EquipUnequipMontage{nullptr};

@@ -10,7 +10,6 @@
 #include "Engine/TimerHandle.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "../Character/BaseCharacter.h"
-#include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
 
 #define DELTA_ENEMY_ENABLE_DEBUG_HIT              0
@@ -25,7 +24,7 @@ class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 
 UCLASS()
-class DELTA_API AEnemy : public ABaseCharacter, public IHitInterface {
+class DELTA_API AEnemy : public ABaseCharacter {
   GENERATED_BODY()
 
 public:
@@ -33,18 +32,12 @@ public:
 
   virtual void Tick(float DeltaTime) override;
 
-  virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
   virtual void GetHit(const FVector& ImpactPoint) override;
 
   virtual float TakeDamage(float                      DamageAmount,    //
                            struct FDamageEvent const& DamageEvent,     //
                            class AController*         EventInstigator, //
                            AActor*                    DamageCauser) override;
-
-  void PlayHitReactMontage(const FName& SectionName);
-
-  void DirectionalHitReact(const FVector& ImpactPoint);
 
   void SetPatrolTargets(const FName& TargetTag);
 
@@ -63,7 +56,11 @@ protected:
 
   virtual void PostInitializeComponents() override;
 
-  void Die();
+  void Attack();
+
+  virtual void Die() override;
+
+  virtual void PlayAttackMontage() override;
 
   bool InTargetRange(AActor* Target, double Radius);
 
@@ -73,15 +70,6 @@ protected:
 
   UFUNCTION()
   void PawnSeen(AActor* Actor, FAIStimulus Stimulus);
-
-  UPROPERTY(EditDefaultsOnly, Category = "Montages")
-  TObjectPtr<UAnimMontage> HitReactMontage;
-
-  UPROPERTY(EditDefaultsOnly, Category = "Montages")
-  TObjectPtr<UAnimMontage> DeathMontage;
-
-  UPROPERTY(VisibleAnywhere, Category = "Attributes")
-  TObjectPtr<UAttributeComponent> AttributeComponent;
 
   UPROPERTY(EditAnywhere, Category = "Widgets")
   TObjectPtr<UHealthBarComponent> HealthBarComponent;
