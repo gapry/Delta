@@ -409,7 +409,7 @@ bool AEchoCharacter::CanDisarm() const {
          EquipUnequipMontage != nullptr;                      //
 }
 
-bool AEchoCharacter::CanAttack() const {
+bool AEchoCharacter::CanAttack() {
   return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
 }
 

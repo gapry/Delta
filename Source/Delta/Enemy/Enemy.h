@@ -72,9 +72,6 @@ protected:
   UFUNCTION()
   void PawnSeen(AActor* Actor, FAIStimulus Stimulus);
 
-  UPROPERTY(VisibleAnywhere, Category = "Attributes")
-  TObjectPtr<UAttributeComponent> AttributeComponent;
-
   UPROPERTY(EditAnywhere, Category = "Widgets")
   TObjectPtr<UHealthBarComponent> HealthBarComponent;
 

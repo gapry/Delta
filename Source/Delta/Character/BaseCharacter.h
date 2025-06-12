@@ -17,6 +17,9 @@ class UCameraComponent;
 class UInputComponent;
 class UAnimMontage;
 class AWeapon;
+class UAttributeComponent;
+class USoundBase;
+class UParticleSystem;
 
 UCLASS()
 class DELTA_API ABaseCharacter : public ACharacter {
@@ -64,4 +67,13 @@ protected:
 
   UPROPERTY(EditDefaultsOnly, Category = "Montages")
   TObjectPtr<UAnimMontage> DeathMontage;
+
+  UPROPERTY(VisibleAnywhere, Category = "Attributes")
+  TObjectPtr<UAttributeComponent> AttributeComponent;
+
+  UPROPERTY(EditAnywhere, Category = "Sounds")
+  TObjectPtr<USoundBase> HitSound;
+
+  UPROPERTY(EditAnywhere, Category = "VisualEffects")
+  TObjectPtr<UParticleSystem> HitParticles;
 };

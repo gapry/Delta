@@ -11,17 +11,24 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "../Component/AttributeComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
 #include "../Weapon/Weapon.h"
 #include "../Weapon/Sword.h"
 
 ABaseCharacter::ABaseCharacter() {
-  PrimaryActorTick.bCanEverTick = true;
+  {
+    PrimaryActorTick.bCanEverTick = true;
 
-  bUseControllerRotationPitch = false;
-  bUseControllerRotationYaw   = false;
-  bUseControllerRotationRoll  = false;
+    bUseControllerRotationPitch = false;
+    bUseControllerRotationYaw   = false;
+    bUseControllerRotationRoll  = false;
+  }
+
+  {
+    AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+  }
 }
 
 void ABaseCharacter::BeginPlay() {

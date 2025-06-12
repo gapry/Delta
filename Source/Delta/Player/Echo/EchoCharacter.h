@@ -55,7 +55,7 @@ public:
   bool CanArm() const;
   bool CanDisarm() const;
 
-  bool CanAttack() const;
+  virtual bool CanAttack() override;
 
 protected:
   virtual void BeginPlay() override;

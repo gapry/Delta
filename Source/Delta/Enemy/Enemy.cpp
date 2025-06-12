@@ -85,10 +85,6 @@ AEnemy::AEnemy() {
   }
 
   {
-    AttributeComponent = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
-  }
-
-  {
     HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
     HealthBarComponent->SetupAttachment(GetRootComponent());
     HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
@@ -363,6 +359,9 @@ void AEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
       if (Character) {
         MovementComponent = Character->GetCharacterMovement();
       }
+      // warning C4996: 'UPathFollowingComponent::SetMovementComponent':
+      // SetMovementComponent(UNavMovementComponent* MoveComp) is deprecated, please use SetNavMoveInterface(INavMoveInterface* NavMoveInterface)
+      // instead. Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.
       AIController->GetPathFollowingComponent()->SetMovementComponent(MovementComponent);
 
       if (Character && MovementComponent) {
