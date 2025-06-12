@@ -10,7 +10,6 @@
 #include "Engine/TimerHandle.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "../Character/BaseCharacter.h"
-#include "../Interface/HitInterface.h"
 #include "Enemy.generated.h"
 
 #define DELTA_ENEMY_ENABLE_DEBUG_HIT              0
@@ -25,7 +24,7 @@ class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 
 UCLASS()
-class DELTA_API AEnemy : public ABaseCharacter, public IHitInterface {
+class DELTA_API AEnemy : public ABaseCharacter {
   GENERATED_BODY()
 
 public:

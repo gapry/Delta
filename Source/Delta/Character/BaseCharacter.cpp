@@ -64,6 +64,9 @@ void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type Collision
   WeaponBox->SetCollisionEnabled(CollisionEnabled);
 }
 
+void ABaseCharacter::GetHit(const FVector& ImpactPoint) {
+}
+
 void ABaseCharacter::Die() {
 }
 

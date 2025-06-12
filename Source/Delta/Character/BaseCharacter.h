@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../Interface/HitInterface.h"
 #include "BaseCharacter.generated.h"
 
 #define DELTA_BASE_CHARACTER_ENABLE_DEBUG_HIT 0
@@ -22,7 +23,7 @@ class USoundBase;
 class UParticleSystem;
 
 UCLASS()
-class DELTA_API ABaseCharacter : public ACharacter {
+class DELTA_API ABaseCharacter : public ACharacter, public IHitInterface {
   GENERATED_BODY()
 
 public:
@@ -35,6 +36,8 @@ public:
   virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
   void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+
+  virtual void GetHit(const FVector& ImpactPoint) override;
 
 protected:
   virtual void BeginPlay() override;

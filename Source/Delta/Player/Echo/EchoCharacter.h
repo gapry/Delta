@@ -57,6 +57,8 @@ public:
 
   virtual bool CanAttack() override;
 
+  virtual void GetHit(const FVector& ImpactPoint) override;
+
 protected:
   virtual void BeginPlay() override;
 

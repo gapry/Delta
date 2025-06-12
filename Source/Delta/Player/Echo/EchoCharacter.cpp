@@ -435,3 +435,6 @@ void AEchoCharacter::Disarm() {
 void AEchoCharacter::FinishEquipping() {
   ActionState = EActionState::EAS_Unoccupied;
 }
+
+void AEchoCharacter::GetHit(const FVector& ImpactPoint) {
+}
