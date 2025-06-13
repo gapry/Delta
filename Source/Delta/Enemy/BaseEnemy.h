@@ -120,7 +120,7 @@ protected:
   float WaitMax{10.f};
 
   UPROPERTY(EditAnywhere)
-  float NormalSpeed{85.f};
+  float NormalSpeed{75.f};
 
   UPROPERTY(EditAnywhere)
   float UpperBoundSpeed{300.f};

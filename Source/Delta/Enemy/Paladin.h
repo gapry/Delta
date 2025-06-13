@@ -9,10 +9,15 @@
 #include "Paladin.generated.h"
 
 UCLASS()
-class DELTA_API APaladin : public ABaseEnemy
-{
-	GENERATED_BODY()
-	
+class DELTA_API APaladin : public ABaseEnemy {
+  GENERATED_BODY()
+
 public:
   APaladin();
+
+  UPROPERTY(EditAnywhere, Category = "Item")
+  TObjectPtr<UStaticMeshComponent> Shield;
+
+protected:
+  virtual void PostInitializeComponents() override;
 };

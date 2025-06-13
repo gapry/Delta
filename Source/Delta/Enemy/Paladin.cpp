@@ -3,6 +3,7 @@
 // See LICENSE file in the project root for full license information.
 
 #include "Paladin.h"
+#include "Engine/EngineTypes.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -44,17 +45,19 @@ APaladin::APaladin() {
 
   {
     static constexpr const TCHAR* const AnimBlueprintPath{
-      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Enemy/Animation/Blueprint/ABP_Enemy.ABP_Enemy_C'")};
+      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Enemy/Paladin/Animation/Blueprint/ABP_Enemy.ABP_Enemy_C'")};
     DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
   }
 
   {
-    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_HitReact.AM_HitReact'")};
+    static constexpr const TCHAR* const MontagePath{
+      TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Paladin/Animation/Montage/AM_HitReact.AM_HitReact'")};
     DELTA_SET_ANIMATION_MONTAGE(HitReactMontage, MontagePath);
   }
 
   {
-    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_Death.AM_Death'")};
+    static constexpr const TCHAR* const MontagePath{
+      TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Paladin/Animation/Montage/AM_Death.AM_Death'")};
     DELTA_SET_ANIMATION_MONTAGE(DeathMontage, MontagePath);
   }
 
@@ -67,4 +70,25 @@ APaladin::APaladin() {
     static constexpr const TCHAR* const Path{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Delta/HUD/WBP_HealthBar.WBP_HealthBar_C'")};
     DELTA_SET_USER_WIDGET(HealthBarComponent, Path);
   }
+
+  {
+    Shield = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Shield"));
+
+    static constexpr const TCHAR* const StaticMeshPath{TEXT("/Script/Engine.StaticMesh'/Game/AncientTreasures/Meshes/SM_Shield_01a.SM_Shield_01a'")};
+    DELTA_SET_STATIC_MESH(Shield, StaticMeshPath);
+
+    Shield->SetCollisionProfileName(TEXT("Custom"));
+    Shield->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    Shield->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    Shield->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    Shield->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+    Shield->UpdateCollisionProfile();
+  }
+}
+
+void APaladin::PostInitializeComponents() {
+  Super::PostInitializeComponents();
+
+  FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
+  Shield->AttachToComponent(SkeletalMeshComponent.Get(), TransformRules, TEXT("RightHandSocket"));
 }
