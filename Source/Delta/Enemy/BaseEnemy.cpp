@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 // See LICENSE file in the project root for full license information.
 
-#include "Enemy.h"
+#include "BaseEnemy.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -27,71 +27,13 @@
 #include "../Component/HealthBarComponent.h"
 #include "../Player/Echo/EchoCharacter.h"
 
-AEnemy::AEnemy() {
+ABaseEnemy::ABaseEnemy() {
   {
     if (UCharacterMovementComponent* const MoveComponent = GetCharacterMovement()) {
       MoveComponent->bUseRVOAvoidance          = true;
       MoveComponent->bOrientRotationToMovement = true;
       MoveComponent->MaxWalkSpeed              = NormalSpeed;
     }
-  }
-
-  {
-    SkeletalMeshComponent = GetMesh();
-
-    static constexpr const TCHAR* const SkeletalMeshPath{TEXT("/Script/Engine.SkeletalMesh'/Game/Mixamo/Paladin/"
-                                                              "Sword_And_Shield_Idle.Sword_And_Shield_Idle'")};
-
-    DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
-
-    SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), FVector(0.f, 0.f, -88.0f), FVector(1.f, 1.f, 1.f)));
-
-    SkeletalMeshComponent->SetGenerateOverlapEvents(true);
-
-    SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
-    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Vehicle, ECollisionResponse::ECR_Ignore);
-  }
-
-  {
-    CapsuleComponent = GetCapsuleComponent();
-
-    CapsuleComponent->SetCollisionProfileName(TEXT("Custom"));
-    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
-    CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-  }
-
-  {
-    static constexpr const TCHAR* const AnimBlueprintPath{
-      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Enemy/Animation/Blueprint/ABP_Enemy.ABP_Enemy_C'")};
-    DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
-  }
-
-  {
-    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_HitReact.AM_HitReact'")};
-    DELTA_SET_ANIMATION_MONTAGE(HitReactMontage, MontagePath);
-  }
-
-  {
-    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_Death.AM_Death'")};
-    DELTA_SET_ANIMATION_MONTAGE(DeathMontage, MontagePath);
-  }
-
-  {
-    HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
-    HealthBarComponent->SetupAttachment(GetRootComponent());
-    HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
-    HealthBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
-
-    static constexpr const TCHAR* const Path{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Delta/HUD/WBP_HealthBar.WBP_HealthBar_C'")};
-    DELTA_SET_USER_WIDGET(HealthBarComponent, Path);
   }
 
   {
@@ -116,30 +58,30 @@ AEnemy::AEnemy() {
   }
 }
 
-void AEnemy::PatrolTimerFinished() {
+void ABaseEnemy::PatrolTimerFinished() {
   MoveToTarget(PatrolTarget);
 }
 
-void AEnemy::BeginPlay() {
+void ABaseEnemy::BeginPlay() {
   Super::BeginPlay();
 
   HideHealthBar();
   SetPatrolTargets(FName(TEXT("TargetNode")));
   MoveToTarget(PatrolTarget);
 
-  AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemy::PawnSeen);
+  AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ABaseEnemy::PawnSeen);
 }
 
-void AEnemy::PostInitializeComponents() {
+void ABaseEnemy::PostInitializeComponents() {
   Super::PostInitializeComponents();
 
   EnemyController = Cast<AAIController>(GetController());
 }
 
-void AEnemy::Attack() {
+void ABaseEnemy::Attack() {
 }
 
-void AEnemy::SetPatrolTargets(const FName& TargetTag) {
+void ABaseEnemy::SetPatrolTargets(const FName& TargetTag) {
   TArray<AActor*> FoundActors;
   UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), ATargetPoint::StaticClass(), TargetTag, FoundActors);
   PatrolTargets = FoundActors;
@@ -149,7 +91,7 @@ void AEnemy::SetPatrolTargets(const FName& TargetTag) {
   PatrolTarget                 = PatrolTargets[TargetSelection];
 }
 
-void AEnemy::Tick(float DeltaTime) {
+void ABaseEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
   if (EnemyState != EEnemyState::EES_Patrolling) {
@@ -159,16 +101,16 @@ void AEnemy::Tick(float DeltaTime) {
   }
 }
 
-void AEnemy::CheckPatrolTarget() {
+void ABaseEnemy::CheckPatrolTarget() {
   if (InTargetRange(PatrolTarget, PatrolRadius)) {
     PatrolTarget = ChoosePatrolTarget();
 
     const float WaitTime = FMath::RandRange(WaitMin, WaitMax);
-    GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
+    GetWorldTimerManager().SetTimer(PatrolTimer, this, &ABaseEnemy::PatrolTimerFinished, WaitTime);
   }
 }
 
-void AEnemy::CheckCombatTarget() {
+void ABaseEnemy::CheckCombatTarget() {
   if (!InTargetRange(CombatTarget, CombatRadius)) {
     CombatTarget                         = nullptr;
     EnemyState                           = EEnemyState::EES_Patrolling;
@@ -186,7 +128,7 @@ void AEnemy::CheckCombatTarget() {
   }
 }
 
-bool AEnemy::InTargetRange(AActor* Target, double Radius) {
+bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
   if (Target == nullptr) {
     return false;
   }
@@ -201,7 +143,7 @@ bool AEnemy::InTargetRange(AActor* Target, double Radius) {
   return DistanceToTarget <= Radius;
 }
 
-void AEnemy::MoveToTarget(AActor* Target, const float AcceptedRadius) {
+void ABaseEnemy::MoveToTarget(AActor* Target, const float AcceptedRadius) {
   if (EnemyController == nullptr || Target == nullptr) {
     DELTA_LOG("EnemyController or Target is null for {}", TCHAR_TO_UTF8(*GetName()));
     return;
@@ -227,7 +169,7 @@ void AEnemy::MoveToTarget(AActor* Target, const float AcceptedRadius) {
 #endif
 }
 
-AActor* AEnemy::ChoosePatrolTarget() {
+AActor* ABaseEnemy::ChoosePatrolTarget() {
   TArray<AActor*> ValidTargets;
   for (AActor* Target : PatrolTargets) {
     if (Target != PatrolTarget) {
@@ -242,7 +184,7 @@ AActor* AEnemy::ChoosePatrolTarget() {
   return nullptr;
 }
 
-void AEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
+void ABaseEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
   if (EnemyState == EEnemyState::EES_Chasing) {
     return;
   }
@@ -259,7 +201,7 @@ void AEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
   }
 }
 
-void AEnemy::Die() {
+void ABaseEnemy::Die() {
   UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
   if (AnimInstance && DeathMontage) {
@@ -302,10 +244,10 @@ void AEnemy::Die() {
   }
 }
 
-void AEnemy::PlayAttackMontage() {
+void ABaseEnemy::PlayAttackMontage() {
 }
 
-float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
+float ABaseEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
   if (AttributeComponent) {
     AttributeComponent->ReceiveDamage(DamageAmount);
     if (HealthBarComponent) {
@@ -319,7 +261,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
   return DamageAmount;
 }
 
-void AEnemy::GetHit(const FVector& ImpactPoint) {
+void ABaseEnemy::GetHit(const FVector& ImpactPoint) {
 #if DELTA_ENEMY_ENABLE_DEBUG_HIT
   DELTA_DEBUG_SPHERE_COLOR(ImpactPoint, FColor::Orange);
 #endif
@@ -332,19 +274,19 @@ void AEnemy::GetHit(const FVector& ImpactPoint) {
   Die();
 }
 
-void AEnemy::HideHealthBar() {
+void ABaseEnemy::HideHealthBar() {
   if (HealthBarComponent != nullptr) {
     HealthBarComponent->SetVisibility(false);
   }
 }
 
-void AEnemy::ShowHealthBar() {
+void ABaseEnemy::ShowHealthBar() {
   if (HealthBarComponent != nullptr) {
     HealthBarComponent->SetVisibility(true);
   }
 }
 
-void AEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
+void ABaseEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
   auto* const AIController = Cast<AAIController>(GetController());
   if (AIController) {
     FAIMoveRequest MoveRequest;
@@ -376,7 +318,7 @@ void AEnemy::VerifyAIMoveToLocation(const FVector& TargetLocation) {
   }
 }
 
-void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
+void ABaseEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
   for (TActorIterator<AActor> It(GetWorld()); It; ++It) {
     if (It->ActorHasTag(TargetTag)) {
       MoveTargetPoint = *It;
@@ -399,7 +341,7 @@ void AEnemy::VerifyAIMoveToTargetPointByTag(const FName& TargetTag) {
   }
 }
 
-void AEnemy::VerifyAISetToMoveTargetPlayer() {
+void ABaseEnemy::VerifyAISetToMoveTargetPlayer() {
   auto* const PlayerCharacter = Cast<AEchoCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
   if (PlayerCharacter) {
     MoveTargetPlayer = PlayerCharacter;
@@ -407,7 +349,7 @@ void AEnemy::VerifyAISetToMoveTargetPlayer() {
   }
 }
 
-void AEnemy::VerifyAIMoveToMoveTargetPlayer() {
+void ABaseEnemy::VerifyAIMoveToMoveTargetPlayer() {
   if (!MoveTargetPlayer) {
     return;
   }
@@ -429,7 +371,7 @@ void AEnemy::VerifyAIMoveToMoveTargetPlayer() {
   EPathFollowingRequestResult::Type MoveResult = AIController->MoveTo(MoveRequest, &NavPath);
 }
 
-void AEnemy::VerifyAIMoveNavigationPath() {
+void ABaseEnemy::VerifyAIMoveNavigationPath() {
   EnemyController = Cast<AAIController>(GetController());
 
   if (EnemyController == nullptr) {

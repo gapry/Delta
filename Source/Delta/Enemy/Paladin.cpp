@@ -1,0 +1,70 @@
+// Copyright (c) 2025 Gapry.
+// Licensed under the MIT License.
+// See LICENSE file in the project root for full license information.
+
+#include "Paladin.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "../Common/Finder.h"
+#include "../Component/HealthBarComponent.h"
+
+APaladin::APaladin() {
+  {
+    SkeletalMeshComponent = GetMesh();
+
+    static constexpr const TCHAR* const SkeletalMeshPath{TEXT("/Script/Engine.SkeletalMesh'/Game/Mixamo/Paladin/"
+                                                              "Sword_And_Shield_Idle.Sword_And_Shield_Idle'")};
+
+    DELTA_SET_SKELETAL_MESH(SkeletalMeshComponent.Get(), SkeletalMeshPath);
+
+    SkeletalMeshComponent->SetRelativeTransform(FTransform(FRotator(0.f, -90.f, 0.f), FVector(0.f, 0.f, -88.0f), FVector(1.f, 1.f, 1.f)));
+
+    SkeletalMeshComponent->SetGenerateOverlapEvents(true);
+
+    SkeletalMeshComponent->SetCollisionProfileName(TEXT("Custom"));
+    SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    SkeletalMeshComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    SkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+    SkeletalMeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Vehicle, ECollisionResponse::ECR_Ignore);
+  }
+
+  {
+    CapsuleComponent = GetCapsuleComponent();
+
+    CapsuleComponent->SetCollisionProfileName(TEXT("Custom"));
+    CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    CapsuleComponent->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+    CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+    CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+  }
+
+  {
+    static constexpr const TCHAR* const AnimBlueprintPath{
+      TEXT("/Script/Engine.AnimBlueprint'/Game/Delta/Enemy/Animation/Blueprint/ABP_Enemy.ABP_Enemy_C'")};
+    DELTA_SET_ANIMATION_BLUEPRINT(SkeletalMeshComponent.Get(), AnimBlueprintPath);
+  }
+
+  {
+    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_HitReact.AM_HitReact'")};
+    DELTA_SET_ANIMATION_MONTAGE(HitReactMontage, MontagePath);
+  }
+
+  {
+    static constexpr const TCHAR* const MontagePath{TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Animation/Montage/AM_Death.AM_Death'")};
+    DELTA_SET_ANIMATION_MONTAGE(DeathMontage, MontagePath);
+  }
+
+  {
+    HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
+    HealthBarComponent->SetupAttachment(GetRootComponent());
+    HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
+    HealthBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
+
+    static constexpr const TCHAR* const Path{TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Delta/HUD/WBP_HealthBar.WBP_HealthBar_C'")};
+    DELTA_SET_USER_WIDGET(HealthBarComponent, Path);
+  }
+}

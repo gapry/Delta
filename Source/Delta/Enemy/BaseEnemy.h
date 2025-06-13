@@ -10,7 +10,7 @@
 #include "Engine/TimerHandle.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "../Character/BaseCharacter.h"
-#include "Enemy.generated.h"
+#include "BaseEnemy.generated.h"
 
 #define DELTA_ENEMY_ENABLE_DEBUG_HIT              0
 #define DELTA_ENEMY_ENABLE_DEBUG_IN_TARGET_RANGE  0
@@ -24,11 +24,11 @@ class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 
 UCLASS()
-class DELTA_API AEnemy : public ABaseCharacter {
+class DELTA_API ABaseEnemy : public ABaseCharacter {
   GENERATED_BODY()
 
 public:
-  AEnemy();
+  ABaseEnemy();
 
   virtual void Tick(float DeltaTime) override;
 

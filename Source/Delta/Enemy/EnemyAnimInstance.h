@@ -8,7 +8,7 @@
 #include "Animation/AnimInstance.h"
 #include "EnemyAnimInstance.generated.h"
 
-class AEnemy;
+class ABaseEnemy;
 class UCharacterMovementComponent;
 
 UCLASS()
@@ -21,7 +21,7 @@ public:
 
 private:
   UPROPERTY(BlueprintReadOnly, Category = "EnemyAnimInstance", meta = (AllowPrivateAccess = "true"))
-  TSoftObjectPtr<AEnemy> EnemyCharacter;
+  TSoftObjectPtr<ABaseEnemy> EnemyCharacter;
 
   UPROPERTY(BlueprintReadOnly, Category = "EnemyAnimInstance", meta = (AllowPrivateAccess = "true"))
   TSoftObjectPtr<UCharacterMovementComponent> CharacterMovement;
