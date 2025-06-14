@@ -363,7 +363,10 @@ void AEchoCharacter::PlayAttackMontage() {
     return;
   }
 
-  AnimInstance->Montage_Play(AttackMontage);
+  const float DefaultPlayRate = AttackMontage->RateScale;
+  const float NewPlayRate     = DefaultPlayRate * 1.5f;
+
+  AnimInstance->Montage_Play(AttackMontage, NewPlayRate);
 
   const int32  Selection   = FMath::RandRange(0, 2);
   static FName SectionName = FName();
