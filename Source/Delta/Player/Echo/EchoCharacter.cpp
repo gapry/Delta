@@ -363,8 +363,9 @@ void AEchoCharacter::PlayAttackMontage() {
     return;
   }
 
+  const float AttackScalar    = 1.5f;
   const float DefaultPlayRate = AttackMontage->RateScale;
-  const float NewPlayRate     = DefaultPlayRate * 1.5f;
+  const float NewPlayRate     = DefaultPlayRate * AttackScalar;
 
   AnimInstance->Montage_Play(AttackMontage, NewPlayRate);
 
