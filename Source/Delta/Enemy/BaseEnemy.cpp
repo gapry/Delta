@@ -26,6 +26,7 @@
 #include "../Component/AttributeComponent.h"
 #include "../Component/HealthBarComponent.h"
 #include "../Player/Echo/EchoCharacter.h"
+#include "../Weapon/Weapon.h"
 
 ABaseEnemy::ABaseEnemy() {
   {
@@ -259,6 +260,12 @@ float ABaseEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
   GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
   MoveToTarget(CombatTarget);
   return DamageAmount;
+}
+
+void ABaseEnemy::Destroyed() {
+  if (EquippedWeapon) {
+    EquippedWeapon->Destroy();
+  }
 }
 
 void ABaseEnemy::GetHit(const FVector& ImpactPoint) {
