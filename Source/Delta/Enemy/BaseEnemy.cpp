@@ -263,6 +263,8 @@ float ABaseEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 }
 
 void ABaseEnemy::Destroyed() {
+  Super::Destroyed();
+  
   if (EquippedWeapon) {
     EquippedWeapon->Destroy();
   }
