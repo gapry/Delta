@@ -22,6 +22,7 @@ class UHealthBarComponent;
 class AAIController;
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
+class AWeapon;
 
 UCLASS()
 class DELTA_API ABaseEnemy : public ABaseCharacter {
@@ -38,6 +39,8 @@ public:
                            struct FDamageEvent const& DamageEvent,     //
                            class AController*         EventInstigator, //
                            AActor*                    DamageCauser) override;
+
+  virtual void Destroyed() override;
 
   void SetPatrolTargets(const FName& TargetTag);
 
@@ -127,6 +130,9 @@ protected:
 
   UPROPERTY();
   FTimerHandle PatrolTimer;
+
+  UPROPERTY(EditAnywhere)
+  TSubclassOf<class AWeapon> WeaponClass;
 
   EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 

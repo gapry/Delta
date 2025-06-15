@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "../Common/Finder.h"
 #include "../Component/HealthBarComponent.h"
+#include "../Weapon/Sword.h"
 
 APaladin::APaladin() {
   {
@@ -90,5 +91,12 @@ void APaladin::PostInitializeComponents() {
   Super::PostInitializeComponents();
 
   FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
-  Shield->AttachToComponent(SkeletalMeshComponent.Get(), TransformRules, TEXT("RightHandSocket"));
+  Shield->AttachToComponent(SkeletalMeshComponent.Get(), TransformRules, TEXT("LeftHandSocket"));
+
+  WeaponClass = ASword::StaticClass();
+  if (UWorld* World = GetWorld(); World && WeaponClass) {
+    auto* const DefaultWeapon = World->SpawnActor<ASword>(WeaponClass);
+    DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+    EquippedWeapon = DefaultWeapon;
+  }
 }
