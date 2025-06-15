@@ -63,6 +63,12 @@ APaladin::APaladin() {
   }
 
   {
+    static constexpr const TCHAR* const MontagePath{
+      TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Paladin/Animation/Montage/AM_Attack.AM_Attack'")};
+    DELTA_SET_ANIMATION_MONTAGE(AttackMontage, MontagePath);
+  }
+
+  {
     HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
     HealthBarComponent->SetupAttachment(GetRootComponent());
     HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
