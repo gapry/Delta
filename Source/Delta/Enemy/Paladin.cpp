@@ -113,14 +113,14 @@ void APaladin::PlayAttackMontage() {
   UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
   if (AnimInstance && AttackMontage) {
     AnimInstance->Montage_Play(AttackMontage);
-    const int32 Selection   = FMath::RandRange(0, 2);
-    FName       SectionName = FName();
-    switch (Selection) {
-      case 0: SectionName = FName("Attack1"); break;
-      case 1: SectionName = FName("Attack2"); break;
-      case 2: SectionName = FName("Attack3"); break;
-      default: break;
+
+    const TArray<FName> AttackSectionNames = {FName(TEXT("Attack1")),  //
+                                              FName(TEXT("Attack2")),  //
+                                              FName(TEXT("Attack3"))}; //
+    if (!AttackSectionNames.IsEmpty()) {
+      const int32 RandomIndex = FMath::RandRange(0, AttackSectionNames.Num() - 1);
+      const FName SectionName = AttackSectionNames[RandomIndex];
+      AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
     }
-    AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
   }
 }
