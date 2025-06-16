@@ -80,6 +80,7 @@ void ABaseEnemy::PostInitializeComponents() {
 }
 
 void ABaseEnemy::Attack() {
+  PlayAttackMontage();
 }
 
 void ABaseEnemy::SetPatrolTargets(const FName& TargetTag) {
@@ -125,6 +126,7 @@ void ABaseEnemy::CheckCombatTarget() {
     MoveToTarget(CombatTarget);
   } else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking) {
     EnemyState = EEnemyState::EES_Attacking;
+    Attack();
     DELTA_LOG("Enemy {} is attacking target {}", TCHAR_TO_UTF8(*GetName()), TCHAR_TO_UTF8(*CombatTarget->GetName()));
   }
 }

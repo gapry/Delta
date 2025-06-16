@@ -351,6 +351,8 @@ void AEchoCharacter::SetCharacterState(ECharacterState NewState) {
 }
 
 void AEchoCharacter::PlayAttackMontage() {
+  Super::PlayAttackMontage();
+
   UAnimInstance* const AnimInstance = SkeletalMeshComponent->GetAnimInstance();
 
   if (!AnimInstance) {
