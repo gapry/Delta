@@ -20,4 +20,6 @@ public:
 
 protected:
   virtual void PostInitializeComponents() override;
+
+  virtual void PlayAttackMontage() override;
 };

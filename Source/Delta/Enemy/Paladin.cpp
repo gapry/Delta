@@ -63,6 +63,12 @@ APaladin::APaladin() {
   }
 
   {
+    static constexpr const TCHAR* const MontagePath{
+      TEXT("/Script/Engine.AnimMontage'/Game/Delta/Enemy/Paladin/Animation/Montage/AM_Attack.AM_Attack'")};
+    DELTA_SET_ANIMATION_MONTAGE(AttackMontage, MontagePath);
+  }
+
+  {
     HealthBarComponent = CreateDefaultSubobject<UHealthBarComponent>(TEXT("HealthBar"));
     HealthBarComponent->SetupAttachment(GetRootComponent());
     HealthBarComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 80.0f));
@@ -98,5 +104,23 @@ void APaladin::PostInitializeComponents() {
     auto* const DefaultWeapon = World->SpawnActor<ASword>(WeaponClass);
     DefaultWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
     EquippedWeapon = DefaultWeapon;
+  }
+}
+
+void APaladin::PlayAttackMontage() {
+  Super::PlayAttackMontage();
+
+  UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+  if (AnimInstance && AttackMontage) {
+    AnimInstance->Montage_Play(AttackMontage);
+
+    const TArray<FName> AttackSectionNames = {FName(TEXT("Attack1")),  //
+                                              FName(TEXT("Attack2")),  //
+                                              FName(TEXT("Attack3"))}; //
+    if (!AttackSectionNames.IsEmpty()) {
+      const int32 RandomIndex = FMath::RandRange(0, AttackSectionNames.Num() - 1);
+      const FName SectionName = AttackSectionNames[RandomIndex];
+      AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+    }
   }
 }

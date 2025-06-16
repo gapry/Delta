@@ -67,7 +67,7 @@ protected:
 
   bool InTargetRange(AActor* Target, double Radius);
 
-  void MoveToTarget(AActor* Target, const float AcceptedRadius = 15.0f);
+  void MoveToTarget(AActor* Target, const float AcceptedRadius = 50.0f);
 
   AActor* ChoosePatrolTarget();
 
@@ -105,13 +105,13 @@ protected:
   TObjectPtr<UAISenseConfig_Sight> SightConfig;
 
   UPROPERTY(EditAnywhere, Category = "AI Navigation")
-  double CombatRadius{800.f};
+  double CombatRadius{500.f};
 
   UPROPERTY(EditAnywhere, Category = "AI Navigation")
   double PatrolRadius{100.f};
 
   UPROPERTY(EditAnywhere, Category = "AI Navigation")
-  double AttackRadius{180.f};
+  double AttackRadius{150.f};
 
   UPROPERTY(EditAnywhere, Category = "AI Navigation");
   float DeathLifeSpanSeconds{10.f};
