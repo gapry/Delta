@@ -54,6 +54,8 @@ protected:
 
   virtual bool CanAttack();
 
+  TArray<FName> GetAllMontageSectionsNames(const UAnimMontage* const Montage);
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;

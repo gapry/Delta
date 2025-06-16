@@ -115,3 +115,18 @@ void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint) {
 bool ABaseCharacter::CanAttack() {
   return false;
 }
+
+TArray<FName> ABaseCharacter::GetAllMontageSectionsNames(const UAnimMontage* const Montage) {
+  TArray<FName> SectionNames;
+  
+  if (Montage != nullptr) {
+    const int32 NumSections = Montage->GetNumSections();
+    for (int32 i = 0; i < NumSections; ++i) {
+      const FName SectionName = Montage->GetSectionName(i);
+      if (SectionName != NAME_None) {
+        SectionNames.Add(SectionName);
+      }
+    }
+  }
+  return SectionNames;
+}
