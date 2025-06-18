@@ -113,7 +113,7 @@ void ABaseEnemy::CheckPatrolTarget() {
 }
 
 void ABaseEnemy::CheckCombatTarget() {
-  if (!InTargetRange(CombatTarget, CombatRadius)) {
+  if (IsOutsideCombatRadius()) {
     LoseInterest();
     StartPatrolling();
   } else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing) {
@@ -136,6 +136,10 @@ void ABaseEnemy::StartPatrolling() {
   EnemyState                           = EEnemyState::EES_Patrolling;
   GetCharacterMovement()->MaxWalkSpeed = PatrollingSpeed;
   MoveToTarget(PatrolTarget);
+}
+
+bool ABaseEnemy::IsOutsideCombatRadius() {
+  return !InTargetRange(CombatTarget, CombatRadius);
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
