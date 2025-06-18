@@ -54,6 +54,9 @@ public:
 
   void CheckCombatTarget();
 
+  EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
+  EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
 protected:
   virtual void BeginPlay() override;
 
@@ -76,9 +79,6 @@ protected:
 
   UPROPERTY(EditAnywhere, Category = "Widgets")
   TObjectPtr<UHealthBarComponent> HealthBarComponent;
-
-  UPROPERTY(BlueprintReadOnly)
-  EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
   UPROPERTY()
   TObjectPtr<AActor> CombatTarget;
@@ -133,8 +133,6 @@ protected:
 
   UPROPERTY(EditAnywhere)
   TSubclassOf<class AWeapon> WeaponClass;
-
-  EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
   void VerifyAIMoveToLocation(const FVector& Location);
