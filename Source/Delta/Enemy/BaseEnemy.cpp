@@ -114,11 +114,10 @@ void ABaseEnemy::CheckPatrolTarget() {
 
 void ABaseEnemy::CheckCombatTarget() {
   if (!InTargetRange(CombatTarget, CombatRadius)) {
-    CombatTarget                         = nullptr;
     EnemyState                           = EEnemyState::EES_Patrolling;
     GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
 
-    HideHealthBar();
+    LoseInterest();
     MoveToTarget(PatrolTarget);
   } else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing) {
     EnemyState                           = EEnemyState::EES_Chasing;
@@ -129,6 +128,11 @@ void ABaseEnemy::CheckCombatTarget() {
     Attack();
     DELTA_LOG("Enemy {} is attacking target {}", TCHAR_TO_UTF8(*GetName()), TCHAR_TO_UTF8(*CombatTarget->GetName()));
   }
+}
+
+void ABaseEnemy::LoseInterest() {
+  CombatTarget = nullptr;
+  HideHealthBar();
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
@@ -266,7 +270,7 @@ float ABaseEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 
 void ABaseEnemy::Destroyed() {
   Super::Destroyed();
-  
+
   if (EquippedWeapon) {
     EquippedWeapon->Destroy();
   }

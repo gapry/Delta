@@ -54,6 +54,8 @@ public:
 
   void CheckCombatTarget();
 
+  void LoseInterest();
+
   EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
   EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
