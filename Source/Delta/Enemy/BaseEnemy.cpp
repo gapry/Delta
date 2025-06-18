@@ -114,11 +114,8 @@ void ABaseEnemy::CheckPatrolTarget() {
 
 void ABaseEnemy::CheckCombatTarget() {
   if (!InTargetRange(CombatTarget, CombatRadius)) {
-    EnemyState                           = EEnemyState::EES_Patrolling;
-    GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
-
     LoseInterest();
-    MoveToTarget(PatrolTarget);
+    StartPatrolling();
   } else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing) {
     EnemyState                           = EEnemyState::EES_Chasing;
     GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
@@ -133,6 +130,12 @@ void ABaseEnemy::CheckCombatTarget() {
 void ABaseEnemy::LoseInterest() {
   CombatTarget = nullptr;
   HideHealthBar();
+}
+
+void ABaseEnemy::StartPatrolling() {
+  EnemyState                           = EEnemyState::EES_Patrolling;
+  GetCharacterMovement()->MaxWalkSpeed = PatrollingSpeed;
+  MoveToTarget(PatrolTarget);
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {

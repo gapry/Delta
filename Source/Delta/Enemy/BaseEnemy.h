@@ -56,6 +56,8 @@ public:
 
   void LoseInterest();
 
+  void StartPatrolling();
+
   EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
   EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
@@ -129,6 +131,12 @@ protected:
 
   UPROPERTY(EditAnywhere)
   float UpperBoundSpeed{300.f};
+
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float PatrollingSpeed{125.f};
+
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float ChasingSpeed{300.f};
 
   UPROPERTY();
   FTimerHandle PatrolTimer;
