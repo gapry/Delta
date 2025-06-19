@@ -113,7 +113,8 @@ void APaladin::PlayAttackMontage() {
   UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
   if (AnimInstance && AttackMontage) {
     AnimInstance->Montage_Play(AttackMontage);
-    const TArray<FName> AttackSectionNames = GetAllMontageSectionsNames(AttackMontage);
+    TArray<FName> AttackSectionNames;
+    GetAllMontageSectionsNames(AttackMontage, AttackSectionNames);
     if (!AttackSectionNames.IsEmpty()) {
       const int32 RandomIndex = FMath::RandRange(0, AttackSectionNames.Num() - 1);
       const FName SectionName = AttackSectionNames[RandomIndex];

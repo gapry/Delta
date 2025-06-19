@@ -56,7 +56,7 @@ protected:
 
   virtual bool CanAttack();
 
-  TArray<FName> GetAllMontageSectionsNames(const UAnimMontage* const Montage);
+  void GetAllMontageSectionsNames(const UAnimMontage* const Montage, TArray<FName>& OutSectionNames);
 
   void PlayHitSound(const FVector& ImpactPoint);
 

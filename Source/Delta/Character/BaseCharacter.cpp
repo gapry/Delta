@@ -121,19 +121,18 @@ bool ABaseCharacter::CanAttack() {
   return false;
 }
 
-TArray<FName> ABaseCharacter::GetAllMontageSectionsNames(const UAnimMontage* const Montage) {
-  TArray<FName> SectionNames;
+void ABaseCharacter::GetAllMontageSectionsNames(const UAnimMontage* const Montage, TArray<FName>& OutSectionNames) {
+  OutSectionNames.Empty();
 
   if (Montage != nullptr) {
     const int32 NumSections = Montage->GetNumSections();
     for (int32 i = 0; i < NumSections; ++i) {
       const FName SectionName = Montage->GetSectionName(i);
       if (SectionName != NAME_None) {
-        SectionNames.Add(SectionName);
+        OutSectionNames.Add(SectionName);
       }
     }
   }
-  return SectionNames;
 }
 
 void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint) {
