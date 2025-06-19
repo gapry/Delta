@@ -60,6 +60,8 @@ public:
 
   bool IsOutsideCombatRadius();
 
+  void ChaseTarget();
+
   EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
   EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
