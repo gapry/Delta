@@ -147,3 +147,9 @@ void ABaseCharacter::SpawnHitParticles(const FVector& ImportPoint) {
     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImportPoint);
   }
 }
+
+void ABaseCharacter::HandleDamage(const float DamageAmount) {
+  if (AttributeComponent) {
+    AttributeComponent->ReceiveDamage(DamageAmount);
+  }
+}

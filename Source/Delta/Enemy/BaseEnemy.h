@@ -110,6 +110,8 @@ protected:
 
   AActor* ChoosePatrolTarget();
 
+  virtual void HandleDamage(const float DamageAmount) override;
+
   UFUNCTION()
   void PawnSeen(AActor* Actor, FAIStimulus Stimulus);
 

@@ -62,6 +62,8 @@ protected:
 
   void SpawnHitParticles(const FVector& ImportPoint);
 
+  virtual void HandleDamage(const float DamageAmount);
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;

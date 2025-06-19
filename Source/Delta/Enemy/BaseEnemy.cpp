@@ -252,6 +252,14 @@ AActor* ABaseEnemy::ChoosePatrolTarget() {
   return nullptr;
 }
 
+void ABaseEnemy::HandleDamage(const float DamageAmount) {
+  Super::HandleDamage(DamageAmount);
+
+  if (AttributeComponent && HealthBarComponent) {
+    HealthBarComponent->SetHealthPercent(AttributeComponent->GetHealthPercent());
+  }
+}
+
 void ABaseEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
   const bool bShouldChaseTarget = EnemyState != EEnemyState::EES_Dead &&            //
                                   EnemyState != EEnemyState::EES_Chasing &&         //
@@ -313,12 +321,8 @@ void ABaseEnemy::PlayAttackMontage() {
 }
 
 float ABaseEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
-  if (AttributeComponent) {
-    AttributeComponent->ReceiveDamage(DamageAmount);
-    if (HealthBarComponent) {
-      HealthBarComponent->SetHealthPercent(AttributeComponent->GetHealthPercent());
-    }
-  }
+  HandleDamage(DamageAmount);
+
   CombatTarget                         = EventInstigator->GetPawn();
   EnemyState                           = EEnemyState::EES_Chasing;
   GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
