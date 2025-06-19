@@ -72,6 +72,8 @@ public:
 
   void StartAttackTimer();
 
+  void ClearAttackTimer();
+
   void ClearPatrolTimer();
 
   bool IsDead() const;

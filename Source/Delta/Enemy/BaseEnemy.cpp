@@ -118,6 +118,7 @@ void ABaseEnemy::CheckPatrolTarget() {
 
 void ABaseEnemy::CheckCombatTarget() {
   if (IsOutsideCombatRadius()) {
+    ClearAttackTimer();
     LoseInterest();
     StartPatrolling();
   } else if (IsOutsideAttackRadius() && !IsChasing()) {
@@ -168,6 +169,10 @@ void ABaseEnemy::StartAttackTimer() {
   EnemyState             = EEnemyState::EES_Attacking;
   const float AttackTime = FMath::RandRange(AttackMin, AttackMax);
   GetWorldTimerManager().SetTimer(AttackTimer, this, &ABaseEnemy::Attack, AttackTime);
+}
+
+void ABaseEnemy::ClearAttackTimer() {
+  GetWorldTimerManager().ClearTimer(AttackTimer);
 }
 
 void ABaseEnemy::ClearPatrolTimer() {
