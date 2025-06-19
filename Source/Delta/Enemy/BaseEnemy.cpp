@@ -116,7 +116,7 @@ void ABaseEnemy::CheckCombatTarget() {
   if (IsOutsideCombatRadius()) {
     LoseInterest();
     StartPatrolling();
-  } else if (IsOutsideAttackRadius() && EnemyState != EEnemyState::EES_Chasing) {
+  } else if (IsOutsideAttackRadius() && !IsChasing()) {
     ChaseTarget();
   } else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking) {
     EnemyState = EEnemyState::EES_Attacking;
@@ -148,6 +148,10 @@ void ABaseEnemy::ChaseTarget() {
 
 bool ABaseEnemy::IsOutsideAttackRadius() {
   return !InTargetRange(CombatTarget, AttackRadius);
+}
+
+bool ABaseEnemy::IsChasing() const {
+  return EnemyState == EEnemyState::EES_Chasing;
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
