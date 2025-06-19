@@ -120,10 +120,16 @@ void ABaseEnemy::CheckCombatTarget() {
   if (IsOutsideCombatRadius()) {
     ClearAttackTimer();
     LoseInterest();
-    StartPatrolling();
+    if (!IsEngaged()) {
+      StartPatrolling();
+    }
   } else if (IsOutsideAttackRadius() && !IsChasing()) {
-    ChaseTarget();
+    ClearAttackTimer();
+    if (!IsEngaged()) {
+      ChaseTarget();
+    }
   } else if (IsInsideAttackRadius() && !IsAttacking()) {
+    ClearAttackTimer();
     StartAttackTimer();
   }
 }
@@ -181,6 +187,10 @@ void ABaseEnemy::ClearPatrolTimer() {
 
 bool ABaseEnemy::IsDead() const {
   return EnemyState == EEnemyState::EES_Dead;
+}
+
+bool ABaseEnemy::IsEngaged() const {
+  return EnemyState == EEnemyState::EES_Engaged;
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {

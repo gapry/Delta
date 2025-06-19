@@ -78,6 +78,8 @@ public:
 
   bool IsDead() const;
 
+  bool IsEngaged() const;
+
   FTimerHandle AttackTimer;
 
   UPROPERTY(EditAnywhere, Category = "Combat")
