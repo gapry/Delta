@@ -346,6 +346,7 @@ void ABaseEnemy::GetHit(const FVector& ImpactPoint) {
   }
   Die();
   PlayHitSound(ImpactPoint);
+  SpawnHitParticles(ImpactPoint);
 }
 
 void ABaseEnemy::HideHealthBar() {

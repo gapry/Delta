@@ -60,6 +60,8 @@ protected:
 
   void PlayHitSound(const FVector& ImpactPoint);
 
+  void SpawnHitParticles(const FVector& ImportPoint);
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;

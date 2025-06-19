@@ -141,3 +141,9 @@ void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint) {
     UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
   }
 }
+
+void ABaseCharacter::SpawnHitParticles(const FVector& ImportPoint) {
+  if (HitParticles && GetWorld()) {
+    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImportPoint);
+  }
+}
