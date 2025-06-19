@@ -60,7 +60,7 @@ protected:
 
   void PlayHitSound(const FVector& ImpactPoint);
 
-  void SpawnHitParticles(const FVector& ImportPoint);
+  void SpawnHitParticles(const FVector& ImpactPoint);
 
   virtual void HandleDamage(const float DamageAmount);
 

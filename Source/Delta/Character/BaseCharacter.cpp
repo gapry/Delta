@@ -137,14 +137,14 @@ TArray<FName> ABaseCharacter::GetAllMontageSectionsNames(const UAnimMontage* con
 }
 
 void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint) {
-  if (HitSound) {
+  if (HitSound && GetWorld()) {
     UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
   }
 }
 
-void ABaseCharacter::SpawnHitParticles(const FVector& ImportPoint) {
+void ABaseCharacter::SpawnHitParticles(const FVector& ImpactPoint) {
   if (HitParticles && GetWorld()) {
-    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImportPoint);
+    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImpactPoint);
   }
 }
 
