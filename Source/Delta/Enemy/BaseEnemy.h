@@ -62,6 +62,8 @@ public:
 
   void ChaseTarget();
 
+  bool IsOutsideAttackRadius();
+
   EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
   EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
