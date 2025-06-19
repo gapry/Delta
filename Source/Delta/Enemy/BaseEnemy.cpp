@@ -227,20 +227,16 @@ AActor* ABaseEnemy::ChoosePatrolTarget() {
 }
 
 void ABaseEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
-  if (EnemyState == EEnemyState::EES_Chasing) {
-    return;
-  }
+  const bool bShouldChaseTarget = EnemyState != EEnemyState::EES_Dead &&            //
+                                  EnemyState != EEnemyState::EES_Chasing &&         //
+                                  EnemyState < EEnemyState::EES_Attacking &&        //
+                                  ActorSeen->ActorHasTag(FName("EchoCharacter")) && //
+                                  Stimulus.WasSuccessfullySensed();                 //
 
-  if (Stimulus.WasSuccessfullySensed() && ActorSeen->ActorHasTag(FName("EchoCharacter"))) {
+  if (bShouldChaseTarget) {
+    CombatTarget = ActorSeen;
     ClearPatrolTimer();
-
-    GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
-    CombatTarget                         = ActorSeen;
-
-    if (EnemyState != EEnemyState::EES_Attacking) {
-      EnemyState = EEnemyState::EES_Chasing;
-      MoveToTarget(CombatTarget);
-    }
+    ChaseTarget();
   }
 }
 
