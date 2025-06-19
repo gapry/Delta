@@ -72,6 +72,8 @@ public:
 
   void StartAttackTimer();
 
+  void ClearPatrolTimer();
+
   FTimerHandle AttackTimer;
 
   UPROPERTY(EditAnywhere, Category = "Combat")

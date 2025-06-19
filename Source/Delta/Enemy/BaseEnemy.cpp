@@ -166,6 +166,10 @@ void ABaseEnemy::StartAttackTimer() {
   GetWorldTimerManager().SetTimer(AttackTimer, this, &ABaseEnemy::Attack, AttackTime);
 }
 
+void ABaseEnemy::ClearPatrolTimer() {
+  GetWorldTimerManager().ClearTimer(PatrolTimer);
+}
+
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
   if (Target == nullptr) {
     return false;
@@ -228,7 +232,8 @@ void ABaseEnemy::PawnSeen(AActor* ActorSeen, FAIStimulus Stimulus) {
   }
 
   if (Stimulus.WasSuccessfullySensed() && ActorSeen->ActorHasTag(FName("EchoCharacter"))) {
-    GetWorldTimerManager().ClearTimer(PatrolTimer);
+    ClearPatrolTimer();
+
     GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
     CombatTarget                         = ActorSeen;
 
