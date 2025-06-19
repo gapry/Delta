@@ -66,6 +66,8 @@ public:
 
   bool IsChasing() const;
 
+  bool IsInsideAttackRadius();
+
   EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
   EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
