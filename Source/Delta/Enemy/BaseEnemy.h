@@ -177,14 +177,4 @@ protected:
 
   UPROPERTY(EditAnywhere)
   TSubclassOf<class AWeapon> WeaponClass;
-
-private:
-  void VerifyAIMoveToLocation(const FVector& Location);
-  void VerifyAIMoveToTargetPointByTag(const FName& TargetTag);
-
-  void VerifyAISetToMoveTargetPlayer();
-  void VerifyAIMoveToMoveTargetPlayer();
-  void VerifyAIMoveNavigationPath();
-
-  FVector LastTargetLocation;
 };
