@@ -321,12 +321,9 @@ void ABaseEnemy::PlayAttackMontage() {
 }
 
 float ABaseEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
+  CombatTarget = EventInstigator->GetPawn();
+  ChaseTarget();
   HandleDamage(DamageAmount);
-
-  CombatTarget                         = EventInstigator->GetPawn();
-  EnemyState                           = EEnemyState::EES_Chasing;
-  GetCharacterMovement()->MaxWalkSpeed = UpperBoundSpeed;
-  MoveToTarget(CombatTarget);
   return DamageAmount;
 }
 
