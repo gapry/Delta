@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "EnemyState.h"
 #include "EnemyAnimInstance.generated.h"
 
 class ABaseEnemy;
@@ -28,4 +29,10 @@ private:
 
   UPROPERTY(BlueprintReadOnly, Category = "EnemyAnimInstance", meta = (AllowPrivateAccess = "true"))
   float GroundSpeed{0.0f};
+
+  UPROPERTY(BlueprintReadOnly, Category = "EnemyAnimInstance", meta = (AllowPrivateAccess = "true"))
+  EDeathPose DeathPose;
+
+  UPROPERTY(BlueprintReadOnly, Category = "EnemyAnimInstance", meta = (AllowPrivateAccess = "true"))
+  EEnemyState EnemyState;
 };

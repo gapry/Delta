@@ -54,10 +54,49 @@ public:
 
   void CheckCombatTarget();
 
+  void LoseInterest();
+
+  void StartPatrolling();
+
+  bool IsOutsideCombatRadius();
+
+  void ChaseTarget();
+
+  bool IsOutsideAttackRadius();
+
+  bool IsChasing() const;
+
+  bool IsInsideAttackRadius();
+
+  bool IsAttacking() const;
+
+  void StartAttackTimer();
+
+  void ClearAttackTimer();
+
+  void ClearPatrolTimer();
+
+  bool IsDead() const;
+
+  bool IsEngaged() const;
+
+  FTimerHandle AttackTimer;
+
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float AttackMin = 0.5f;
+
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float AttackMax = 1.f;
+
+  EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
+  EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
 protected:
   virtual void BeginPlay() override;
 
   virtual void PostInitializeComponents() override;
+
+  virtual bool CanAttack() override;
 
   void Attack();
 
@@ -71,14 +110,13 @@ protected:
 
   AActor* ChoosePatrolTarget();
 
+  virtual void HandleDamage(const float DamageAmount) override;
+
   UFUNCTION()
   void PawnSeen(AActor* Actor, FAIStimulus Stimulus);
 
   UPROPERTY(EditAnywhere, Category = "Widgets")
   TObjectPtr<UHealthBarComponent> HealthBarComponent;
-
-  UPROPERTY(BlueprintReadOnly)
-  EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
   UPROPERTY()
   TObjectPtr<AActor> CombatTarget;
@@ -128,13 +166,17 @@ protected:
   UPROPERTY(EditAnywhere)
   float UpperBoundSpeed{300.f};
 
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float PatrollingSpeed{125.f};
+
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float ChasingSpeed{300.f};
+
   UPROPERTY();
   FTimerHandle PatrolTimer;
 
   UPROPERTY(EditAnywhere)
   TSubclassOf<class AWeapon> WeaponClass;
-
-  EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 private:
   void VerifyAIMoveToLocation(const FVector& Location);

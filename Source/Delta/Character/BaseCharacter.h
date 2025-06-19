@@ -39,6 +39,8 @@ public:
 
   virtual void GetHit(const FVector& ImpactPoint) override;
 
+  bool IsAlive() const;
+
 protected:
   virtual void BeginPlay() override;
 
@@ -53,6 +55,14 @@ protected:
   void DirectionalHitReact(const FVector& ImpactPoint);
 
   virtual bool CanAttack();
+
+  void GetAllMontageSectionsNames(const UAnimMontage* const Montage, TArray<FName>& OutSectionNames);
+
+  void PlayHitSound(const FVector& ImpactPoint);
+
+  void SpawnHitParticles(const FVector& ImpactPoint);
+
+  virtual void HandleDamage(const float DamageAmount);
 
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;

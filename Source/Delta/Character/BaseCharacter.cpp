@@ -11,6 +11,7 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "../Component/AttributeComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
@@ -67,6 +68,10 @@ void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type Collision
 void ABaseCharacter::GetHit(const FVector& ImpactPoint) {
 }
 
+bool ABaseCharacter::IsAlive() const {
+  return AttributeComponent != nullptr && AttributeComponent->GetHealth() > 0.0f;
+}
+
 void ABaseCharacter::Die() {
 }
 
@@ -114,4 +119,36 @@ void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint) {
 
 bool ABaseCharacter::CanAttack() {
   return false;
+}
+
+void ABaseCharacter::GetAllMontageSectionsNames(const UAnimMontage* const Montage, TArray<FName>& OutSectionNames) {
+  OutSectionNames.Empty();
+
+  if (Montage != nullptr) {
+    const int32 NumSections = Montage->GetNumSections();
+    for (int32 i = 0; i < NumSections; ++i) {
+      const FName SectionName = Montage->GetSectionName(i);
+      if (SectionName != NAME_None) {
+        OutSectionNames.Add(SectionName);
+      }
+    }
+  }
+}
+
+void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint) {
+  if (HitSound && GetWorld()) {
+    UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+  }
+}
+
+void ABaseCharacter::SpawnHitParticles(const FVector& ImpactPoint) {
+  if (HitParticles && GetWorld()) {
+    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImpactPoint);
+  }
+}
+
+void ABaseCharacter::HandleDamage(const float DamageAmount) {
+  if (AttributeComponent) {
+    AttributeComponent->ReceiveDamage(DamageAmount);
+  }
 }

@@ -22,4 +22,9 @@ void UEnemyAnimInstance::NativeUpdateAnimation(float DeltaTime) {
   if (CharacterMovement) {
     GroundSpeed = UKismetMathLibrary::VSizeXY(CharacterMovement->Velocity);
   }
+
+  if (EnemyCharacter) {
+    DeathPose  = EnemyCharacter->DeathPose;
+    EnemyState = EnemyCharacter->EnemyState;
+  }
 }
