@@ -74,6 +74,8 @@ public:
 
   void ClearPatrolTimer();
 
+  bool IsDead() const;
+
   FTimerHandle AttackTimer;
 
   UPROPERTY(EditAnywhere, Category = "Combat")

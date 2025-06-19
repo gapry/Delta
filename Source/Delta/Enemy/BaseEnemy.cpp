@@ -96,6 +96,10 @@ void ABaseEnemy::SetPatrolTargets(const FName& TargetTag) {
 void ABaseEnemy::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
+  if (IsDead()) {
+    return;
+  }
+
   if (EnemyState != EEnemyState::EES_Patrolling) {
     CheckCombatTarget();
   } else {
@@ -168,6 +172,10 @@ void ABaseEnemy::StartAttackTimer() {
 
 void ABaseEnemy::ClearPatrolTimer() {
   GetWorldTimerManager().ClearTimer(PatrolTimer);
+}
+
+bool ABaseEnemy::IsDead() const {
+  return EnemyState == EEnemyState::EES_Dead;
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
