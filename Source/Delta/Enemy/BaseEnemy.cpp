@@ -118,7 +118,7 @@ void ABaseEnemy::CheckCombatTarget() {
     StartPatrolling();
   } else if (IsOutsideAttackRadius() && !IsChasing()) {
     ChaseTarget();
-  } else if (IsInsideAttackRadius() && EnemyState != EEnemyState::EES_Attacking) {
+  } else if (IsInsideAttackRadius() && !IsAttacking()) {
     EnemyState = EEnemyState::EES_Attacking;
     Attack();
     DELTA_LOG("Enemy {} is attacking target {}", TCHAR_TO_UTF8(*GetName()), TCHAR_TO_UTF8(*CombatTarget->GetName()));
@@ -156,6 +156,10 @@ bool ABaseEnemy::IsChasing() const {
 
 bool ABaseEnemy::IsInsideAttackRadius() {
   return InTargetRange(CombatTarget, AttackRadius);
+}
+
+bool ABaseEnemy::IsAttacking() const {
+  return EnemyState == EEnemyState::EES_Attacking;
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
