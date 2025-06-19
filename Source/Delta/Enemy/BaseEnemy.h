@@ -70,6 +70,16 @@ public:
 
   bool IsAttacking() const;
 
+  void StartAttackTimer();
+
+  FTimerHandle AttackTimer;
+
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float AttackMin = 0.5f;
+
+  UPROPERTY(EditAnywhere, Category = "Combat")
+  float AttackMax = 1.f;
+
   EDeathPose  DeathPose  = EDeathPose::EDP_Alive;
   EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 

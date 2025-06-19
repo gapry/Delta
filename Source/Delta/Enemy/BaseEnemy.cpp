@@ -119,9 +119,7 @@ void ABaseEnemy::CheckCombatTarget() {
   } else if (IsOutsideAttackRadius() && !IsChasing()) {
     ChaseTarget();
   } else if (IsInsideAttackRadius() && !IsAttacking()) {
-    EnemyState = EEnemyState::EES_Attacking;
-    Attack();
-    DELTA_LOG("Enemy {} is attacking target {}", TCHAR_TO_UTF8(*GetName()), TCHAR_TO_UTF8(*CombatTarget->GetName()));
+    StartAttackTimer();
   }
 }
 
@@ -160,6 +158,12 @@ bool ABaseEnemy::IsInsideAttackRadius() {
 
 bool ABaseEnemy::IsAttacking() const {
   return EnemyState == EEnemyState::EES_Attacking;
+}
+
+void ABaseEnemy::StartAttackTimer() {
+  EnemyState             = EEnemyState::EES_Attacking;
+  const float AttackTime = FMath::RandRange(AttackMin, AttackMax);
+  GetWorldTimerManager().SetTimer(AttackTimer, this, &ABaseEnemy::Attack, AttackTime);
 }
 
 bool ABaseEnemy::InTargetRange(AActor* Target, double Radius) {
