@@ -58,6 +58,8 @@ protected:
 
   TArray<FName> GetAllMontageSectionsNames(const UAnimMontage* const Montage);
 
+  void PlayHitSound(const FVector& ImpactPoint);
+
   TWeakObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
   TWeakObjectPtr<UCapsuleComponent>      CapsuleComponent;
   TWeakObjectPtr<USpringArmComponent>    SpringArmComponent;

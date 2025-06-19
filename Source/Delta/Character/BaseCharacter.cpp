@@ -11,6 +11,7 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "../Component/AttributeComponent.h"
 #include "../Common/Finder.h"
 #include "../Common/LogUtil.h"
@@ -122,7 +123,7 @@ bool ABaseCharacter::CanAttack() {
 
 TArray<FName> ABaseCharacter::GetAllMontageSectionsNames(const UAnimMontage* const Montage) {
   TArray<FName> SectionNames;
-  
+
   if (Montage != nullptr) {
     const int32 NumSections = Montage->GetNumSections();
     for (int32 i = 0; i < NumSections; ++i) {
@@ -133,4 +134,10 @@ TArray<FName> ABaseCharacter::GetAllMontageSectionsNames(const UAnimMontage* con
     }
   }
   return SectionNames;
+}
+
+void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint) {
+  if (HitSound) {
+    UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+  }
 }
