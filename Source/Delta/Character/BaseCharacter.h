@@ -39,6 +39,8 @@ public:
 
   virtual void GetHit(const FVector& ImpactPoint) override;
 
+  bool IsAlive() const;
+
 protected:
   virtual void BeginPlay() override;
 

@@ -340,7 +340,7 @@ void ABaseEnemy::GetHit(const FVector& ImpactPoint) {
 #endif
   ShowHealthBar();
 
-  if (AttributeComponent != nullptr && AttributeComponent->GetHealth() > 0.0f) {
+  if (IsAlive()) {
     DirectionalHitReact(ImpactPoint);
     return;
   }

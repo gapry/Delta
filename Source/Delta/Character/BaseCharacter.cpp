@@ -67,6 +67,10 @@ void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type Collision
 void ABaseCharacter::GetHit(const FVector& ImpactPoint) {
 }
 
+bool ABaseCharacter::IsAlive() const {
+  return AttributeComponent != nullptr && AttributeComponent->GetHealth() > 0.0f;
+}
+
 void ABaseCharacter::Die() {
 }
 
