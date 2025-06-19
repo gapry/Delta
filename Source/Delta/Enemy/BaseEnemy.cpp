@@ -79,6 +79,10 @@ void ABaseEnemy::PostInitializeComponents() {
   EnemyController = Cast<AAIController>(GetController());
 }
 
+bool ABaseEnemy::CanAttack() {
+  return IsInsideAttackRadius() && !IsAttacking() && !IsDead();
+}
+
 void ABaseEnemy::Attack() {
   PlayAttackMontage();
 }
@@ -128,8 +132,7 @@ void ABaseEnemy::CheckCombatTarget() {
     if (!IsEngaged()) {
       ChaseTarget();
     }
-  } else if (IsInsideAttackRadius() && !IsAttacking()) {
-    ClearAttackTimer();
+  } else if (CanAttack()) {
     StartAttackTimer();
   }
 }

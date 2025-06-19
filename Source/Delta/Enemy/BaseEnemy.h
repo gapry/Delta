@@ -96,6 +96,8 @@ protected:
 
   virtual void PostInitializeComponents() override;
 
+  virtual bool CanAttack() override;
+
   void Attack();
 
   virtual void Die() override;
